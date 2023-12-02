@@ -22,12 +22,15 @@
       ];
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       flake = {
-        common = import ./modules/common.nix;
-        linux = import ./modules/linux.nix;
-        darwin = import ./modules/darwin.nix;
         # All home-manager configurations are kept here.
         homeModules = {
           common = import ./modules/home/common.nix;
+        };
+        # All nixOS modules are kept here
+        nixosModules = {
+          common = import ./modules/common.nix;
+          linux = import ./modules/linux.nix;
+          darwin = import ./modules/darwin.nix;
         };
       };
 
