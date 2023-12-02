@@ -1,11 +1,11 @@
 # Linux specific configuration
-{ pkgs, flake, ... }: {
+{ pkgs, flake, lib, ... }: {
   imports = [
     flake.inputs.vscode-server.nixosModules.default
   ];
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "ru_RU.UTF-8";
+  i18n.defaultLocale = lib.mkDefault "ru_RU.UTF-8";
   i18n.supportedLocales = [ "all" ];
   # Use same config for linux console
   console.useXkbConfig = true;
