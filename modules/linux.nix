@@ -1,6 +1,6 @@
 # Linux specific configuration
 { pkgs, flake, ... }: {
-  imports = builtins.trace flake [
+  imports = [
     flake.inputs.vscode-server.nixosModules.default
   ];
 
