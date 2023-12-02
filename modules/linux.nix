@@ -1,7 +1,7 @@
 # Linux specific configuration
 { pkgs, flake, ... }: {
-  imports = [
-    flake.vscode-server.nixosModules.default
+  imports = builtins.trace flake [
+    flake.inputs.vscode-server.nixosModules.default
   ];
 
   # Select internationalisation properties.
