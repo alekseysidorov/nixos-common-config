@@ -5,7 +5,6 @@
     # Default to unstable, but you may override it by using the 
     # `nixos-common-config.inputs.nixpkgs.follows = "your-own-nixpkgs"`
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
