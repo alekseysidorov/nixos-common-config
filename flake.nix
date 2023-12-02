@@ -5,8 +5,14 @@
     # Default to unstable, but you may override it by using the 
     # `nixos-common-config.inputs.nixpkgs.follows = "your-own-nixpkgs"`
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -16,6 +22,9 @@
       ];
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       flake = {
+        common = import ./modules/common.nix;
+        linux = import ./modules/linux.nix;
+        darwin = import ./modules/darwin.nix;
         # All home-manager configurations are kept here.
         homeModules = {
           common = import ./modules/home/common.nix;
