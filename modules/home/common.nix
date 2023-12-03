@@ -1,5 +1,5 @@
 # Common home-manager configuration shared between Linux and macOS
-{ pkgs, lib, ... }: 
+{ pkgs, lib, ... }:
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -52,10 +52,10 @@
     })
   ];
 
-  home.sessionVariables = {
+  home.sessionVariables = lib.mkMerge [{
     EDITOR = "vim";
     RUSTC_WRAPPER = "sccache";
-  };
+  }];
 
   programs.zsh = {
     enable = true;
