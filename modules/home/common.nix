@@ -1,10 +1,5 @@
 # Common home-manager configuration shared between Linux and macOS
 { pkgs, lib, ... }: 
-let 
-initSessionVariables = ''
-  source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-  '';
-in 
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -76,15 +71,11 @@ in
       ];
       theme = lib.mkDefault "af-magic";
     };
-
-    initExtra = initSessionVariables;
   };
 
   programs.bash = {
     enable = true;
     enableCompletion = true;
-    
-    initExtra = initSessionVariables;
   };
 
   programs.vim = {
