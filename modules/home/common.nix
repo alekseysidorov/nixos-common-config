@@ -76,11 +76,14 @@ in
       ];
       theme = lib.mkDefault "af-magic";
     };
+
+    initExtra = initSessionVariables;
   };
 
   programs.bash = {
     enable = true;
     enableCompletion = true;
+    
     initExtra = initSessionVariables;
   };
 
@@ -88,7 +91,6 @@ in
     enable = true;
 
     extraConfig = builtins.readFile ./assets/vimrc;
-    initExtra = initSessionVariables;
   };
 
   programs.direnv = {
