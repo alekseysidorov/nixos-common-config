@@ -10,13 +10,28 @@
     userName = lib.mkDefault "Aleksey Sidorov";
     userEmail = lib.mkDefault "sauron1987@gmail.com";
 
-    extraConfig = {
+    extraConfig = lib.mkMerge [{
       alias.cln = "!git clean -dxf -e \"/.vscode\" -e \".idea\"";
       push.autoSetupRemote = true;
-    };
+    }];
   };
 
+  # Common develop nixos/nix-darwin configuration shared between Linux and macOS
   home.packages = with pkgs; [
+    # Nix extensions
+    nil
+    nixpkgs-fmt
+    cachix
+
+    # Rust
+    rustup
+    sccache
+
+    # Useful utilites
+    bat
+    ripgrep
+    xh
+
     # Cleanup all git repos
     (writeShellApplication {
       name = "git-clean-all";
@@ -35,6 +50,11 @@
       '';
     })
   ];
+
+  home.sessionVariables = {
+    EDITOR = "vim";
+    RUSTC_WRAPPER = "sccache";
+  };
 
   programs.zsh = {
     enable = true;
