@@ -57,6 +57,12 @@
     RUSTC_WRAPPER = "sccache";
   }];
 
+  # Popular extra paths.
+  # TODO Implement home-manager module to manage cargo home configuration.
+  home.sessionPath = [
+    "$HOME/.cargo/bin" # For packages installed by Cargo
+  ];
+
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
