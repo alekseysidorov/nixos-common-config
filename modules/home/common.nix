@@ -53,7 +53,6 @@
   ];
 
   home.sessionVariables = lib.mkMerge [{
-    EDITOR = "vim";
     RUSTC_WRAPPER = "sccache";
   }];
 
