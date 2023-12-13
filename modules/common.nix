@@ -17,10 +17,6 @@
     bash = {
       enableCompletion = true;
     };
-
-    vim = {
-      enable = true;
-    };
   };
 
   fonts = {
