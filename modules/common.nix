@@ -11,10 +11,7 @@
     config.allowUnfree = true;
     # Some additional overlays
     overlays = [
-      # Simple nix to toml generator
-      (final: prev: {
-        makeToml = nix: (prev.pkgs.formats.toml { }).generate "" nix;
-      })
+
     ];
   };
 
