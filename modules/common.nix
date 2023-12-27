@@ -6,6 +6,18 @@
     trusted-users = [ "root" "@wheel" ];
   };
 
+  # Some common tweaks for nix packages
+  nixpkgs = {
+    config.allowUnfree = true;
+    # Some additional overlays
+    overlays = [
+      # Simple nix to toml generator
+      (final: prev: {
+        makeToml = nix: (prev.pkgs.formats.toml { }).generate "" nix;
+      })
+    ];
+  };
+
   programs = {
     zsh = {
       enable = true;
