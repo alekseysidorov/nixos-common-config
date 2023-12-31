@@ -5,14 +5,16 @@
   ];
 
   # Select internationalisation properties.
-  i18n.defaultLocale = lib.mkDefault "ru_RU.UTF-8";
-  i18n.supportedLocales = [ "all" ];
+  i18n = {
+    defaultLocale = lib.mkDefault "ru_RU.UTF-8";
+    supportedLocales = [ "all" ];
+  };
   # Use same config for linux console
-  console.useXkbConfig = true;
+  console.useXkbConfig = lib.mkDefault true;
   # My favorite keyboard layout
   services.xserver = {
-    layout = "us,ru";
-    xkbOptions = "grp:caps_toggle";
+    layout = lib.mkDefault "us,ru";
+    xkbOptions = lib.mkDefault "grp:caps_toggle";
   };
 
   # Some basic packages
