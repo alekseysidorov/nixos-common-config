@@ -1,8 +1,20 @@
 # Linux specific configuration
-{ pkgs, flake, lib, ... }: {
+{ pkgs, flake, lib, ... }:
+let
+  nixPath = "/etc/nixpkgs/channels";
+in
+{
   imports = [
     flake.inputs.vscode-server.nixosModules.default
   ];
+
+  # Setup nix paths for the nix-channel, we can use unstable branch.
+  systemd.tmpfiles.rules = [
+    "L+ ${nixPath} - - - - ${pkgs.unstable.path}"
+  ];
+  nix = {
+    nixPath = [ "nixpkgs=${nixPath}" ];
+  };
 
   # Select internationalisation properties.
   i18n = {

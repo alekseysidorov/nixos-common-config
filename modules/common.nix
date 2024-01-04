@@ -1,5 +1,5 @@
 # Common nixos/nix-darwin configuration shared between Linux and macOS
-{ pkgs, ... }: {
+{ pkgs, flake, ... }: {
   # Flakes
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
@@ -11,7 +11,12 @@
     config.allowUnfree = true;
     # Some additional overlays
     overlays = [
-
+      (final: prev: {
+        unstable = import flake.inputs.nixpkgs-unstable {
+          inherit (pkgs) system;
+          config.allowUnfree = true;
+        };
+      })
     ];
   };
 
