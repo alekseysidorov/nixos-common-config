@@ -1,5 +1,5 @@
 {
-  description = "Description for the project";
+  description = "Common parts of Nixos configuration";
 
   inputs = {
     # Default to unstable, but you may override it by using the 
@@ -42,11 +42,13 @@
         homeModules = {
           common = import ./modules/home/common.nix;
         };
+
         # All nixOS modules are kept here
         nixosModules = {
           common = import ./modules/common.nix;
           linux = import ./modules/linux.nix;
           darwin = import ./modules/darwin.nix;
+          pipewire = import ./modules/pipewire.nix;
         };
       };
     };
