@@ -19,10 +19,13 @@ in
   # Select internationalisation properties.
   i18n = {
     defaultLocale = lib.mkDefault "ru_RU.UTF-8";
-    supportedLocales = [ "all" ];
+    supportedLocales = lib.mkDefault [ "all" ];
   };
   # Use same config for linux console
-  console.useXkbConfig = lib.mkDefault true;
+  console = {
+    useXkbConfig = lib.mkDefault true;
+    earlySetup = lib.mkDefault true;
+  };
   # My favorite keyboard layout
   services.xserver = {
     layout = lib.mkDefault "us,ru";
