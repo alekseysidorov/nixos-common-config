@@ -11,9 +11,6 @@
     config.allowUnfree = true;
     # Some additional overlays.
     overlays = [
-      # Workaround for the not being able to download a file.
-      # https://rycee.net/nmd.tar.gz
-      flake.inputs.nmd.overlays.default
       # Some customization.
       (final: prev: {
         # Unstable packages
