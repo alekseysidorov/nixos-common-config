@@ -11,11 +11,12 @@
     config.allowUnfree = true;
     # Some additional overlays.
     overlays = [
-      # Override nmd packages.
+      # Workaround for the not being able to download a file.
+      # https://rycee.net/nmd.tar.gz
       flake.inputs.nmd.overlays.default
       # Some customization.
       (final: prev: {
-        # Untable packages
+        # Unstable packages
         unstable = import flake.inputs.nixpkgs-unstable {
           inherit (pkgs) system;
           config.allowUnfree = true;
