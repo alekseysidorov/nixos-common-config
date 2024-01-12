@@ -9,9 +9,13 @@
   # Some common tweaks for nix packages
   nixpkgs = {
     config.allowUnfree = true;
-    # Some additional overlays
+    # Some additional overlays.
     overlays = [
+      # Override nmd packages.
+      flake.inputs.nmd.overlays.default
+      # Some customization.
       (final: prev: {
+        # Untable packages
         unstable = import flake.inputs.nixpkgs-unstable {
           inherit (pkgs) system;
           config.allowUnfree = true;

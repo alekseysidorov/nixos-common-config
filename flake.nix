@@ -7,6 +7,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # Workaround for the not being able to download a file.
+    # https://rycee.net/nmd.tar.gz
+    nmd.url = "github:gvolpe/nmd";
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
