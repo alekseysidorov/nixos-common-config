@@ -5,12 +5,8 @@
   # Nix configuration parameters
   nix = {
     package = pkgs.nix;
-    useDaemon = true;
   };
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
+  
   # Macos specific virtualization 
   # TODO Rewrite closer to NixOS virtualization support
   # https://nixos.wiki/wiki/Docker
