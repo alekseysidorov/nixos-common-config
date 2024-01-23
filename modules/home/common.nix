@@ -21,7 +21,7 @@
   };
 
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
-  home.packages = with pkgs; [
+  home.packages = with pkgs.unstable; [
     # Nix extensions
     nil
     nixpkgs-fmt
@@ -30,6 +30,9 @@
     # Rust
     rustup
     sccache
+    mask
+    dprint
+    just
 
     # Useful utilites
     bat
