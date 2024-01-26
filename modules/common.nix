@@ -12,6 +12,8 @@
     # Some additional overlays.
     overlays = [
       # Some customization.
+      # Some additional packages
+      (import ./pkgs)
       (final: prev: {
         # Unstable packages
         unstable = import flake.inputs.nixpkgs-unstable {

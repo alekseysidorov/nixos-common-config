@@ -6,7 +6,7 @@
   nix = {
     package = pkgs.nix;
   };
-  
+
   # Macos specific virtualization 
   # TODO Rewrite closer to NixOS virtualization support
   # https://nixos.wiki/wiki/Docker

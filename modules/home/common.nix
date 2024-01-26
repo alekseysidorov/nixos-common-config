@@ -33,6 +33,8 @@
     mask
     dprint
     just
+    cargo-criterion
+    criterion-table
 
     # Useful utilites
     bat
