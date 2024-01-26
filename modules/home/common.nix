@@ -28,13 +28,18 @@
     cachix
 
     # Rust
-    rustup
-    sccache
-    mask
+    cargo-criterion
+    cargo-machete
+    cargo-nextest
+    criterion-table
     dprint
     just
-    cargo-criterion
-    criterion-table
+    markdownlint-cli
+    mask
+    rustup
+    sccache
+    shellcheck
+    taplo
 
     # Useful utilites
     bat
