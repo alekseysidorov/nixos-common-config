@@ -12,13 +12,16 @@
     # Some additional overlays.
     overlays = [
       # Some customization.
-      # Some additional packages
-      (import ./pkgs)
       (final: prev: {
-        # Unstable packages
+        # Unstable packages.
         unstable = import flake.inputs.nixpkgs-unstable {
           inherit (pkgs) system;
           config.allowUnfree = true;
+
+          overlays = [
+            # Some additional packages.
+            (import ./pkgs)
+          ];
         };
       })
     ];
