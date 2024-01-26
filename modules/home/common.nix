@@ -34,7 +34,7 @@
     dprint
     just
     cargo-criterion
-    criterion-table
+    pkgs.criterion-table
 
     # Useful utilites
     bat
