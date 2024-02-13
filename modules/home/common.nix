@@ -32,6 +32,7 @@
     cargo-machete
     cargo-nextest
     cargo-deny
+    cargo-makedocs
     criterion-table
     dprint
     just
