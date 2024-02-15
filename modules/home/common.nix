@@ -33,6 +33,7 @@
     cargo-nextest
     cargo-deny
     cargo-makedocs
+    cargo-watch
     criterion-table
     dprint
     just
