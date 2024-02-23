@@ -9,9 +9,13 @@
   # Some common tweaks for nix packages
   nixpkgs = {
     config.allowUnfree = true;
-    # Some additional overlays.
     overlays = [
-      flake.overlays.default
+      (
+        import ./../overlay.nix {
+          nixpkgs-unstable = flake.inputs.nixpkgs-unstable;
+          config.allowUnfree = true;
+        }
+      )
     ];
   };
 
