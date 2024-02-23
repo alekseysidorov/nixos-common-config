@@ -52,6 +52,19 @@
           darwin = import ./modules/darwin.nix;
           pipewire = import ./modules/pipewire.nix;
         };
+
+        overlays.default = (final: prev: {
+          # Unstable packages.
+          unstable = import inputs.nixpkgs-unstable {
+            system = prev.stdenv.hostPlatform.system;
+            config.allowUnfree = true;
+
+            overlays = [
+              # Some additional packages.
+              (import ./pkgs)
+            ];
+          };
+        });
       };
     };
 }

@@ -11,19 +11,7 @@
     config.allowUnfree = true;
     # Some additional overlays.
     overlays = [
-      # Some customization.
-      (final: prev: {
-        # Unstable packages.
-        unstable = import flake.inputs.nixpkgs-unstable {
-          inherit (pkgs) system;
-          config.allowUnfree = true;
-
-          overlays = [
-            # Some additional packages.
-            (import ./pkgs)
-          ];
-        };
-      })
+      flake.overlays.default
     ];
   };
 
