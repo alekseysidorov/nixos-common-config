@@ -37,6 +37,21 @@
         };
 
         formatter = config.treefmt.build.wrapper;
+
+        # Additional subcommands to maintain home-manager setups.
+        packages = {
+          update = pkgs.writeShellScriptBin "update.sh"
+            ''
+              nix flake update
+            '';
+
+          # Activate system script like in flake-parts
+          activate-home = pkgs.writeShellScriptBin "activate.sh"
+            ''
+              sudo -i nix upgrade-nix
+              home-manager switch --flake .
+            '';
+        };
       };
 
       flake = {
