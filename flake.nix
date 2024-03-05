@@ -45,11 +45,16 @@
               nix flake update
             '';
 
-          # Activate system script like in flake-parts
+          # Activate system scripts like in flake-parts
           activate-home = pkgs.writeShellScriptBin "activate.sh"
             ''
               sudo -i nix upgrade-nix
               home-manager switch --flake .
+            '';
+
+          activate-darwin = pkgs.writeShellScriptBin "activate.sh"
+            ''
+              darwin-rebuild switch --flake .
             '';
         };
       };
