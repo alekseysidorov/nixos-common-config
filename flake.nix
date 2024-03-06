@@ -59,7 +59,7 @@
 
           activate-nixos = pkgs.writeShellScriptBin "activate.sh"
             ''
-              nixos-rebuild switch --flake . -L
+              nixos-rebuild switch --flake . -L --use-remote-sudo
             '';
         };
       };
