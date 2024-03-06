@@ -49,12 +49,17 @@
           activate-home = pkgs.writeShellScriptBin "activate.sh"
             ''
               sudo -i nix upgrade-nix
-              home-manager switch --flake .
+              home-manager switch --flake . -L
             '';
 
           activate-darwin = pkgs.writeShellScriptBin "activate.sh"
             ''
-              darwin-rebuild switch --flake .
+              darwin-rebuild switch --flake . -L
+            '';
+
+          activate-nixos = pkgs.writeShellScriptBin "activate.sh"
+            ''
+              nixos-rebuild switch --flake . -L
             '';
         };
       };
