@@ -29,10 +29,10 @@
 
     # Rust
     cargo-criterion
-    cargo-machete
-    cargo-nextest
     cargo-deny
+    cargo-machete
     cargo-makedocs
+    cargo-nextest
     cargo-watch
     criterion-table
     dprint
