@@ -79,9 +79,9 @@
     "$HOME/.cargo/bin" # For packages installed by Cargo
   ];
 
-    programs.starship = {
+  programs.starship = {
     enable = true;
-    settings = builtins.fromTOML (builtins.readFile ./assets/starship.toml);
+    settings = lib.mkDefault builtins.fromTOML (builtins.readFile ./assets/starship.toml);
   };
 
   programs.zsh = {
