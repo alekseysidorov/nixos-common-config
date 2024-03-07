@@ -81,7 +81,7 @@
 
   programs.starship = {
     enable = true;
-    settings = lib.mkDefault builtins.fromTOML (builtins.readFile ./assets/starship.toml);
+    settings = lib.mkDefault (builtins.fromTOML (builtins.readFile ./assets/starship.toml));
   };
 
   programs.zsh = {
