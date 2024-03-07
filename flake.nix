@@ -48,8 +48,8 @@
           # Activate system scripts like in flake-parts
           activate-home = pkgs.writeShellScriptBin "activate.sh"
             ''
-              sudo -i nix upgrade-nix
               home-manager switch --flake . -L
+              sudo -i nix upgrade-nix
             '';
 
           activate-darwin = pkgs.writeShellScriptBin "activate.sh"
