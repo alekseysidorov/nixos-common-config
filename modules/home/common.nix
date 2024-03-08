@@ -119,6 +119,6 @@
   };
 
   programs.nushell = {
-    extraConfig = lib.mkDefault (builtins.readFile ./assets/config.nu);
+    extraConfig = lib.mkMerge [(builtins.readFile ./assets/config.nu)];
   };
 }
