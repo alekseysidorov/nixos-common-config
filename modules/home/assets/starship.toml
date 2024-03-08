@@ -18,6 +18,10 @@ success_symbol = "[❯](purple)"
 error_symbol = "[❯](red)"
 vimcmd_symbol = "[❮](green)"
 
+[hostname]
+ssh_only = true
+format = '[$hostname](purple) '
+
 [git_branch]
 format = "[$branch]($style)"
 style = "bright-black"
