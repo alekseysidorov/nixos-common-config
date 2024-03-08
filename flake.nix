@@ -39,7 +39,7 @@
         formatter = config.treefmt.build.wrapper;
 
         # Additional subcommands to maintain home-manager setups.
-        packages = {
+        packages = rec {
           update = pkgs.writeShellScriptBin "update.sh"
             ''
               nix flake update
@@ -61,6 +61,18 @@
             ''
               nixos-rebuild switch --flake . -L --use-remote-sudo
             '';
+
+          activate = {
+            home = activate-home;
+            darwin = activate-darwin;
+            nixos = activate-nixos;
+          };
+
+          cleanup = pkgs.writeShellScriptBin "activate.sh"
+            ''
+              sudo nix store gc
+              sudo nix optimize
+            '';          
         };
       };
 
