@@ -66,7 +66,7 @@
             ''
               nix store gc -v
               nix store optimise
-            '';          
+            '';
         };
       };
 
