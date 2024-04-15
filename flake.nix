@@ -74,6 +74,7 @@
         # All home-manager configurations are kept here.
         homeModules = {
           common = import ./modules/home/common.nix;
+          develop = import ./modules/home/develop.nix;
         };
 
         # All nixOS modules are kept here

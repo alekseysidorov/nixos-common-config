@@ -1,0 +1,20 @@
+# Development stuff
+{ pkgs, ... }: {
+
+  # Common develop nixos/nix-darwin configuration shared between Linux and macOS
+  home.packages = with pkgs.unstable; [
+    # Rust
+    cargo-criterion
+    cargo-deny
+    cargo-machete
+    cargo-makedocs
+    cargo-nextest
+    cargo-watch
+    criterion-table
+    markdownlint-cli
+    mask
+    shellcheck
+    taplo
+  ];
+
+}

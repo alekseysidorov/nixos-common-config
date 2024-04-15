@@ -28,26 +28,16 @@
     cachix
 
     # Rust
-    cargo-criterion
-    cargo-deny
-    cargo-machete
-    cargo-makedocs
-    cargo-nextest
-    cargo-watch
-    criterion-table
     dprint
     just
-    markdownlint-cli
-    mask
     rustup
     sccache
-    shellcheck
-    taplo
 
     # Useful utilites
     bat
     ripgrep
     xh
+    pwgen
 
     # Cleanup all git repos
     (writeShellApplication {
