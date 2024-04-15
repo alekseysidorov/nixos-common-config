@@ -1,4 +1,4 @@
-# Development stuff
+# Extra development stuff
 { pkgs, ... }: {
 
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
@@ -16,5 +16,4 @@
     shellcheck
     taplo
   ];
-
 }
