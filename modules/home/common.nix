@@ -109,7 +109,7 @@
   };
 
   programs.nushell = {
-    package = pkgs.unstable.nushell;
+    package = pkgs.unstable.nushellFull;
     extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
   };
 }
