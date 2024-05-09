@@ -103,22 +103,6 @@ let
         mkdir -p $dev $lib
         mv $out/include $dev/include
         mv $out/lib $lib/lib
-
-        # python bindings
-        # NB: use the original setup.py.in, so we can substitute VERSION correctly
-        cp ../LICENSE ./bindings/python
-        substitute ../bindings/python/setup.py.in ./bindings/python/setup.py \
-          --replace 'VERSION' "${version}"
-        rm -f ./bindings/python/setup.py.* ./bindings/python/CMakeLists.txt
-        rm -f ./bindings/python/fdb/*.pth # remove useless files
-        rm -f ./bindings/python/*.rst ./bindings/python/*.mk
-
-        cp -R ./bindings/python/                          tmp-pythonsrc/
-        tar -zcf $pythonsrc --transform s/tmp-pythonsrc/python-foundationdb/ ./tmp-pythonsrc/
-
-        # java bindings
-        mkdir -p $lib/share/java
-        mv lib/fdb-java-*.jar $lib/share/java/fdb-java.jar
       '';
 
       outputs = [ "out" "dev" "lib" ];
