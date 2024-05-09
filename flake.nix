@@ -4,8 +4,8 @@
   inputs = {
     # Default to unstable, but you may override it by using the 
     # `nixos-common-config.inputs.nixpkgs.follows = "your-own-nixpkgs"`
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # `nixos-common-config` dependencies.

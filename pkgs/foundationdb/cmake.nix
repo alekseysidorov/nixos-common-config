@@ -20,7 +20,8 @@
 }:
 
 let
-  stdenv = if useClang then llvmPackages.libcxxStdenv else gccStdenv;
+  # stdenv = if useClang then llvmPackages.libcxxStdenv else gccStdenv;
+  dylib_suffix = stdenv.hostPlatform.extensions.sharedLibrary;
 
   # Only even numbered versions compile on aarch64; odd numbered versions have avx enabled.
   avxEnabled = version:
@@ -52,14 +53,12 @@ let
         ++ lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.Foundation ]
       ;
 
-      nativeBuildInputs = [ pkg-config cmake ninja python3 openjdk8 mono ]
-        ++ lib.optionals useClang [ llvmPackages.lld ];
+      nativeBuildInputs = [ pkg-config cmake ninja python3 openjdk8 mono ];
 
       separateDebugInfo = true;
       dontFixCmake = false;
 
-      cmakeFlags =
-        [
+      cmakeFlags = [
           (lib.optionalString officialRelease "-DFDB_RELEASE=TRUE")
 
           # Disable CMake warnings for project developers.
@@ -72,16 +71,10 @@ let
           # FoundationDB's CMake is hardcoded to pull in jemalloc as an external
           # project at build time.
           "-DUSE_JEMALLOC=FALSE"
-
-          # # LTO brings up overall build time, but results in much smaller
-          # # binaries for all users and the cache.
-          # (lib.optionalString (!useClang) "-DUSE_LTO=ON")
-
-          # # Gold helps alleviate the link time, especially when LTO is
-          # # enabled. But even then, it still takes a majority of the time.
-          # # Same with LLD when Clang is available.
-          # (lib.optionalString useClang "-DUSE_LD=LLD")
-          # (lib.optionalString (!useClang) "-DUSE_LD=GOLD")
+          # FIXME: why can't openssl be found automatically?
+          "-DOPENSSL_USE_STATIC_LIBS=FALSE"
+          "-DOPENSSL_CRYPTO_LIBRARY=${ssl.out}/lib/libcrypto${dylib_suffix}"
+          "-DOPENSSL_SSL_LIBRARY=${ssl.out}/lib/libssl${dylib_suffix}"
         ];
 
       hardeningDisable = [ "fortify" ];
@@ -91,8 +84,6 @@ let
         "-Wno-error=missing-template-keyword"
         # Needed to compile on aarch64
         (lib.optionalString stdenv.isAarch64 "-march=armv8-a+crc")
-        
-        # "-DHAS_ALIGNED_ALLOC"
       ];
 
       inherit patches;
