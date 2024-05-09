@@ -20,7 +20,7 @@
 }:
 
 let
-  # stdenv = if useClang then llvmPackages.libcxxStdenv else gccStdenv;
+  stdenv = if useClang then llvmPackages.libcxxStdenv else gccStdenv;
   dylib_suffix = stdenv.hostPlatform.extensions.sharedLibrary;
 
   # Only even numbered versions compile on aarch64; odd numbered versions have avx enabled.
