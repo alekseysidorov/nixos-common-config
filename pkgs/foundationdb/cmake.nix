@@ -81,7 +81,7 @@ let
 
       env.NIX_CFLAGS_COMPILE = toString [
         # Needed with GCC 12
-        "-Wno-error=missing-template-keyword"
+        "-Wno-missing-template-keyword"
         # Needed to compile on aarch64
         (lib.optionalString stdenv.isAarch64 "-march=armv8-a+crc")
       ];
@@ -103,6 +103,10 @@ let
         mkdir -p $dev $lib
         mv $out/include $dev/include
         mv $out/lib $lib/lib
+
+        # java bindings
+        mkdir -p $lib/share/java
+        mv lib/fdb-java-*.jar $lib/share/java/fdb-java.jar
       '';
 
       outputs = [ "out" "dev" "lib" ];
