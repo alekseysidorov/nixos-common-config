@@ -36,7 +36,6 @@
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = [
             pkgs.nixpkgs-fmt
-            (pkgs.callPackage ./pkgs/foundationdb { }).foundationdb73
           ];
         };
 
