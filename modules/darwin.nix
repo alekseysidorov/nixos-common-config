@@ -14,6 +14,7 @@
     # Docker
     colima
     docker
+    skopeo
     # nerdctl wrapper without `colima nerdctl install`
     (writeShellApplication {
       name = "nerdctl";
