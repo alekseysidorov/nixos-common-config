@@ -78,6 +78,7 @@
         homeModules = {
           common = import ./modules/home/common.nix;
           develop = import ./modules/home/develop.nix;
+          docker = import ./modules/home/docker.nix;
         };
 
         # All nixOS modules are kept here
