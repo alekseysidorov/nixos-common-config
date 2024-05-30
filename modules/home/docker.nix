@@ -1,13 +1,9 @@
 # Fixes against evil corporations.
 #
 # https://huecker.io
-{ ... }: 
+{ config, ... }: 
 {
-  home.file."~/.config/docker/daemon.json".text = builtins.toJSON {
-    registry-mirrors = [
-      # "https://huecker.io"
-      # Let's try to use google mirror.
-      "https://mirror.gcr.io"
-    ];
+  home.file."${config.xdg.configHome}/docker/daemon.json" = {
+    source = ./assets/daemon.json;
   };
 }
