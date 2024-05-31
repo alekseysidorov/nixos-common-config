@@ -77,24 +77,27 @@
               nix store optimise
             '';
         };
+      })
+    # Add system independent modules.
+    // {
+      overlays.default = import ./overlay.nix {
+        nixpkgs-unstable = nixpkgs-unstable;
+        config.allowUnfree = true;
+      };
 
-        overlays.default = import ./overlay.nix {
-          nixpkgs-unstable = nixpkgs-unstable;
-          config.allowUnfree = true;
+      # All nixOS modules are kept here
+      nixosModules = {
+        # All home-manager configurations are kept here.
+        homeModules = {
+          common = import ./modules/home/common.nix;
+          develop = import ./modules/home/develop.nix;
         };
 
-        # All nixOS modules are kept here
-        nixosModules = {
-          # All home-manager configurations are kept here.
-          homeModules = {
-            common = import ./modules/home/common.nix;
-            develop = import ./modules/home/develop.nix;
-          };
-
-          common = import ./modules/common.nix;
-          linux = import ./modules/linux.nix;
-          darwin = import ./modules/darwin.nix;
-          pipewire = import ./modules/pipewire.nix;
-        };
-      });
+        common = import ./modules/common.nix;
+        linux = import ./modules/linux.nix;
+        darwin = import ./modules/darwin.nix;
+        pipewire = import ./modules/pipewire.nix;
+      };
+    }
+  ;
 }
