@@ -55,11 +55,14 @@
             '';
 
           # Activate system scripts like in flake-parts
-          activate-home = pkgs.writeShellScriptBin "activate.sh"
-            ''
+          activate-home = pkgs.writeShellApplication {
+            name = "activate-home";
+            runtimeInputs = with pkgs; [ home-manager ];
+            text = ''
               home-manager switch --flake . -L
               sudo -i nix upgrade-nix
             '';
+          };
 
           activate-darwin = pkgs.writeShellScriptBin "activate.sh"
             ''
@@ -98,7 +101,6 @@
         common = import ./modules/home/common.nix;
         develop = import ./modules/home/develop.nix;
       };
-
     }
   ;
 }
