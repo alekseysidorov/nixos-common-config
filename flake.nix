@@ -87,17 +87,18 @@
 
       # All nixOS modules are kept here
       nixosModules = {
-        # All home-manager configurations are kept here.
-        homeModules = {
-          common = import ./modules/home/common.nix;
-          develop = import ./modules/home/develop.nix;
-        };
-
         common = import ./modules/common.nix;
         linux = import ./modules/linux.nix;
         darwin = import ./modules/darwin.nix;
         pipewire = import ./modules/pipewire.nix;
       };
+
+      # All home-manager configurations are kept here.
+      homeModules = {
+        common = import ./modules/home/common.nix;
+        develop = import ./modules/home/develop.nix;
+      };
+
     }
   ;
 }
