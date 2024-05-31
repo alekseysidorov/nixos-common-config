@@ -8,38 +8,44 @@
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # `nixos-common-config` dependencies.
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-        inputs.treefmt-nix.flakeModule
-      ];
-
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
-      perSystem = { self', system, pkgs, lib, config, inputs', ... }: {
-        treefmt.config = {
+  outputs =
+    { self
+    , nixpkgs
+    , nixpkgs-unstable
+    , flake-utils
+    , treefmt-nix
+    }: flake-utils.lib.eachDefaultSystem
+      (system:
+      let
+        # Setup nixpkgs.
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+        # Eval the treefmt modules from ./treefmt.nix
+        treefmtConfig = {
           projectRootFile = "flake.nix";
           programs.nixpkgs-fmt.enable = true;
         };
+        treefmt = (treefmt-nix.lib.evalModule pkgs treefmtConfig).config.build;
+      in
+      {
+        # for `nix fmt`
+        formatter = treefmt.wrapper;
+        # for `nix flake check`
+        checks.formatting = treefmt.check self;
 
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = [
             pkgs.nixpkgs-fmt
           ];
         };
-
-        formatter = config.treefmt.build.wrapper;
 
         # Additional subcommands to maintain home-manager setups.
         packages = {
@@ -71,14 +77,15 @@
               nix store optimise
             '';
         };
-      };
 
-      flake = {
+        overlays.default = import ./overlay.nix {
+          nixpkgs-unstable = nixpkgs-unstable;
+          config.allowUnfree = true;
+        };
         # All home-manager configurations are kept here.
         homeModules = {
           common = import ./modules/home/common.nix;
           develop = import ./modules/home/develop.nix;
-          docker = import ./modules/home/docker.nix;
         };
 
         # All nixOS modules are kept here
@@ -88,11 +95,5 @@
           darwin = import ./modules/darwin.nix;
           pipewire = import ./modules/pipewire.nix;
         };
-
-        overlays.default = import ./overlay.nix {
-          nixpkgs-unstable = inputs.nixpkgs-unstable;
-          config.allowUnfree = true;
-        };
-      };
-    };
+      });
 }
