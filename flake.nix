@@ -81,7 +81,7 @@
             '';
         };
       })
-    # Add system independent modules.
+    # System independent modules.
     // {
       overlays.default = import ./overlay.nix {
         nixpkgs-unstable = nixpkgs-unstable;

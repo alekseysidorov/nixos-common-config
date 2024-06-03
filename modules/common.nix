@@ -4,6 +4,7 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     trusted-users = [ "root" "@wheel" ];
+    allow-import-from-derivation = true;
   };
 
   # Some common tweaks for nix packages
