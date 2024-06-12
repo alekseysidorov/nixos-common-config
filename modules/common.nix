@@ -23,9 +23,9 @@
   programs = {
     zsh = {
       enable = true;
+      syntaxHighlighting.enable = true;
       enableCompletion = true;
       enableBashCompletion = true;
-      enableSyntaxHighlighting = true;
     };
 
     bash = {
@@ -35,7 +35,7 @@
 
   fonts = {
     fontDir.enable = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       hack-font
       ubuntu_font_family
       jetbrains-mono

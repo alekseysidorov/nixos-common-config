@@ -28,8 +28,8 @@ in
   };
   # My favorite keyboard layout
   services.xserver = {
-    layout = lib.mkDefault "us,ru";
-    xkbOptions = lib.mkDefault "grp:caps_toggle";
+    xkb.layout = lib.mkDefault "us,ru";
+    xkb.options = lib.mkDefault "grp:caps_toggle";
   };
 
   # Some basic packages
