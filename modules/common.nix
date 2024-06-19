@@ -34,8 +34,7 @@
   };
 
   fonts = {
-    fontDir.enable = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       hack-font
       ubuntu_font_family
       jetbrains-mono
