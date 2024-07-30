@@ -38,5 +38,5 @@ format = "[$virtualenv]($style) "
 style = "bright-black"
 
 [env_var]
-variable = 'STARSHIP_ENV_NAME'
+variable = 'PROMPT_NAME'
 format = "[($env_value)]($style)"
