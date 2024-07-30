@@ -37,6 +37,5 @@ style = "yellow"
 format = "[$virtualenv]($style) "
 style = "bright-black"
 
-[env_var.ENV_NAME]
-variable = 'ENV_NAME'
-default = ""
+[env_var.STARSHIP_ENV_NAME]
+variable = 'STARSHIP_ENV_NAME'
