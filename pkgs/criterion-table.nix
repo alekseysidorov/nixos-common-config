@@ -2,15 +2,14 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "criterion-table";
-  version = "0.2.2";
+  version = "0.4.2";
 
   src = fetchCrate {
     inherit pname version;
-    sha256 = "sha256-Rq0GG8dEBx93F7cE8KvAU9BStgeNZWtKMRF8jLMQEes=";
+    sha256 = "sha256-JWJUIgpXCsafWNDnDPC975wQUO0Fb3nUTYmG63jNCiQ=";
   };
 
-
-  cargoSha256 = "sha256-L3bvKs/1mf3wtKV9WQS7UM1JMyWa6mj7FGjgJQFJTio=";
+  cargoHash = "sha256-92SzUhLuFviIdPt0pfinEQtrDo9MdFQptSJRWPe8qt4=";
   # Doctests fails with an error "doctest failed, to rerun pass `--doc`"
   doCheck = false;
 
