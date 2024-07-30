@@ -7,12 +7,10 @@
     cargo-criterion
     cargo-deny
     cargo-machete
-    cargo-makedocs
     cargo-nextest
     cargo-watch
     criterion-table
     markdownlint-cli
-    mask
     shellcheck
     taplo
   ];
