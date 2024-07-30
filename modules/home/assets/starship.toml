@@ -38,4 +38,4 @@ format = "[$virtualenv]($style) "
 style = "bright-black"
 
 [nix_shell]
-format = '\[[$symbol$state( \($name\))]($style)\]'
+format = 'via [☃️ $state( \($name\))](bold blue) '
