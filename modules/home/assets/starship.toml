@@ -37,5 +37,6 @@ style = "yellow"
 format = "[$virtualenv]($style) "
 style = "bright-black"
 
-# [nix_shell]
-# format = 'via [$symbol $state( \($name\))](bold blue) '
+[env_var.ENV_NAME]
+variable = 'ENV_NAME'
+default = ""
