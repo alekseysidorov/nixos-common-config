@@ -2,10 +2,10 @@
 { pkgs, ... }: {
   # security.pam.enableSudoTouchIdAuth = true;
 
-  # Nix configuration parameters
-  nix = {
-    package = pkgs.nix;
-  };
+  # # Nix configuration parameters
+  # nix = {
+  #   package = pkgs.nix;
+  # };
 
   # Macos specific virtualization 
   # TODO Rewrite closer to NixOS virtualization support
