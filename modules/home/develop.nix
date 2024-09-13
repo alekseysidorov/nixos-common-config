@@ -13,5 +13,6 @@
     markdownlint-cli
     shellcheck
     taplo
+    typos
   ];
 }
