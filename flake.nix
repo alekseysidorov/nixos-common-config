@@ -82,7 +82,8 @@
 
           cleanup = pkgs.writeShellScriptBin "activate.sh"
             ''
-              nix store gc -v
+              sudo nix store gc -vv
+              nix store gc -vv
               nix store optimise
             '';
         };
