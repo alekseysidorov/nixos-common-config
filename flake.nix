@@ -33,11 +33,7 @@
           ];
         };
         # Eval the treefmt modules from ./treefmt.nix
-        treefmtConfig = {
-          projectRootFile = "flake.nix";
-          programs.nixpkgs-fmt.enable = true;
-        };
-        treefmt = (treefmt-nix.lib.evalModule pkgs treefmtConfig).config.build;
+        treefmt = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build;
       in
       {
         # for `nix fmt`

@@ -2,7 +2,8 @@ final: prev:
 
 {
   criterion-table = prev.callPackage ./criterion-table.nix { };
-    zed-editor = prev.buildFHSUserEnv {
+
+  zed-editor-fhs = prev.buildFHSUserEnv {
     name = "zed";
     targetPkgs = prev:
       with prev; [
