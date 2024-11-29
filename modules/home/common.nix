@@ -48,7 +48,7 @@
       ];
       text = ''
         REPOS=$(find "$1" -type d -exec test -d {}/.git \; -prune -print)
-        for REPO in $REPOS 
+        for REPO in $REPOS
         do
           echo "Cleaning $REPO"
           cd "$REPO"
@@ -92,7 +92,7 @@
 
   programs.bash = {
     enable = true;
-    enableCompletion = true;
+    completion.enable = true;
   };
 
   programs.vim = {
