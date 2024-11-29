@@ -38,6 +38,7 @@
       hack-font
       ubuntu_font_family
       jetbrains-mono
+      fira-code-nerdfont
     ];
   };
 }
