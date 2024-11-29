@@ -2,10 +2,7 @@
   description = "Common parts of Nixos configuration";
 
   inputs = {
-    # Default to unstable, but you may override it by using the 
-    # `nixos-common-config.inputs.nixpkgs.follows = "your-own-nixpkgs"`
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     treefmt-nix = {
