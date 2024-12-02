@@ -17,37 +17,36 @@
   ];
 
   # Common zed editor configuration
-    zed-editor = {
-      userSettings = lib.mkMerge {
-        ui_font_size = 15;
-        buffer_font_size = 13;
-        terminal.shell.program = "nu";
-        # theme = "Fleet Dark";
-        theme = "siri";
+  programs.zed-editor = {
+    userSettings = lib.mkMerge {
+      ui_font_size = 15;
+      buffer_font_size = 13;
+      terminal.shell.program = "nu";
+      # theme = "Fleet Dark";
+      theme = "siri";
 
-        lsp = {
-          nil.settings = {
-            formatting.command = "nixpkgs-fmt";
-            flake = {
-              autoArchive = true;
-              autoEvalInputs = true;
-              nixpkgsInputsName = "nixpkgs";
-            };
+      lsp = {
+        nil.settings = {
+          formatting.command = "nixpkgs-fmt";
+          flake = {
+            autoArchive = true;
+            autoEvalInputs = true;
+            nixpkgsInputsName = "nixpkgs";
           };
         };
       };
-
-      extensions = [
-        "cargo-appraiser"
-        "cargo-tom"
-        "dockerfile"
-        "fleet-themes"
-        "github-dark-default"
-        "nix"
-        "nu"
-        "markdown-oxide"
-        "siri"
-      ];
     };
 
+    extensions = [
+      "cargo-appraiser"
+      "cargo-tom"
+      "dockerfile"
+      "fleet-themes"
+      "github-dark-default"
+      "nix"
+      "nu"
+      "markdown-oxide"
+      "siri"
+    ];
+  };
 }
