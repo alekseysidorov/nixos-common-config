@@ -115,16 +115,15 @@
 
   # Common zed editor configuration
   programs.zed-editor = {
-    userSettings = lib.mkMerge {
-      ui_font_size = 15;
-      buffer_font_size = 13;
-      terminal.shell.program = "nu";
-      # theme = "Fleet Dark";
-      theme = "siri";
+    userSettings = lib.mkMerge [{
+      ui_font_size = lib.mkDefault 15;
+      buffer_font_size = lib.mkDefault 13;
+      terminal.shell.program = lib.mkDefault "nu";
+      theme = lib.mkDefault "Fleet Dark";
 
       lsp = {
         nil.settings = {
-          formatting.command = "nixpkgs-fmt";
+          formatting.command = ["nixpkgs-fmt"];
           flake = {
             autoArchive = true;
             autoEvalInputs = true;
@@ -132,7 +131,7 @@
           };
         };
       };
-    };
+    }];
 
     extensions = [
       "cargo-appraiser"
