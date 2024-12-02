@@ -134,7 +134,6 @@
     }];
 
     extensions = [
-      "cargo-appraiser"
       "cargo-tom"
       "dockerfile"
       "fleet-themes"
