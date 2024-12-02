@@ -18,7 +18,7 @@
 
   # Common zed editor configuration
     zed-editor = {
-      userSettings = lib.mkDefault {
+      userSettings = lib.mkMerge {
         ui_font_size = 15;
         buffer_font_size = 13;
         terminal.shell.program = "nu";
