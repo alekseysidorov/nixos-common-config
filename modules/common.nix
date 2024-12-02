@@ -29,7 +29,7 @@
     };
 
     bash = {
-      enableCompletion = true;
+      completion.enable = true;
     };
   };
 
