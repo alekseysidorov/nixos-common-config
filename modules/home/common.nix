@@ -123,7 +123,7 @@
 
       lsp = {
         nil.settings = {
-          formatting.command = ["nixpkgs-fmt"];
+          formatting.command = [ "nixpkgs-fmt" ];
           flake = {
             autoArchive = true;
             autoEvalInputs = true;

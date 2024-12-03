@@ -1,14 +1,16 @@
 final: prev:
 
+let
+  isLinux = prev.stdenv.targetPlatform.isLinux;
+in
 {
   criterion-table = prev.callPackage ./criterion-table.nix { };
-
-  zed-editor-fhs = prev.buildFHSUserEnv {
-    name = "zed";
-    targetPkgs = prev:
-      with prev; [
-        zed-editor
-      ];
-    runScript = "zed";
-  };
+  # Special case for Zed on linux
+  zed-editor =
+    if isLinux then
+      prev.zed-editor.fhsWithPackages
+        (pkgs:
+          with pkgs; [ zlib openssl ]
+        )
+    else prev.zed-editor;
 }
