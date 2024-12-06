@@ -1,7 +1,7 @@
 # Linux specific configuration
 { pkgs, flake, lib, ... }:
 let
-  nixPath = "/tmp/nixPath";
+  nixPath = "/tmp/nixpkgs";
 in
 {
   imports = [
