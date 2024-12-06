@@ -5,7 +5,7 @@ let
 in
 {
   imports = [
-    flake.inputs.vscode-server.nixosModules.default
+    flake.vscode-server.nixosModules.default
   ];
 
   # Setup nix paths for the nix-channel, we can use unstable branch.
