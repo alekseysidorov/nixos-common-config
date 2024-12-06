@@ -13,7 +13,7 @@
     overlays = [
       (
         import ./../overlay.nix {
-          nixpkgs-unstable = flake.inputs.nixpkgs-unstable;
+          nixpkgs-unstable = flake.nixpkgs-unstable;
           config.allowUnfree = true;
         }
       )

@@ -1,7 +1,7 @@
 # Linux specific configuration
 { pkgs, flake, lib, ... }:
 let
-  nixPath = "/etc/nixpkgs/channels";
+  nixPath = "/tmp/nixPath";
 in
 {
   imports = [
@@ -9,12 +9,12 @@ in
   ];
 
   # Setup nix paths for the nix-channel, we can use unstable branch.
-  systemd.tmpfiles.rules = [
-    "L+ ${nixPath} - - - - ${pkgs.unstable.path}"
-  ];
   nix = {
     nixPath = [ "nixpkgs=${nixPath}" ];
   };
+  systemd.tmpfiles.rules = [
+    "L+ ${nixPath} - - - - ${pkgs.unstable.path}"
+  ];
 
   # Select internationalisation properties.
   i18n = {
