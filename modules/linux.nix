@@ -1,11 +1,11 @@
 # Linux specific configuration
-{ pkgs, flake, lib, ... }:
+{ pkgs, inputs, lib, ... }:
 let
   nixPath = "/tmp/nixpkgs";
 in
 {
   imports = [
-    flake.vscode-server.nixosModules.default
+    inputs.vscode-server.nixosModules.default
   ];
 
   # Setup nix paths for the nix-channel, we can use unstable branch.
