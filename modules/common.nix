@@ -23,7 +23,7 @@
   programs = {
     zsh = {
       enable = true;
-      enableCompletion = true;
+      completion.enable = true;
       enableBashCompletion = true;
       enableSyntaxHighlighting = true;
     };
