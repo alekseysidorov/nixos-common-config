@@ -112,36 +112,4 @@
     package = pkgs.unstable.nushell;
     extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
   };
-
-  # Common zed editor configuration
-  programs.zed-editor = {
-    userSettings = lib.mkMerge [{
-      ui_font_size = lib.mkDefault 15;
-      buffer_font_size = lib.mkDefault 13;
-      terminal.shell.program = lib.mkDefault "nu";
-      theme = lib.mkDefault "Fleet Dark";
-
-      lsp = {
-        nil.settings = {
-          formatting.command = [ "nixpkgs-fmt" ];
-          flake = {
-            autoArchive = true;
-            autoEvalInputs = true;
-            nixpkgsInputsName = "nixpkgs";
-          };
-        };
-      };
-    }];
-
-    extensions = [
-      "cargo-tom"
-      "dockerfile"
-      "fleet-themes"
-      "github-dark-default"
-      "nix"
-      "nu"
-      "markdown-oxide"
-      "siri"
-    ];
-  };
 }
