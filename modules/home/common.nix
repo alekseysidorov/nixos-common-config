@@ -97,7 +97,6 @@
 
   programs.vim = {
     enable = true;
-
     extraConfig = builtins.readFile ./assets/vimrc;
   };
 
