@@ -9,7 +9,7 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-JWJUIgpXCsafWNDnDPC975wQUO0Fb3nUTYmG63jNCiQ=";
   };
 
-  cargoHash = "sha256-92SzUhLuFviIdPt0pfinEQtrDo9MdFQptSJRWPe8qt4=";
+  cargoHash = "sha256-4g8iaf/cNOnkRO1nOrZNgr7NZo25pQeN7QCDqSPM0sE=";
   # Doctests fails with an error "doctest failed, to rerun pass `--doc`"
   doCheck = false;
 
