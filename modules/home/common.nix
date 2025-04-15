@@ -12,11 +12,11 @@
     userEmail = lib.mkDefault "sauron1987@gmail.com";
 
     extraConfig = lib.mkMerge [{
-      alias.cln = "!git clean -dxf -e \"/.vscode\" -e \".idea\"";
+      alias.cln = "!git clean -dxf -e \"/.vscode\" -e \".idea\" -e \".zed\" -e \".private\"";
       alias.sweep-branches = "!git fetch -p && for branch in $(git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == \"[gone]\" {sub(\"refs/heads/\", \"\", $1); print $1}'); do git branch -D $branch; done";
 
-      # Some settings from this article 
-      # 
+      # Some settings from this article
+      #
       # https://habr.com/en/articles/886538/
       push = {
         autoSetupRemote = true;
@@ -68,6 +68,7 @@
     ripgrep
     xh
     pwgen
+    git-credential-manager
 
     # Cleanup all git repos
     (writeShellApplication {
