@@ -37,7 +37,6 @@
     packages = with pkgs; [
       corefonts
       emojione
-      fira-code-nerdfont
       hack-font
       ipafont
       jetbrains-mono
