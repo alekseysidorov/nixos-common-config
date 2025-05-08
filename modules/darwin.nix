@@ -17,6 +17,4 @@
       text = ''colima nerdctl -- "$@"'';
     })
   ];
-
-  programs.fish.enable = true;
 }

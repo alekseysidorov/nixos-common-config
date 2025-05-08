@@ -7,6 +7,9 @@
     allow-import-from-derivation = true;
   };
 
+  programs.fish.enable = true;
+  programs.zsh.enable = true;
+
   # Some common tweaks for nix packages
   nixpkgs = {
     config.allowUnfree = true;
