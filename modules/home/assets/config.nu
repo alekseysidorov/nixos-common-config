@@ -1,10 +1,7 @@
 let fish_completer = {|spans|
-    fish --command $"complete '--do-complete=($spans | str join ' ')'"
-    | from tsv --flexible --noheaders --no-infer
-    | rename value description
-    | update value {
-        if ($in | path exists) {$'"($in | str replace "\"" "\\\"" )"'} else {$in}
-    }
+    fish --command $'complete "--do-complete=($spans | str join " ")"'
+    | $"value(char tab)description(char newline)" + $in
+    | from tsv --flexible --no-infer
 }
 
 let carapace_completer = {|spans|
@@ -26,7 +23,7 @@ let external_completer = {|spans|
     }
 
     match $spans.0 {
-        nix => $fish_completer
+        git => $carapace_completer
         _ => $fish_completer
     } | do $in $spans
 }
@@ -41,7 +38,7 @@ $env.config = {
     completions: {
         external: {
             enable: true
-            completer: $external_completer
+            completer: $fish_completer
         }
     }
 
