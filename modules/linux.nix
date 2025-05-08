@@ -1,19 +1,8 @@
 # Linux specific configuration
 { pkgs, inputs, lib, ... }:
-let
-  nixPath = "/tmp/nixpkgs";
-in
 {
   imports = [
     inputs.vscode-server.nixosModules.default
-  ];
-
-  # Setup nix paths for the nix-channel, we can use unstable branch.
-  nix = {
-    nixPath = [ "nixpkgs=${nixPath}" ];
-  };
-  systemd.tmpfiles.rules = [
-    "L+ ${nixPath} - - - - ${pkgs.unstable.path}"
   ];
 
   # Select internationalisation properties.

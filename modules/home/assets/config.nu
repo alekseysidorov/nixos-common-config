@@ -4,6 +4,30 @@ let fish_completer = {|spans|
     | from tsv --flexible --no-infer
 }
 
+let carapace_completer = {|spans|
+    carapace $spans.0 nushell ...$spans | from json
+}
+
+# This completer will use carapace by default
+let external_completer = {|spans|
+    let expanded_alias = scope aliases
+    | where name == $spans.0
+    | get -i 0.expansion
+
+    let spans = if $expanded_alias != null {
+        $spans
+        | skip 1
+        | prepend ($expanded_alias | split row ' ' | take 1)
+    } else {
+        $spans
+    }
+
+    match $spans.0 {
+        nu => $carapace_completer
+        _ => $fish_completer
+    } | do $in $spans
+}
+
 let menu_style = {
     text: white_bold                     # Text style
     selected_text: white_reverse         # Text style for selected option
@@ -14,7 +38,7 @@ $env.config = {
     completions: {
         external: {
             enable: true
-            completer: $fish_completer
+            completer: $external_completer
         }
     }
 

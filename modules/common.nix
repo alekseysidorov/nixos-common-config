@@ -34,7 +34,7 @@
   };
 
   fonts = {
-    packages = with pkgs; [
+    packages = with pkgs.unstable; [
       corefonts
       emojione
       hack-font

@@ -69,6 +69,7 @@
     xh
     pwgen
     git-credential-manager
+    carapace
 
     # Cleanup all git repos
     (writeShellApplication {
@@ -84,6 +85,23 @@
           echo "Cleaning $REPO"
           cd "$REPO"
           git cln
+        done
+      '';
+    })
+    # Sweep all stale branches in all projects
+    (writeShellApplication {
+      name = "git-sweep-all";
+      runtimeInputs = [
+        git
+        coreutils
+      ];
+      text = ''
+        REPOS=$(find "$1" -type d -exec test -d {}/.git \; -prune -print)
+        for REPO in $REPOS
+        do
+          echo "Cleaning $REPO"
+          cd "$REPO"
+          git sweep-branches
         done
       '';
     })
@@ -117,7 +135,6 @@
         "direnv"
         "git"
       ];
-      theme = lib.mkDefault "af-magic";
     };
   };
 
@@ -136,6 +153,10 @@
     nix-direnv = {
       enable = true;
     };
+  };
+
+  programs.fish = {
+    enable = true;
   };
 
   programs.nushell = {
