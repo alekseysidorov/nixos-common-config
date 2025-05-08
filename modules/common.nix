@@ -33,23 +33,14 @@
     };
   };
 
+  # Common fonts
   fonts = {
     packages = with pkgs.unstable; [
-      corefonts
-      emojione
       hack-font
-      ipafont
       jetbrains-mono
-      kanji-stroke-order-font
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
       nerd-fonts.inconsolata
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      roboto
-      roboto-serif
-      roboto-slab
       source-code-pro
       ubuntu_font_family
     ];
