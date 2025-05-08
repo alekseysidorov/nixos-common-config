@@ -55,7 +55,7 @@
     nil
     nixd
     nixpkgs-fmt
-    cachix
+    pkgs.cachix
 
     # Rust
     dprint
