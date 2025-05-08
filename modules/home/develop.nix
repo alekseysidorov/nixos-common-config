@@ -8,7 +8,10 @@
     cargo-deny
     cargo-machete
     cargo-nextest
+    cargo-release
+    cargo-semver-checks
     cargo-watch
+    cargo-workspaces
     criterion-table
     markdownlint-cli
     shellcheck
