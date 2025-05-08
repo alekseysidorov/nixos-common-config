@@ -20,19 +20,6 @@
     ];
   };
 
-  programs = {
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      enableBashCompletion = true;
-      enableSyntaxHighlighting = true;
-    };
-
-    bash = {
-      completion.enable = true;
-    };
-  };
-
   # Common fonts
   fonts = {
     packages = with pkgs.unstable; [
