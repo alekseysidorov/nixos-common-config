@@ -26,7 +26,7 @@ let external_completer = {|spans|
     }
 
     match $spans.0 {
-        nix => $carapace_completer
+        nix => $fish_completer
         _ => $fish_completer
     } | do $in $spans
 }
