@@ -8,7 +8,7 @@
   # Select internationalisation properties.
   i18n = {
     defaultLocale = lib.mkDefault "ru_RU.UTF-8";
-    supportedLocales = lib.mkDefault [ "all" ];
+    extraLocales = lib.mkDefault [ "all" ];
   };
   # Use same config for linux console
   console = {
