@@ -2,7 +2,7 @@
 { pkgs, ... }: {
 
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
-  home.packages = with pkgs; [
+  home.packages = with pkgs.unstable; [
     # Rust
     cargo-criterion
     cargo-deny
