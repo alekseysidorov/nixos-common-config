@@ -65,11 +65,13 @@
 
           activate-darwin = pkgs.writeShellScriptBin "activate.sh"
             ''
+              darwin-rebuild build --flake . -L
               sudo darwin-rebuild switch --flake . -L
             '';
 
           activate-nixos = pkgs.writeShellScriptBin "activate.sh"
             ''
+              nixos-rebuild build --flake . -L
               sudo nixos-rebuild switch --flake . -L
             '';
 
