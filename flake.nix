@@ -2,7 +2,7 @@
   description = "Common parts of Nixos configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     treefmt-nix = {
@@ -65,12 +65,12 @@
 
           activate-darwin = pkgs.writeShellScriptBin "activate.sh"
             ''
-              darwin-rebuild switch --flake . -L
+              sudo darwin-rebuild switch --flake . -L
             '';
 
           activate-nixos = pkgs.writeShellScriptBin "activate.sh"
             ''
-              nixos-rebuild switch --flake . -L --use-remote-sudo
+              sudo nixos-rebuild switch --flake . -L
             '';
 
           cleanup = pkgs.writeShellScriptBin "activate.sh"
