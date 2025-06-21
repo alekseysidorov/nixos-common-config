@@ -5,7 +5,9 @@
     experimental-features = [ "nix-command" "flakes" ];
     trusted-users = [ "root" "@wheel" ];
     allow-import-from-derivation = true;
-    auto-optimise-store = true;
+  };
+  nix.optimise = {
+    automatic = true;
   };
 
   programs.fish.enable = true;
