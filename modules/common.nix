@@ -5,6 +5,7 @@
     experimental-features = [ "nix-command" "flakes" ];
     trusted-users = [ "root" "@wheel" ];
     allow-import-from-derivation = true;
+    auto-optimise-store = true;
   };
 
   programs.fish.enable = true;
@@ -30,6 +31,8 @@
       jetbrains-mono
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
+      nerd-fonts.zed-mono
+      nerd-fonts.roboto-mono
       nerd-fonts.inconsolata
       source-code-pro
       ubuntu_font_family
