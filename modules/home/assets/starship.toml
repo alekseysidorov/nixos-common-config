@@ -39,4 +39,5 @@ style = "bright-black"
 
 [env_var]
 variable = 'PROMPT_NAME'
+style = "purple"
 format = "[($env_value)]($style)"
