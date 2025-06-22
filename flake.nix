@@ -54,6 +54,8 @@
               rustup
               nushell
             ];
+
+            env.PROMPT_NAME = "devshell/rust";
           };
         };
 
