@@ -38,12 +38,23 @@
         # for `nix flake check`
         checks.formatting = treefmt.check self;
 
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = [
-            pkgs.nixpkgs-fmt
-            # check packages
-            pkgs.criterion-table
-          ];
+        devShells = {
+          default = pkgs.mkShell {
+            nativeBuildInputs = [
+              pkgs.nixpkgs-fmt
+              # check packages
+              pkgs.criterion-table
+            ];
+          };
+          # Minimal shell for Rust development.
+          rust = pkgs.mkShell {
+            nativeBuildInputs = with pkgs; [
+              pkgconf
+              openssl
+              rustup
+              nushell
+            ];
+          };
         };
 
         # Additional subcommands to maintain home-manager setups.
