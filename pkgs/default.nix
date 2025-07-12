@@ -1,4 +1,5 @@
 final: prev:
 {
-  criterion-table = prev.callPackage ./criterion-table.nix { };
+  criterion-table = final.callPackage ./criterion-table.nix { };
+  serial-monitor = final.callPackage ./serial-monitor.nix { };
 }

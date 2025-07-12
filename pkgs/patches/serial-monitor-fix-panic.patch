@@ -1,0 +1,13 @@
+diff --git a/src/string_decoder.rs b/src/string_decoder.rs
+index a38a434..b8e9f17 100644
+--- a/src/string_decoder.rs
++++ b/src/string_decoder.rs
+@@ -55,7 +55,7 @@ impl Decoder for StringDecoder {
+                 let (ref mut index, ref mut buf) = self.incomplete;
+
+                 // Index is always less than 4, because of below.
+-                buf[*index] = src.split_off(1)[0];
++                buf[*index] = src.split_off(1).get(0).cloned().unwrap_or_default();
+                 *index += 1;
+
+                 // Check if char is valid

@@ -44,6 +44,7 @@
               pkgs.nixpkgs-fmt
               # check packages
               pkgs.criterion-table
+              pkgs.serial-monitor
             ];
           };
           # Minimal shell for Rust development.
@@ -52,6 +53,7 @@
               pkgconf
               openssl
               rustup
+              systemd
               nushell
             ];
 
