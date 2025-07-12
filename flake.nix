@@ -74,7 +74,6 @@
             runtimeInputs = with pkgs; [ home-manager ];
             text = ''
               home-manager switch --flake . -L
-              sudo -i nix upgrade-nix
             '';
           };
 

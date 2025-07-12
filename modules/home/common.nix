@@ -114,7 +114,7 @@
 
   # Popular extra paths.
   # TODO Implement home-manager module to manage cargo home configuration.
-  home.sessionPath = [
+  home.sessionPath = lib.mkDefault [
     "$HOME/.cargo/bin" # For packages installed by Cargo
   ];
 
@@ -155,11 +155,6 @@
     };
   };
 
-  programs.fish = {
-    enable = true;
-  };
-
-  programs.nushell = {
-    extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
-  };
+  programs.fish.enable = true;
+  programs.nushell.extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
 }
