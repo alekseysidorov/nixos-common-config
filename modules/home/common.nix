@@ -70,6 +70,8 @@
     "$HOME/.cargo/bin" # For packages installed by Cargo
   ];
 
+  home.shell.enableShellIntegration = true;
+
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
