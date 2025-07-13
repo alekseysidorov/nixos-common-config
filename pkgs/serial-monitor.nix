@@ -22,7 +22,7 @@ rustPlatform.buildRustPackage rec {
   buildInputs = [ systemd ];
 
   meta = with lib; {
-    description = "Serial port monitor libuevCLI utility";
+    description = "Cross platform command line serial terminal program.";
     homepage = "https://crates.io/crates/serial-monitor";
     license = licenses.mit;
     maintainers = with maintainers; [ alekseysidorov ];

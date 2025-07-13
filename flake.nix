@@ -45,6 +45,7 @@
               # check packages
               pkgs.criterion-table
               pkgs.serial-monitor
+              pkgs.serial-console
             ];
           };
           # Minimal shell for Rust development.
@@ -76,6 +77,8 @@
               home-manager switch --flake . -L
             '';
           };
+
+          serial-console = pkgs.serial-console;
 
           activate-darwin = pkgs.writeShellScriptBin "activate.sh"
             ''
