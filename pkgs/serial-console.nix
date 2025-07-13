@@ -3,6 +3,7 @@
 , fetchCrate
 , pkgconf
 , systemd
+, stdenv
 , ...
 
 }:
@@ -18,13 +19,13 @@ rustPlatform.buildRustPackage rec {
   cargoHash = "sha256-diMH0ZWD0XVxdsrf63at50qvcTsKaLhPRg64UjZ/FYk=";
 
   nativeBuildInputs = [ pkgconf ];
-  buildInputs = [ systemd ];
+  buildInputs = lib.optionals stdenv.isLinux [ systemd ];
 
   meta = with lib; {
     description = "Serial console CLI utility";
-    homepage = "Cross platform command line serial terminal program.";
+    homepage = "https://crates.io/crates/serial-console";
     license = licenses.mit;
     maintainers = with maintainers; [ alekseysidorov ];
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 }

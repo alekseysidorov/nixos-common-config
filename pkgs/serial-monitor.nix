@@ -1,31 +1,34 @@
 { lib
 , rustPlatform
-, fetchCrate
+, fetchFromGitHub
 , pkgconf
 , systemd
+, stdenv
 , ...
 }:
 
-rustPlatform.buildRustPackage rec {
+rustPlatform.buildRustPackage {
   pname = "serial-monitor";
-  version = "0.0.7";
+  version = "unstable-20250712";
 
-  src = fetchCrate {
-    inherit pname version;
-    sha256 = "sha256-66NY9os7xEYnBDodHT9XZiYZfJ2ZzcFECADgvS2kEOw=";
+  src = fetchFromGitHub {
+    owner = "dhylands";
+    repo = "serial-monitor";
+    rev = "a43047e55b8069a482370cf3d8cc9f1a822075dc";
+    sha256 = "sha256-m9CKBlCQTBMG+95YthLzllSNkKT1/6UxjwET2fujawU=";
   };
-  cargoHash = "sha256-f0QSbP7+x5tHJyIJ07VcfRHDET1CBZ9N3fMgY09CFI8=";
+  cargoHash = "sha256-BXtrHKK+G/5Hni9Rfpxj3nKlRVabyKDiZiDKpulSX4w=";
 
-  patches = [ ./patches/serial-monitor-fix-panic.patch ];
+  patches = [ ./patches/fix-unwrap-or-default.patch ];
 
   nativeBuildInputs = [ pkgconf ];
-  buildInputs = [ systemd ];
+  buildInputs = lib.optionals stdenv.isLinux [ systemd ];
 
   meta = with lib; {
     description = "Cross platform command line serial terminal program.";
     homepage = "https://crates.io/crates/serial-monitor";
     license = licenses.mit;
     maintainers = with maintainers; [ alekseysidorov ];
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 }
