@@ -1,13 +1,15 @@
 # Common nixos/nix-darwin configuration shared between Linux and macOS
 { pkgs, inputs, ... }: {
   # Flakes
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    trusted-users = [ "root" "@wheel" ];
-    allow-import-from-derivation = true;
-  };
-  nix.optimise = {
-    automatic = true;
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "@wheel" ];
+      allow-import-from-derivation = true;
+    };
+    optimise = {
+      automatic = true;
+    };
   };
 
   programs.fish.enable = true;

@@ -6,9 +6,7 @@
   ];
 
   # Select internationalisation properties.
-  i18n = {
-    defaultLocale = lib.mkDefault "ru_RU.UTF-8";
-  };
+  i18n.defaultLocale = lib.mkDefault "ru_RU.UTF-8";
   # Use same config for linux console
   console = {
     useXkbConfig = lib.mkDefault true;
@@ -41,18 +39,16 @@
   };
 
   # Some linux specific fonts
-  fonts = {
-    packages = with pkgs.unstable; [
-      corefonts
-      emojione
-      ipafont
-      kanji-stroke-order-font
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      roboto
-      roboto-serif
-      roboto-slab
-    ];
-  };
+  fonts.packages = with pkgs.unstable; [
+    corefonts
+    emojione
+    ipafont
+    kanji-stroke-order-font
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+    roboto
+    roboto-serif
+    roboto-slab
+  ];
 }

@@ -67,7 +67,6 @@
             ''
               nix flake update
             '';
-
           # Activate system scripts like in flake-parts
           activate-home = pkgs.writeShellApplication {
             name = "activate-home";
@@ -76,25 +75,17 @@
               home-manager switch --flake . -L
             '';
           };
-
-
-
-          activate-darwin = pkgs.writeShellScriptBin "activate.sh"
-            ''
-              sudo darwin-rebuild switch --flake . -L
-            '';
-
-          activate-nixos = pkgs.writeShellScriptBin "activate.sh"
-            ''
-              sudo nixos-rebuild switch --flake . -L
-            '';
-
-          cleanup = pkgs.writeShellScriptBin "activate.sh"
-            ''
-              sudo nix store gc -vv
-              nix store gc -vv
-              nix store optimise
-            '';
+          activate-darwin = pkgs.writeShellScriptBin "activate.sh" ''
+            sudo darwin-rebuild switch --flake . -L
+          '';
+          activate-nixos = pkgs.writeShellScriptBin "activate.sh" ''
+            sudo nixos-rebuild switch --flake . -L
+          '';
+          cleanup = pkgs.writeShellScriptBin "cleanup.sh" ''
+            sudo nix store gc -vv
+            nix store gc -vv
+            nix store optimise
+          '';
         };
       })
     # System independent modules.
