@@ -9,7 +9,8 @@
     cargo-machete
     cargo-nextest
     cargo-release
-    cargo-semver-checks
+    # Unstable version are broken.
+    pkgs.cargo-semver-checks
     cargo-watch
     cargo-workspaces
     criterion-table
