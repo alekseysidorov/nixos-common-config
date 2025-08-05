@@ -127,8 +127,11 @@
 
       # All home-manager configurations are kept here.
       homeModules = {
+        all = import ./modules/home;
         common = import ./modules/home/common.nix;
         develop = import ./modules/home/develop.nix;
+        shell = import ./modules/home/shell.nix;
+        git = import ./modules/home/git.nix;
       };
     }
   ;
