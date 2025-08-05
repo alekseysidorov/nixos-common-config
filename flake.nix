@@ -82,7 +82,7 @@
             name = "activate-darwin";
             runtimeInputs = [ ];
             text = ''
-              darwin-rebuild --flake . -L switch
+              sudo darwin-rebuild --flake . -L switch
             '';
           };
           activate-nixos = pkgs.writeShellApplication {
