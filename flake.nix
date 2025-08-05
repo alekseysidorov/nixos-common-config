@@ -63,29 +63,44 @@
 
         # Additional subcommands to maintain home-manager setups.
         packages = {
-          update = pkgs.writeShellScriptBin "update.sh"
-            ''
+          update = pkgs.writeShellApplication {
+            name = "update";
+            runtimeInputs = with pkgs; [ nix ];
+            text = ''
               nix flake update
             '';
+          };
           # Activate system scripts like in flake-parts
           activate-home = pkgs.writeShellApplication {
             name = "activate-home";
             runtimeInputs = with pkgs; [ home-manager ];
             text = ''
-              home-manager switch --flake . -L
+              home-manager --flake . -L switch
             '';
           };
-          activate-darwin = pkgs.writeShellScriptBin "activate.sh" ''
-            sudo darwin-rebuild switch --flake . -L
-          '';
-          activate-nixos = pkgs.writeShellScriptBin "activate.sh" ''
-            sudo nixos-rebuild switch --flake . -L
-          '';
-          cleanup = pkgs.writeShellScriptBin "cleanup.sh" ''
-            sudo nix store gc -vv
-            nix store gc -vv
-            nix store optimise
-          '';
+          activate-darwin = pkgs.writeShellApplication {
+            name = "activate-darwin";
+            runtimeInputs = [ ];
+            text = ''
+              darwin-rebuild --flake . -L switch
+            '';
+          };
+          activate-nixos = pkgs.writeShellApplication {
+            name = "activate-nixos";
+            runtimeInputs = with pkgs; [ nixos-rebuild-ng ];
+            text = ''
+              nixos-rebuild-ng --flake .# -L switch --sudo
+            '';
+          };
+          cleanup = pkgs.writeShellApplication {
+            name = "cleanup";
+            runtimeInputs = with pkgs; [ nix ];
+            text = ''
+              sudo nix store gc -vv
+              nix store gc -vv
+              nix store optimise
+            '';
+          };
         };
       })
     # System independent modules.
@@ -101,6 +116,7 @@
         linux = import ./modules/linux.nix;
         darwin = import ./modules/darwin.nix;
         pipewire = import ./modules/pipewire.nix;
+        overlays = import ./modules/overlays.nix;
       };
 
       # All home-manager configurations are kept here.
