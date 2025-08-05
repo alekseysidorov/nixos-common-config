@@ -5,6 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,6 +21,7 @@
     { self
     , nixpkgs
     , nixpkgs-unstable
+    , nix-darwin
     , flake-utils
     , treefmt-nix
     }: flake-utils.lib.eachDefaultSystem
@@ -80,9 +86,9 @@
           };
           activate-darwin = pkgs.writeShellApplication {
             name = "activate-darwin";
-            runtimeInputs = [ ];
+            runtimeInputs = [ nix-darwin.packages.${system}.darwin-rebuild ];
             text = ''
-              sudo darwin-rebuild --flake . -L switch
+              sudo darwin-rebuild switch --flake . -L
             '';
           };
           activate-nixos = pkgs.writeShellApplication {

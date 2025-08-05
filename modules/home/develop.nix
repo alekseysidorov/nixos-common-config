@@ -1,5 +1,5 @@
 # Extra development stuff
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
 
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
   home.packages = with pkgs.unstable; [
