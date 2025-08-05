@@ -17,7 +17,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # Common fonts
-  fonts.packages = with pkgs.unstable; [
+  fonts.packages = with pkgs; [
     hack-font
     jetbrains-mono
     nerd-fonts.fira-code
