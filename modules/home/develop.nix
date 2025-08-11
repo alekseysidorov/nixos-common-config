@@ -35,7 +35,6 @@
 
   home.sessionVariables = lib.mkMerge [{
     RUSTC_WRAPPER = "sccache";
-    EDITOR = "vim";
   }];
 
   # Popular extra paths.

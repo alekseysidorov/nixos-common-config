@@ -1,19 +1,14 @@
 # Common home-manager configuration shared between Linux and macOS
-{ pkgs, lib, ... }:
+{ lib, pkgs, ... }:
 {
+  # Useful utilites
   home.packages = with pkgs; [
-    # Useful utilites
     bat
     ripgrep
     pwgen
   ];
 
-  home.sessionVariables = lib.mkMerge [{
-    EDITOR = "vim";
-  }];
-
   programs.vim = {
-    enable = true;
-    extraConfig = builtins.readFile ./assets/vimrc;
+    extraConfig = lib.mkDefault builtins.readFile ./assets/vimrc;
   };
 }
