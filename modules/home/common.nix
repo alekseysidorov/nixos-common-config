@@ -9,6 +9,6 @@
   ];
 
   programs.vim = {
-    extraConfig = lib.mkDefault builtins.readFile ./assets/vimrc;
+    extraConfig = lib.mkDefault (builtins.readFile ./assets/vimrc);
   };
 }
