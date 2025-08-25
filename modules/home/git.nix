@@ -80,7 +80,6 @@
       };
 
       pull.rebase = "true";
-
     }];
   };
 }

@@ -9,8 +9,6 @@
     cargo-machete
     cargo-nextest
     cargo-release
-    # Unstable version are broken.
-    pkgs.cargo-semver-checks
     cargo-watch
     cargo-workspaces
     criterion-table
@@ -22,13 +20,11 @@
     just
     rustup
     sccache
-
     # Nix extensions
     nil
     nixd
     nixpkgs-fmt
     cachix
-
     # Useful utilites
     xh
   ];
