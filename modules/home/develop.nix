@@ -16,7 +16,7 @@
     shellcheck
     taplo
     typos
-    dprint
+    pkgs.dprint
     just
     rustup
     sccache
