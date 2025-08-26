@@ -123,6 +123,7 @@
         darwin = import ./modules/darwin.nix;
         pipewire = import ./modules/pipewire.nix;
         overlays = import ./modules/overlays.nix;
+        guitarix = import ./modules/guitarix.nix;
       };
 
       # All home-manager configurations are kept here.
