@@ -27,5 +27,11 @@
     nerd-fonts.inconsolata
     source-code-pro
     ubuntu_font_family
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    inter
+    roboto
+    roboto-mono
   ];
 }
