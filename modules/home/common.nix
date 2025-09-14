@@ -6,6 +6,7 @@
     bat
     ripgrep
     pwgen
+    jq
   ];
 
   programs.vim = {
