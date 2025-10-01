@@ -16,7 +16,7 @@
     shellcheck
     taplo
     typos
-    pkgs.dprint
+    dprint
     just
     rustup
     sccache
@@ -24,7 +24,10 @@
     nil
     nixd
     nixpkgs-fmt
+    nixos-rebuild-ng
     cachix
+    devenv
+    attic-client
     # Useful utilites
     xh
   ];
