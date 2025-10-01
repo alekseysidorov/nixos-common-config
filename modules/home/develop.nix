@@ -24,7 +24,6 @@
     nil
     nixd
     nixpkgs-fmt
-    nixos-rebuild-ng
     cachix
     devenv
     attic-client
