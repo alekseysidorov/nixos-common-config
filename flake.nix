@@ -45,12 +45,13 @@
         checks.formatting = treefmt.check self;
 
         devShells = {
-          default = pkgs.mkShell {
-            nativeBuildInputs = [
-              pkgs.nixpkgs-fmt
-              # check packages
-              pkgs.criterion-table
-              pkgs.serial-monitor
+          default = with pkgs; mkShell {
+            buildInputs = [
+              nixpkgs-fmt
+              criterion-table
+              serial-monitor
+              mod-host
+              lilv
             ];
           };
           # Minimal shell for Rust development.

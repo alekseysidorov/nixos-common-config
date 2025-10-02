@@ -3,6 +3,7 @@
 ### Nix files
 **/result
 **/.direnv/
+**/tmp
 
 ### MacOS files
 *.DS_Store
