@@ -120,7 +120,9 @@
       # All nixOS modules are kept here
       nixosModules = {
         common = import ./modules/common.nix;
-        linux = import ./modules/linux.nix;
+        i18n = import ./modules/i18n.nix;
+        fonts = import ./modules/fonts.nix;
+        desktop = import ./modules/desktop.nix;
         darwin = import ./modules/darwin.nix;
         pipewire = import ./modules/pipewire.nix;
         overlays = import ./modules/overlays.nix;
