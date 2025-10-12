@@ -2,12 +2,12 @@
 
 {
   nixpkgs.overlays = [
-    (
-      import ./../overlay.nix {
-        nixpkgs-unstable = inputs.nixpkgs-unstable;
-        # TODO Make it configurable
-        config.allowUnfree = true;
-      }
-    )
+    (import ./../pkgs)
+    # Unstable overlay to get the latest versions of some packages.
+    (final: prev: {
+      unstable = import inputs.nixpkgs-unstable {
+        inherit (prev) system config overlays;
+      };
+    })
   ];
 }

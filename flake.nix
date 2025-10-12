@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-25.05";
@@ -20,7 +19,6 @@
   outputs =
     { self
     , nixpkgs
-    , nixpkgs-unstable
     , nix-darwin
     , flake-utils
     , treefmt-nix
@@ -30,7 +28,6 @@
         # Setup nixpkgs.
         pkgs = import nixpkgs {
           inherit system;
-
           overlays = [
             (import ./pkgs)
           ];
@@ -62,6 +59,8 @@
               rustup
               systemd
               nushell
+              python3
+              rustPlatform.bindgenHook
             ];
 
             env.PROMPT_NAME = "devshell/rust";
@@ -112,23 +111,20 @@
       })
     # System independent modules.
     // {
-      overlays.default = import ./overlay.nix {
-        nixpkgs-unstable = nixpkgs-unstable;
-        config.allowUnfree = true;
-      };
-
       # All nixOS modules are kept here
       nixosModules = {
-        common = import ./modules/common.nix;
+        core = import ./modules/core.nix;
         i18n = import ./modules/i18n.nix;
         fonts = import ./modules/fonts.nix;
         desktop = import ./modules/desktop.nix;
-        darwin = import ./modules/darwin.nix;
         pipewire = import ./modules/pipewire.nix;
         overlays = import ./modules/overlays.nix;
         guitarix = import ./modules/guitarix.nix;
       };
-
+      # All nix-darwin modules are kept here
+      darwinModules = {
+        core = import ./modules/darwin.nix;
+      };
       # All home-manager configurations are kept here.
       homeModules = {
         all = import ./modules/home;
