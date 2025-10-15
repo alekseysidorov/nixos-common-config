@@ -1,10 +1,6 @@
 # Linux specific configuration
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
-  imports = [
-    inputs.vscode-server.nixosModules.default
-  ];
-
   # Some basic packages
   environment.systemPackages = with pkgs; [
     wget
@@ -20,10 +16,7 @@
     vulkan-tools
   ];
 
-  services = {
-    openssh.enable = true;
-    vscode-server.enable = true;
-  };
+  services.openssh.enable = true;
 
   # Some linux specific fonts
   fonts.packages = with pkgs.unstable; [
