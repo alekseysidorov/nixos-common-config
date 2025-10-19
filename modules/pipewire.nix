@@ -1,6 +1,9 @@
 { ... }:
 
 {
+  # Tune real-time scheduling for low-latency audio.
+  boot.kernel.sysctl."kernel.sched_rt_runtime_us" = -1;
+
   services.pulseaudio.enable = false;
   # rtkit is optional but recommended
   security.rtkit.enable = true;
