@@ -123,7 +123,6 @@
         i18n = import ./modules/i18n.nix;
         fonts = import ./modules/fonts.nix;
         desktop = import ./modules/desktop.nix;
-        pipewire = import ./modules/pipewire.nix;
         overlays = import ./modules/overlays.nix;
         guitarix = import ./modules/guitarix.nix;
       };
