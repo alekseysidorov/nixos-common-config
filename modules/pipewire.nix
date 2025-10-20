@@ -24,6 +24,13 @@
         "default.clock.min-quantum" = 32;
         "default.clock.max-quantum" = 32;
       };
+
+      "context.rt" = {
+        "rt.prio" = 95;
+        "rt.time.soft" = 200000;
+        "rt.time.hard" = 200000;
+        "nice.level" = -15;
+      };
     };
   };
 }
