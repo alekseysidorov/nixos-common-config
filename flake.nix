@@ -51,6 +51,7 @@
               lilv
             ];
           };
+
           # Minimal shell for Rust development.
           rust = pkgs.mkShell {
             nativeBuildInputs = with pkgs; [
@@ -68,7 +69,7 @@
         };
 
         # Additional subcommands to maintain home-manager setups.
-        packages = {
+        packages = rec {
           update = pkgs.writeShellApplication {
             name = "update";
             runtimeInputs = with pkgs; [ nix ];
@@ -98,6 +99,11 @@
               nixos-rebuild-ng --flake .# -L switch --sudo
             '';
           };
+
+          activate =
+            if system == "aarch64-darwin"
+            then activate-darwin
+            else activate-nixos;
           cleanup = pkgs.writeShellApplication {
             name = "cleanup";
             runtimeInputs = with pkgs; [ nix ];
