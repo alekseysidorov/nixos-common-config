@@ -4,25 +4,12 @@
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
   home.packages = with pkgs.unstable; [
     # Rust
-    cargo-criterion
-    cargo-deny
-    cargo-machete
-    cargo-nextest
-    cargo-watch
-    cargo-workspaces
-    markdownlint-cli
-    shellcheck
-    taplo
-    typos
-    dprint
-    just
     rustup
     sccache
     # Nix extensions
     nil
     nixd
     nixpkgs-fmt
-    cachix
     devenv
     attic-client
     # Useful utilites
