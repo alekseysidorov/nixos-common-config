@@ -122,7 +122,6 @@
         core = import ./modules/core.nix;
         i18n = import ./modules/i18n.nix;
         fonts = import ./modules/fonts.nix;
-        desktop = import ./modules/desktop.nix;
         overlays = import ./modules/overlays.nix;
         guitarix = import ./modules/guitarix.nix;
       };
@@ -133,7 +132,7 @@
       # All home-manager configurations are kept here.
       homeModules = {
         all = import ./modules/home;
-        common = import ./modules/home/common.nix;
+        core = import ./modules/home/core.nix;
         develop = import ./modules/home/develop.nix;
         shell = import ./modules/home/shell.nix;
         git = import ./modules/home/git.nix;

@@ -1,4 +1,4 @@
-# Extra development stuff
+# Common development stuff for nixos and nix-darwin
 { pkgs, lib, ... }: {
 
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
@@ -8,10 +8,8 @@
     cargo-deny
     cargo-machete
     cargo-nextest
-    cargo-release
     cargo-watch
     cargo-workspaces
-    criterion-table
     markdownlint-cli
     shellcheck
     taplo

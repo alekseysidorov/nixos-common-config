@@ -2,7 +2,7 @@
 { ... }:
 {
   imports = [
-    ./common.nix
+    ./core.nix
     ./develop.nix
     ./shell.nix
     ./git.nix
