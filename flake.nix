@@ -119,15 +119,7 @@
     // {
       # All nixOS modules are kept here
       nixosModules = {
-        core = import ./modules/core.nix;
-        i18n = import ./modules/i18n.nix;
-        fonts = import ./modules/fonts.nix;
         overlays = import ./modules/overlays.nix;
-        guitarix = import ./modules/guitarix.nix;
-      };
-      # All nix-darwin modules are kept here
-      darwinModules = {
-        core = import ./modules/darwin.nix;
       };
       # All home-manager configurations are kept here.
       homeModules = {
