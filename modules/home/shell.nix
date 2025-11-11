@@ -15,7 +15,10 @@
 
     fish.enable = true;
 
-    nushell.extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
+    nushell = {
+      enable = true;
+      extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
+    };
 
     zsh = {
       enable = true;
