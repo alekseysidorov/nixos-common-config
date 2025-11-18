@@ -7,7 +7,6 @@
     ripgrep
     pwgen
     jq
-    vim
   ];
 
   programs.vim = {
