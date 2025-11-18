@@ -11,10 +11,9 @@
   ];
 
   programs.vim = {
+    enable = true;
+    package = pkgs.vim;
+    defaultEditor = true;
     extraConfig = lib.mkDefault (builtins.readFile ./assets/vimrc);
   };
-
-  home.sessionVariables = lib.mkMerge [{
-    EDITOR = "vim";
-  }];
 }
