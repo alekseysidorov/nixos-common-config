@@ -12,7 +12,6 @@
 
   programs.vim = {
     enable = true;
-    package = pkgs.vim;
     defaultEditor = true;
     extraConfig = lib.mkDefault (builtins.readFile ./assets/vimrc);
   };
