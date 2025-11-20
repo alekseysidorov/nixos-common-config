@@ -1,5 +1,5 @@
 # Shell configuration
-{ lib, pkgs, ... }: {
+{ lib, ... }: {
   home.shell.enableShellIntegration = true;
 
   programs = {
@@ -17,7 +17,6 @@
 
     nushell = {
       enable = true;
-      package = pkgs.unstable.nushell;
       extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
     };
 
