@@ -14,6 +14,9 @@
     attic-client
     # Useful utilites
     xh
+    # Gitlab tools
+    gitlab-ci-ls
+    gitlab-ci-linter
   ];
 
   home.sessionVariables = lib.mkMerge [{
