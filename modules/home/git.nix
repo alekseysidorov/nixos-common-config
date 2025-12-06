@@ -43,10 +43,12 @@
     enable = true;
     lfs.enable = true;
 
-    userName = lib.mkDefault "Aleksey Sidorov";
-    userEmail = lib.mkDefault "sauron1987@gmail.com";
+    settings = lib.mkMerge [{
+      # Default user info
+      user.name = "Aleksey Sidorov";
+      user.email = "sauron1987@gmail.com";
 
-    extraConfig = lib.mkMerge [{
+      # Common aliases
       alias.cln = "!git clean -dxf -e \"/.vscode\" -e \".idea\" -e \".zed\" -e \".private\"";
       alias.sweep-branches = "!git fetch -p && for branch in $(git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == \"[gone]\" {sub(\"refs/heads/\", \"\", $1); print $1}'); do git branch -D $branch; done";
 
