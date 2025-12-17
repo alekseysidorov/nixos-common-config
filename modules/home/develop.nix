@@ -4,7 +4,7 @@
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
   home.packages = with pkgs.unstable; [
     # Rust
-    rustup
+    pkgs.rustup
     sccache
     # Nix extensions
     nil
