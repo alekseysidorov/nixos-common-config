@@ -47,7 +47,6 @@
               nixpkgs-fmt
               criterion-table
               serial-monitor
-              mod-host
               lilv
             ];
           };
