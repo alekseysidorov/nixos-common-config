@@ -22,98 +22,103 @@
     , nix-darwin
     , flake-utils
     , treefmt-nix
-    }: flake-utils.lib.eachDefaultSystem
-      (system:
-      let
-        # Setup nixpkgs.
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [
-            (import ./pkgs)
-          ];
-        };
-        # Eval the treefmt modules from ./treefmt.nix
-        treefmt = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build;
-      in
-      {
-        # for `nix fmt`
-        formatter = treefmt.wrapper;
-        # for `nix flake check`
-        checks.formatting = treefmt.check self;
-
-        devShells = {
-          default = with pkgs; mkShell {
-            buildInputs = [
-              nixpkgs-fmt
-              criterion-table
-              serial-monitor
-              lilv
+    ,
+    }:
+    flake-utils.lib.eachDefaultSystem
+      (
+        system:
+        let
+          # Setup nixpkgs.
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              (import ./pkgs)
             ];
           };
+          # Eval the treefmt modules from ./treefmt.nix
+          treefmt = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build;
+        in
+        {
+          # for `nix fmt`
+          formatter = treefmt.wrapper;
+          # for `nix flake check`
+          checks.formatting = treefmt.check self;
 
-          # Minimal shell for Rust development.
-          rust = pkgs.mkShell {
-            nativeBuildInputs = with pkgs; [
-              pkgconf
-              openssl
-              rustup
-              systemd
-              nushell
-              python3
-              rustPlatform.bindgenHook
-            ];
+          devShells = {
+            default =
+              with pkgs;
+              mkShell {
+                buildInputs = [
+                  nixpkgs-fmt
+                  criterion-table
+                  serial-monitor
+                  lilv
+                ];
+              };
 
-            env.PROMPT_NAME = "devshell/rust";
-          };
-        };
+            # Minimal shell for Rust development.
+            rust = pkgs.mkShell {
+              nativeBuildInputs = with pkgs; [
+                pkgconf
+                openssl
+                rustup
+                systemd
+                nushell
+                python3
+                rustPlatform.bindgenHook
+              ];
 
-        # Additional subcommands to maintain home-manager setups.
-        packages = rec {
-          update = pkgs.writeShellApplication {
-            name = "update";
-            runtimeInputs = with pkgs; [ nix ];
-            text = ''
-              nix flake update
-            '';
-          };
-          # Activate system scripts like in flake-parts
-          activate-home = pkgs.writeShellApplication {
-            name = "activate-home";
-            runtimeInputs = with pkgs; [ home-manager ];
-            text = ''
-              home-manager --flake . -L switch
-            '';
-          };
-          activate-darwin = pkgs.writeShellApplication {
-            name = "activate-darwin";
-            runtimeInputs = [ nix-darwin.packages.${system}.darwin-rebuild ];
-            text = ''
-              sudo darwin-rebuild switch --flake ".#''${1:-}"  -L
-            '';
-          };
-          activate-nixos = pkgs.writeShellApplication {
-            name = "activate-nixos";
-            runtimeInputs = with pkgs; [ nixos-rebuild-ng ];
-            text = ''
-              nixos-rebuild-ng --flake .# -L switch --sudo
-            '';
+              env.PROMPT_NAME = "devshell/rust";
+            };
           };
 
-          activate =
-            if system == "aarch64-darwin"
-            then activate-darwin
-            else activate-nixos;
-          cleanup = pkgs.writeShellApplication {
-            name = "cleanup";
-            runtimeInputs = with pkgs; [ nix ];
-            text = ''
-              sudo nix store gc -vv
-              nix store gc -vv
-              nix store optimise
-            '';
+          # Additional subcommands to maintain home-manager setups.
+          packages = rec {
+            update = pkgs.writeShellApplication {
+              name = "update";
+              runtimeInputs = with pkgs; [ nix ];
+              text = ''
+                nix flake update
+              '';
+            };
+            # Activate system scripts like in flake-parts
+            activate-home = pkgs.writeShellApplication {
+              name = "activate-home";
+              runtimeInputs = with pkgs; [ home-manager ];
+              text = ''
+                home-manager --flake . -L switch
+              '';
+            };
+            activate-darwin = pkgs.writeShellApplication {
+              name = "activate-darwin";
+              runtimeInputs = [
+                pkgs.nix
+                nix-darwin.packages.${system}.darwin-rebuild
+              ];
+              text = ''
+                sudo darwin-rebuild switch --flake ".#''${1:-}"  -L
+              '';
+            };
+            activate-nixos = pkgs.writeShellApplication {
+              name = "activate-nixos";
+              text = ''
+                nixos-rebuild --flake .# -L switch --sudo
+              '';
+            };
+
+            activate = if system == "aarch64-darwin" then activate-darwin else activate-nixos;
+            cleanup = pkgs.writeShellApplication {
+              name = "cleanup";
+              runtimeInputs = with pkgs; [ nix ];
+              text = ''
+                sudo nix store gc -vv
+                nix store gc -vv
+                nix store optimise
+              '';
+            };
           };
-        };
-      })
+        }
+      )
     # System independent modules.
     // {
       # All nixOS modules are kept here
@@ -128,6 +133,5 @@
         shell = import ./modules/home/shell.nix;
         git = import ./modules/home/git.nix;
       };
-    }
-  ;
+    };
 }
