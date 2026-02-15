@@ -1,5 +1,6 @@
 # Shell configuration
-{ lib, ... }: {
+{ lib, ... }:
+{
   home.shell.enableShellIntegration = true;
 
   programs = {

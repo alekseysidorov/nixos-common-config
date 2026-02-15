@@ -1,5 +1,6 @@
 # Common development stuff for nixos and nix-darwin
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
 
   # Common develop nixos/nix-darwin configuration shared between Linux and macOS
   home.packages = with pkgs.unstable; [
@@ -9,7 +10,7 @@
     # Nix extensions
     nil
     nixd
-    nixpkgs-fmt
+    nixfmt
     devenv
     attic-client
     # Useful utilites
@@ -19,9 +20,11 @@
     gitlab-ci-linter
   ];
 
-  home.sessionVariables = lib.mkMerge [{
-    RUSTC_WRAPPER = "sccache";
-  }];
+  home.sessionVariables = lib.mkMerge [
+    {
+      RUSTC_WRAPPER = "sccache";
+    }
+  ];
 
   # Popular extra paths.
   # TODO Implement home-manager module to manage cargo home configuration.
