@@ -132,5 +132,10 @@
         shell = import ./modules/home/shell.nix;
         git = import ./modules/home/git.nix;
       };
+      # All nix-darwin modules are kept here
+      darwinModules = {
+        all = import ./modules/darwin;
+        ollama = import ./modules/darwin/ollama.nix;
+      };
     };
 }

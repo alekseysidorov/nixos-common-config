@@ -13,7 +13,7 @@
     nixfmt
     devenv
     attic-client
-    # Useful utilites
+    # Useful utilities
     xh
     # Gitlab tools
     gitlab-ci-ls

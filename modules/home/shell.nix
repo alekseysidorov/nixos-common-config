@@ -6,7 +6,7 @@
   programs = {
     starship = {
       enable = true;
-      settings = lib.mkDefault (builtins.fromTOML (builtins.readFile ./assets/starship.toml));
+      settings = lib.mkDefault (fromTOML (builtins.readFile ./assets/starship.toml));
     };
 
     bash = {
