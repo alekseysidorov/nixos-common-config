@@ -1,4 +1,4 @@
-# Extra nix-darwin modules
+# Additional nix-darwin modules
 { ... }:
 
 {

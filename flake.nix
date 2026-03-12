@@ -1,5 +1,5 @@
 {
-  description = "Common parts of Nixos configuration";
+  description = "Common parts of NixOS configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
@@ -27,20 +27,20 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        # Setup nixpkgs.
+        # Set up nixpkgs.
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
             (import ./pkgs)
           ];
         };
-        # Eval the treefmt modules from ./treefmt.nix
+        # Evaluate the treefmt modules from ./treefmt.nix
         treefmt = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build;
       in
       {
-        # for `nix fmt`
+        # For `nix fmt`
         formatter = treefmt.wrapper;
-        # for `nix flake check`
+        # For `nix flake check`
         checks.formatting = treefmt.check self;
 
         devShells = {
@@ -71,7 +71,7 @@
           };
         };
 
-        # Additional subcommands to maintain home-manager setups.
+        # Additional subcommands for managing home-manager setups.
         packages = rec {
           update = pkgs.writeShellApplication {
             name = "update";
@@ -80,7 +80,7 @@
               nix flake update
             '';
           };
-          # Activate system scripts like in flake-parts
+          # Activate system scripts, similar to flake-parts
           activate-home = pkgs.writeShellApplication {
             name = "activate-home";
             runtimeInputs = with pkgs; [ home-manager ];
@@ -118,13 +118,13 @@
         };
       }
     )
-    # System independent modules.
+    # System-independent modules.
     // {
-      # All nixOS modules are kept here
+      # All NixOS modules are defined here
       nixosModules = {
         overlays = import ./modules/overlays.nix;
       };
-      # All home-manager configurations are kept here.
+      # All home-manager configurations are defined here.
       homeModules = {
         all = import ./modules/home;
         core = import ./modules/home/core.nix;
@@ -132,7 +132,7 @@
         shell = import ./modules/home/shell.nix;
         git = import ./modules/home/git.nix;
       };
-      # All nix-darwin modules are kept here
+      # All nix-darwin modules are defined here
       darwinModules = {
         all = import ./modules/darwin;
         ollama = import ./modules/darwin/ollama.nix;

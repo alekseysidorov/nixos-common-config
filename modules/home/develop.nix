@@ -1,21 +1,21 @@
-# Common development stuff for nixos and nix-darwin
+# Common development configuration for NixOS and nix-darwin
 { pkgs, lib, ... }:
 {
 
-  # Common develop nixos/nix-darwin configuration shared between Linux and macOS
+  # Shared development configuration for Linux and macOS
   home.packages = with pkgs.unstable; [
-    # Rust
+    # Rust toolchain and related tooling
     pkgs.rustup
     sccache
-    # Nix extensions
+    # Nix tooling and extensions
     nil
     nixd
     nixfmt
     devenv
     attic-client
-    # Useful utilities
+    # Utilities
     xh
-    # Gitlab tools
+    # GitLab tools
     gitlab-ci-ls
     gitlab-ci-linter
   ];
@@ -26,8 +26,8 @@
     }
   ];
 
-  # Popular extra paths.
-  # TODO Implement home-manager module to manage cargo home configuration.
+  # Common additional paths
+  # TODO: Implement a home-manager module to manage Cargo home configuration.
   home.sessionPath = lib.mkDefault [
     "$HOME/.cargo/bin" # For packages installed by Cargo
   ];

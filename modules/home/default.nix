@@ -1,4 +1,4 @@
-# Complete home configuration for desktop
+# Complete Home Manager configuration for desktop systems
 { ... }:
 {
   imports = [

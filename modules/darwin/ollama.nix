@@ -1,4 +1,4 @@
-# src: https://github.com/nix-darwin/nix-darwin/pull/972
+# Source: https://github.com/nix-darwin/nix-darwin/pull/972
 {
   config,
   lib,
@@ -27,7 +27,7 @@ in
       package = mkOption {
         type = types.path;
         default = pkgs.ollama;
-        description = "This option specifies the ollama package to use.";
+        description = "Ollama package to use.";
       };
 
       host = mkOption {
@@ -35,7 +35,7 @@ in
         default = "127.0.0.1";
         example = "0.0.0.0";
         description = ''
-          The host address which the ollama server HTTP interface listens to.
+          Host address for the Ollama server HTTP interface.
         '';
       };
 
@@ -44,7 +44,7 @@ in
         default = 11434;
         example = 11111;
         description = ''
-          Which port the ollama server listens to.
+          Port the Ollama server listens on.
         '';
       };
 
@@ -53,7 +53,7 @@ in
         default = null;
         example = "/path/to/ollama/models";
         description = ''
-          The directory that the ollama service will read models from and download new models to.
+          Directory where Ollama will read and download models.
         '';
       };
 
@@ -65,11 +65,10 @@ in
           HIP_VISIBLE_DEVICES = "0,1";
         };
         description = ''
-          Set arbitrary environment variables for the ollama service.
+          Set environment variables for the Ollama service.
 
-          Be aware that these are only seen by the ollama server (launchd daemon),
-          not normal invocations like `ollama run`.
-          Since `ollama run` is mostly a shell around the ollama server, this is usually sufficient.
+          These apply to the Ollama daemon (launchd) and not to direct `ollama run` calls;
+          since `ollama run` typically communicates with the daemon, these variables usually affect runtime behavior.
         '';
       };
     };

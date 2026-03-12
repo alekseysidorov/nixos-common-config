@@ -1,7 +1,7 @@
-# treefmt.nix
+# treefmt configuration
 { ... }:
 {
-  # Used to find the project root
+  # Project root marker used by treefmt
   projectRootFile = "flake.nix";
 
   programs.nixfmt.enable = true;

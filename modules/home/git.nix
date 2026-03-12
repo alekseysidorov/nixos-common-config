@@ -1,10 +1,10 @@
-# Git configuration
+# Git configuration and utilities
 { pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
     git-credential-manager
     carapace
-    # Cleanup all git repos
+    # Clean up all Git repositories
     (writeShellApplication {
       name = "git-clean-all";
       runtimeInputs = [
@@ -21,7 +21,7 @@
         done
       '';
     })
-    # Sweep all stale branches in all projects
+    # Sweep stale branches across all projects
     (writeShellApplication {
       name = "git-sweep-all";
       runtimeInputs = [
@@ -46,16 +46,15 @@
 
     settings = lib.mkMerge [
       {
-        # Default user info
+        # Default user information
         user.name = "Aleksey Sidorov";
         user.email = "sauron1987@gmail.com";
 
-        # Common aliases
+        # Common Git aliases
         alias.cln = "!git clean -dxf -e \"/.vscode\" -e \".idea\" -e \".zed\" -e \".private\" -e \".cargo\"";
         alias.sweep-branches = "!git fetch -p && for branch in $(git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == \"[gone]\" {sub(\"refs/heads/\", \"\", $1); print $1}'); do git branch -D $branch; done";
 
-        # Some settings from this article
-        #
+        # Example settings inspired by:
         # https://habr.com/en/articles/886538/
         push = {
           autoSetupRemote = true;

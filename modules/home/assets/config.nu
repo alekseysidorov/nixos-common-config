@@ -8,7 +8,7 @@ let carapace_completer = {|spans|
     carapace $spans.0 nushell ...$spans | from json
 }
 
-# This completer will use carapace by default
+# Use carapace as the default completer
 let external_completer = {|spans|
     let expanded_alias = scope aliases
     | where name == $spans.0

@@ -3,7 +3,7 @@
 {
   nixpkgs.overlays = [
     (import ./../pkgs)
-    # Unstable overlay to get the latest versions of some packages.
+    # Unstable overlay providing newer versions of selected packages.
     (final: prev: {
       unstable = import inputs.nixpkgs-unstable {
         localSystem = prev.stdenv.hostPlatform.system;

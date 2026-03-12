@@ -1,7 +1,7 @@
-# Common home-manager configuration shared between Linux and macOS
+# Common home-manager configuration for Linux and macOS
 { lib, pkgs, ... }:
 {
-  # Useful utilities
+  # Useful command-line utilities
   home.packages = with pkgs; [
     bat
     ripgrep

@@ -1,4 +1,4 @@
-# Shell configuration
+# Shell settings and integrations
 { lib, ... }:
 {
   home.shell.enableShellIntegration = true;
