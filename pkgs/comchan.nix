@@ -4,6 +4,7 @@
   fetchCrate,
   pkg-config,
   udev,
+  stdenv,
 }:
 
 rustPlatform.buildRustPackage rec {
@@ -12,16 +13,16 @@ rustPlatform.buildRustPackage rec {
 
   src = fetchCrate {
     inherit pname version;
-    hash = "sha256-C+DvcXGqqQbkof2+s/Xzz5IL8gW+9VQ3W7reJ9AsZu8=";
+    hash = "sha256-A66sn6oBOIp3WSUo5uY4HeAxpjCphbsHHadEjS0v5Sw=";
   };
 
-  cargoHash = lib.fakeHash;
+  cargoHash = "sha256-xu0z5VP+xxc+sZmys+LNRy28Xw7+kMK37MSf7PvQU4E=";
 
   nativeBuildInputs = [
     pkg-config
   ];
 
-  buildInputs = [
+  buildInputs = lib.optionals stdenv.isLinux [
     udev
   ];
 
@@ -30,6 +31,7 @@ rustPlatform.buildRustPackage rec {
     homepage = "https://github.com/Vaishnav-Sabari-Girish/ComChan";
     license = licenses.mit;
     mainProgram = "comchan";
-    platforms = platforms.linux ++ platforms.darwin;
+    maintainers = with maintainers; [ alekseysidorov ];
+    platforms = platforms.unix;
   };
 }
