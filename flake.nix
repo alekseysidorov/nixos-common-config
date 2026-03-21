@@ -44,16 +44,12 @@
         checks.formatting = treefmt.check self;
 
         devShells = {
-          default =
-            with pkgs;
-            mkShell {
-              buildInputs = [
-                nixpkgs-fmt
-                criterion-table
-                serial-monitor
-                lilv
-              ];
-            };
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixpkgs-fmt
+              comchan
+            ];
+          };
 
           # Minimal shell for Rust development.
           rust = pkgs.mkShell {
@@ -65,6 +61,7 @@
               nushell
               python3
               rustPlatform.bindgenHook
+              comchan
             ];
 
             env.PROMPT_NAME = "devshell/rust";
