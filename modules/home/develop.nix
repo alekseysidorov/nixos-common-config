@@ -11,7 +11,7 @@
     nil
     nixd
     nixfmt
-    devenv
+    pkgs.direnv
     attic-client
     # Utilities
     xh
