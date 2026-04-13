@@ -10,6 +10,7 @@
 rustPlatform.buildRustPackage rec {
   pname = "comchan";
   version = "0.2.6";
+  strictDeps = true;
 
   src = fetchCrate {
     inherit pname version;
@@ -31,7 +32,7 @@ rustPlatform.buildRustPackage rec {
     homepage = "https://github.com/Vaishnav-Sabari-Girish/ComChan";
     license = licenses.mit;
     mainProgram = "comchan";
-    maintainers = with maintainers; [ alekseysidorov ];
+    maintainers = with lib.maintainers; [ alekseysidorov ];
     platforms = platforms.unix;
   };
 }

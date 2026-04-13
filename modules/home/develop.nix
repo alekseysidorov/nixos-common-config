@@ -10,8 +10,6 @@
     # Nix tooling and extensions
     nil
     nixd
-    nixfmt
-    pkgs.direnv
     attic-client
     # Utilities
     xh

@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -53,16 +52,19 @@
 
           # Minimal shell for Rust development.
           rust = pkgs.mkShell {
-            nativeBuildInputs = with pkgs; [
-              pkgconf
-              openssl
-              rustup
-              systemd
-              nushell
-              python3
-              rustPlatform.bindgenHook
-              comchan
-            ];
+            nativeBuildInputs =
+              with pkgs;
+              [
+                pkgconf
+                openssl
+                rustup
+                nushell
+                python3
+                rustPlatform.bindgenHook
+                comchan
+                rumdl
+              ]
+              ++ lib.optionals stdenv.isLinux [ systemd ];
 
             env.PROMPT_NAME = "devshell/rust";
           };
