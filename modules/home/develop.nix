@@ -3,9 +3,9 @@
 {
 
   # Shared development configuration for Linux and macOS
-  home.packages = with pkgs.unstable; [
+  home.packages = with pkgs; [
     # Rust toolchain and related tooling
-    pkgs.rustup
+    rustup
     sccache
     # Nix tooling and extensions
     nil
