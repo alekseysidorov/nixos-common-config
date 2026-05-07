@@ -16,13 +16,13 @@ buildGoModule rec {
 
   goPackagePath = "github.com/cacggghp/vk-turn-proxy";
 
-  # Build both client and server binaries.
+  # Build both client and server binaries, and name them vk-turn-proxy-server/client.
   installPhase = ''
     mkdir -p $out/bin
     export GOBIN=$out/bin
-    # Build server and client
-    go build -trimpath -ldflags '-s -w' -o $out/bin/server ./server
-    go build -trimpath -ldflags '-s -w' -o $out/bin/client ./client
+    # Build server and client with new names
+    go build -trimpath -ldflags '-s -w' -o $out/bin/vk-turn-proxy-server ./server
+    go build -trimpath -ldflags '-s -w' -o $out/bin/vk-turn-proxy-client ./client
   '';
 
   meta = with lib; {
