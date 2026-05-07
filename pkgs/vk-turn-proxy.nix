@@ -1,6 +1,6 @@
-{ lib, buildGoModule, fetchFromGitHub, stdenv }:
+{ lib, buildGoModule, fetchFromGitHub }:
 
-buildGoModule rec {
+buildGoModule {
   pname = "vk-turn-proxy";
   version = "1.8.3";
 
