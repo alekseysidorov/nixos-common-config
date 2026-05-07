@@ -47,11 +47,13 @@
             buildInputs = with pkgs; [
               nixpkgs-fmt
               comchan
+              vk-turn-proxy
             ];
           };
 
           # Minimal shell for Rust development.
           rust = pkgs.mkShell {
+<<<<<<< HEAD
             nativeBuildInputs =
               with pkgs;
               [
@@ -65,6 +67,19 @@
                 rumdl
               ]
               ++ lib.optionals stdenv.isLinux [ systemd ];
+=======
+            nativeBuildInputs = with pkgs; [
+              pkgconf
+              openssl
+              rustup
+              systemd
+              nushell
+              python3
+              rustPlatform.bindgenHook
+              comchan
+              vk-turn-proxy
+            ];
+>>>>>>> 87ae214 (Add vk-turn-proxy Nix package and enable in flake)
 
             env.PROMPT_NAME = "devshell/rust";
           };
