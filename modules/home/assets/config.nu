@@ -24,8 +24,8 @@ let external_completer = {|spans|
     }
 
     match $spans.0 {
-        git => $carapace_completer
-        _ => $fish_completer
+        # _ => $fish_completer
+        _ => $carapace_completer
     } | do $in $spans
 }
 
