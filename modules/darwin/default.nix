@@ -3,6 +3,5 @@
 
 {
   imports = [
-    ./ollama.nix
   ];
 }

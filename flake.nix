@@ -2,9 +2,9 @@
   description = "Common parts of NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nix-darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-25.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -135,7 +135,6 @@
       # All nix-darwin modules are defined here
       darwinModules = {
         all = import ./modules/darwin;
-        ollama = import ./modules/darwin/ollama.nix;
       };
     };
 }
