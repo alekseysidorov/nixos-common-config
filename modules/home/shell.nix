@@ -1,5 +1,5 @@
 # Shell settings and integrations
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   home.shell.enableShellIntegration = true;
 
@@ -18,7 +18,18 @@
 
     nushell = {
       enable = true;
-      extraConfig = lib.mkMerge [ (builtins.readFile ./assets/config.nu) ];
+
+      configFile.text =
+        let
+          mainConfig = builtins.readFile ./assets/config.nu;
+          nuScriptsDir = "${pkgs.nu_scripts}/share/nu_scripts";
+        in
+        ''
+          # Internal completions
+          source ${nuScriptsDir}/custom-completions/just/just-completions.nu
+
+          ${mainConfig}
+        '';
     };
 
     zsh = {
