@@ -33,6 +33,6 @@ buildGoModule {
     description = "VK Turn Proxy — tunnels WireGuard/Hysteria traffic via VK TURN servers";
     homepage = "https://github.com/cacggghp/vk-turn-proxy";
     license = licenses.gpl3;
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 }

@@ -64,6 +64,7 @@
                 rustPlatform.bindgenHook
                 comchan
                 rumdl
+                cargo-fmt-toml
               ]
               ++ lib.optionals stdenv.isLinux [ systemd ];
 
