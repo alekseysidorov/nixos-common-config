@@ -7,6 +7,9 @@
     # Rust toolchain and related tooling
     rustup
     sccache
+    tombi
+    cargo-fmt-toml
+    comchan
     # Nix tooling and extensions
     nil
     nixd
