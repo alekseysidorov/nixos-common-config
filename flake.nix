@@ -48,8 +48,7 @@
               nixpkgs-fmt
               comchan
               cargo-fmt-toml
-              # vk-turn-proxy
-              # ollama
+              vk-turn-proxy
             ];
           };
 
