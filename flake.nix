@@ -48,6 +48,7 @@
               nixpkgs-fmt
               comchan
               vk-turn-proxy
+              ollama
             ];
           };
 
