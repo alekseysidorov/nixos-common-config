@@ -4,6 +4,7 @@
   fetchCrate,
   pkg-config,
   udev,
+  fontconfig,
   stdenv,
 }:
 
@@ -25,6 +26,7 @@ rustPlatform.buildRustPackage rec {
 
   buildInputs = lib.optionals stdenv.isLinux [
     udev
+    fontconfig
   ];
 
   meta = with lib; {
