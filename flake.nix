@@ -47,8 +47,9 @@
             buildInputs = with pkgs; [
               nixpkgs-fmt
               comchan
-              vk-turn-proxy
-              ollama
+              cargo-fmt-toml
+              # vk-turn-proxy
+              # ollama
             ];
           };
 
