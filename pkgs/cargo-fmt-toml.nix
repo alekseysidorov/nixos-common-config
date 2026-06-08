@@ -2,12 +2,17 @@
   lib,
   rustPlatform,
   fetchCrate,
+  aws-lc,
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "cargo-fmt-toml";
   version = "0.0.16";
   strictDeps = true;
+
+  buildInputs = [
+    aws-lc
+  ];
 
   src = fetchCrate {
     inherit pname version;
