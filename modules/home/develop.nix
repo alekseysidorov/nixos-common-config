@@ -8,7 +8,6 @@
     rustup
     sccache
     tombi
-    cargo-fmt-toml
     comchan
     # Nix tooling and extensions
     nil
