@@ -21,7 +21,7 @@
   };
 
   outputs =
-    {
+     {
       self,
       nixpkgs,
       nix-darwin,
@@ -36,7 +36,7 @@
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
-            (import ./pkgs)
+            ((import ./overlay.nix) self)
           ];
         };
         # Evaluate the treefmt modules from ./treefmt.nix
@@ -121,10 +121,17 @@
       }
     )
     # System-independent modules.
-    // {
+    // rec {
+      overlays.default = (import ./overlay.nix) self;
+
       # All NixOS modules are defined here
       nixosModules = {
-        overlays = import ./modules/overlays.nix;
+        # Local overlay providing custom packages and utilities.
+        overlays = { inputs, ... }: {
+          nixpkgs.overlays = [
+            ((import ./overlays) inputs)
+          ];
+        };
       };
       # All home-manager configurations are defined here.
       homeModules = {
