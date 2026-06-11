@@ -81,19 +81,13 @@
 
         # Additional subcommands for managing home-manager setups.
         packages = rec {
-          update = pkgs.writeShellApplication {
-            name = "update";
-            runtimeInputs = with pkgs; [ nix ];
-            text = ''
-              nix flake update
-            '';
-          };
           # Activate system scripts, similar to flake-parts
+
           activate-home = pkgs.writeShellApplication {
             name = "activate-home";
             runtimeInputs = with pkgs; [ home-manager ];
             text = ''
-              home-manager --flake . -L switch
+              home-manager switch --flake ".# ''${1:-}"
             '';
           };
           activate-darwin = pkgs.writeShellApplication {
@@ -103,17 +97,17 @@
               nix-darwin.packages.${system}.darwin-rebuild
             ];
             text = ''
-              sudo darwin-rebuild switch --flake ".#''${1:-}"  -L
+              sudo darwin-rebuild switch --flake ".# ''${1:-}"
             '';
           };
           activate-nixos = pkgs.writeShellApplication {
             name = "activate-nixos";
             text = ''
-              nixos-rebuild --flake .# -L switch --sudo
+              nixos-rebuild switch --sudo --flake ".# ''${1:-}"
             '';
           };
-
           activate = if system == "aarch64-darwin" then activate-darwin else activate-nixos;
+
           cleanup = pkgs.writeShellApplication {
             name = "cleanup";
             runtimeInputs = with pkgs; [ nix ];
