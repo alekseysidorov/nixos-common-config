@@ -10,6 +10,10 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
+    nufmt = {
+      url = "github:nushell/nufmt";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +27,7 @@
       nix-darwin,
       flake-utils,
       treefmt-nix,
+      ...
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
