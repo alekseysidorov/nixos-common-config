@@ -21,7 +21,7 @@
   };
 
   outputs =
-     {
+    {
       self,
       nixpkgs,
       nix-darwin,
@@ -29,15 +29,16 @@
       treefmt-nix,
       ...
     }:
+    let
+      localOverlay = ((import ./overlay.nix) self);
+    in
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         # Set up nixpkgs.
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [
-            ((import ./overlay.nix) self)
-          ];
+          overlays = [ localOverlay ];
         };
         # Evaluate the treefmt modules from ./treefmt.nix
         treefmt = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build;
@@ -55,6 +56,7 @@
               comchan
               cargo-fmt-toml
               vk-turn-proxy
+              nufmt
             ];
           };
 
@@ -87,7 +89,7 @@
             name = "activate-home";
             runtimeInputs = with pkgs; [ home-manager ];
             text = ''
-              home-manager switch --flake ".# ''${1:-}"
+              home-manager switch --flake .# "$@"
             '';
           };
           activate-darwin = pkgs.writeShellApplication {
@@ -97,13 +99,13 @@
               nix-darwin.packages.${system}.darwin-rebuild
             ];
             text = ''
-              sudo darwin-rebuild switch --flake ".# ''${1:-}"
+              sudo darwin-rebuild switch --flake .# "$@"
             '';
           };
           activate-nixos = pkgs.writeShellApplication {
             name = "activate-nixos";
             text = ''
-              nixos-rebuild switch --sudo --flake ".# ''${1:-}"
+              nixos-rebuild switch --flake .# --sudo "$@"
             '';
           };
           activate = if system == "aarch64-darwin" then activate-darwin else activate-nixos;
@@ -121,17 +123,11 @@
       }
     )
     # System-independent modules.
-    // rec {
-      overlays.default = (import ./overlay.nix) self;
-
+    // {
+      overlays.default = localOverlay;
       # All NixOS modules are defined here
       nixosModules = {
-        # Local overlay providing custom packages and utilities.
-        overlays = { inputs, ... }: {
-          nixpkgs.overlays = [
-            ((import ./overlays) inputs)
-          ];
-        };
+        overlays = import ./modules/overlays.nix;
       };
       # All home-manager configurations are defined here.
       homeModules = {

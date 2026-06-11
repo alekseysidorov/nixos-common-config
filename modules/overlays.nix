@@ -1,23 +1,15 @@
-{ inputs, ... }:
+{ inputs, ... }@self:
 
 {
   nixpkgs.overlays = [
     # Local overlay providing custom packages and utilities.
-    (import ./../pkgs)
-    (
-      final: prev:
-      let
-        system = prev.stdenv.hostPlatform.system;
-      in
-      {
-        # Unstable overlay providing newer versions of selected packages.
-        unstable = import inputs.nixpkgs-unstable {
-          localSystem = system;
-          inherit (prev) config overlays;
-        };
-        # Additional packages from flake inputs.
-        nufmt = final.callPackage inputs.nufmt { };
-      }
-    )
+    ((import ./../overlay.nix) self)
+    # Unstable overlay providing newer versions of selected packages.
+    (final: prev: {
+      unstable = import inputs.nixpkgs-unstable {
+        localSystem = prev.stdenv.hostPlatform.system;
+        inherit (prev) config overlays;
+      };
+    })
   ];
 }

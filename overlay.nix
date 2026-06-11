@@ -11,7 +11,7 @@ in
     inherit (prev) config overlays;
   };
   # Additional packages from flake inputs.
-  nufmt = final.callPackage inputs.nufmt { };
+  nufmt = inputs.nufmt.packages.${system}.nufmt;
 
   # Custom packages.
 
