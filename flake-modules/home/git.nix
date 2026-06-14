@@ -52,8 +52,8 @@ let
     {
       home.packages = with pkgs; [
         git-credential-manager
-        (pkgs.callPackage gitCleanAll)
-        (pkgs.callPackage gitSweepAll)
+        (pkgs.callPackage gitCleanAll { })
+        (pkgs.callPackage gitSweepAll { })
       ];
 
       programs.git = {
@@ -106,6 +106,6 @@ let
 in
 {
   flake = {
-    homeManagerModules = gitModule;
+    homeManagerModules.git = gitModule;
   };
 }

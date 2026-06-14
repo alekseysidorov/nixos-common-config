@@ -5,6 +5,5 @@
     ./core.nix
     ./develop.nix
     ./shell.nix
-    ./git.nix
   ];
 }
