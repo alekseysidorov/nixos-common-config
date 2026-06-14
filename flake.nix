@@ -45,7 +45,7 @@
         inputs.treefmt-nix.flakeModule
         ./flake-modules/options.nix
         ./flake-modules/overlays.nix
-        ./flake-modules/home/git.nix
+        ./flake-modules/home
       ];
 
       perSystem =
