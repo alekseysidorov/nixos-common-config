@@ -43,7 +43,7 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
-        ./flake-modules/unstable-overlay.nix
+        ./flake-modules/overlays.nix
       ];
 
       perSystem =
@@ -150,13 +150,6 @@
         };
 
       flake = {
-        # The usual flake attributes can be defined here, including
-        # system-agnostic and/or arbitrary outputs.
-        overlays.default = localOverlay;
-        # All NixOS modules are defined here
-        nixosModules = {
-          overlays = import ./modules/overlays.nix;
-        };
         # All home-manager configurations are defined here.
         homeManagerModules = {
           all = import ./modules/home;
@@ -164,10 +157,6 @@
           develop = import ./modules/home/develop.nix;
           shell = import ./modules/home/shell.nix;
           git = import ./modules/home/git.nix;
-        };
-        # All nix-darwin modules are defined here
-        darwinModules = {
-          all = import ./modules/darwin;
         };
       };
     };

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, ... }@self:
 
 let
   unstableOverlay = final: prev: {
@@ -12,17 +12,23 @@ let
       overlays = [ ];
     };
   };
-  # Define module that adds the unstable overlay to the system configuration.
-  unstableModule = {
+  commonOverlay = (import ./../overlay.nix) self;
+
+  overlayModule = overlay: {
     nixpkgs.overlays = [
-      unstableOverlay
+      overlay
     ];
   };
 in
 {
   flake = {
     overlays.unstable = unstableOverlay;
-    nixosModules.unstableOverlay = unstableModule;
-    darwinModules.unstableOverlay = unstableModule;
+    overlays.common = commonOverlay;
+
+    nixosModules.unstableOverlay = overlayModule unstableOverlay;
+    nixosModules.commonOverlay = overlayModule commonOverlay;
+
+    darwinModules.unstableOverlay = overlayModule unstableOverlay;
+    darwinModules.commonOverlay = overlayModule commonOverlay;
   };
 }
