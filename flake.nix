@@ -30,7 +30,7 @@
       ...
     }@inputs:
     let
-      localOverlay = ((import ./overlay.nix) self);
+      localOverlay = (import ./overlay.nix) { inherit inputs; };
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       # Declared systems that your flake supports. These will be enumerated in perSystem
