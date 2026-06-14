@@ -3,7 +3,6 @@
 {
   home.packages = with pkgs; [
     git-credential-manager
-    carapace
     # Clean up all Git repositories
     (writeShellApplication {
       name = "git-clean-all";

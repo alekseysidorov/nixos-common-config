@@ -43,7 +43,9 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
+        ./flake-modules/options.nix
         ./flake-modules/overlays.nix
+        ./flake-modules/home/git.nix
       ];
 
       perSystem =
@@ -152,7 +154,6 @@
       flake = {
         # All home-manager configurations are defined here.
         homeManagerModules = {
-          all = import ./modules/home;
           core = import ./modules/home/core.nix;
           develop = import ./modules/home/develop.nix;
           shell = import ./modules/home/shell.nix;

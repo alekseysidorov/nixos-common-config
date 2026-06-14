@@ -21,14 +21,16 @@ let
   };
 in
 {
-  flake = {
-    overlays.unstable = unstableOverlay;
-    overlays.common = commonOverlay;
+  flake = rec {
+    overlays = {
+      unstable = unstableOverlay;
+      common = commonOverlay;
+    };
 
-    nixosModules.unstableOverlay = overlayModule unstableOverlay;
-    nixosModules.commonOverlay = overlayModule commonOverlay;
-
-    darwinModules.unstableOverlay = overlayModule unstableOverlay;
-    darwinModules.commonOverlay = overlayModule commonOverlay;
+    nixosModules = {
+      unstableOverlay = overlayModule unstableOverlay;
+      commonOverlay = overlayModule commonOverlay;
+    };
+    darwinModules = nixosModules;
   };
 }
