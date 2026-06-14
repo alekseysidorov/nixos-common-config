@@ -1,43 +1,45 @@
-# Git configuration and utilities
 { pkgs, lib, ... }:
+let
+  # Clean up all Git repositories
+  gitCleanAll = pkgs.writeShellApplication {
+    name = "git-clean-all";
+    runtimeInputs = [
+      pkgs.git
+      pkgs.coreutils
+    ];
+    text = ''
+      REPOS=$(find "$1" -type d -exec test -d {}/.git \; -prune -print)
+      for REPO in $REPOS
+      do
+        echo "Cleaning $REPO"
+        cd "$REPO"
+        git cln
+      done
+    '';
+  };
+  # Sweep stale branches across all projects
+  gitSweepAll = pkgs.writeShellApplication {
+    name = "git-sweep-all";
+    runtimeInputs = [
+      pkgs.git
+      pkgs.coreutils
+    ];
+    text = ''
+      REPOS=$(find "$1" -type d -exec test -d {}/.git \; -prune -print)
+      for REPO in $REPOS
+      do
+        echo "Cleaning $REPO"
+        cd "$REPO"
+        git sweep-branches
+      done
+    '';
+  };
+in
 {
   home.packages = with pkgs; [
     git-credential-manager
-    carapace
-    # Clean up all Git repositories
-    (writeShellApplication {
-      name = "git-clean-all";
-      runtimeInputs = [
-        git
-        coreutils
-      ];
-      text = ''
-        REPOS=$(find "$1" -type d -exec test -d {}/.git \; -prune -print)
-        for REPO in $REPOS
-        do
-          echo "Cleaning $REPO"
-          cd "$REPO"
-          git cln
-        done
-      '';
-    })
-    # Sweep stale branches across all projects
-    (writeShellApplication {
-      name = "git-sweep-all";
-      runtimeInputs = [
-        git
-        coreutils
-      ];
-      text = ''
-        REPOS=$(find "$1" -type d -exec test -d {}/.git \; -prune -print)
-        for REPO in $REPOS
-        do
-          echo "Cleaning $REPO"
-          cd "$REPO"
-          git sweep-branches
-        done
-      '';
-    })
+    gitCleanAll
+    gitSweepAll
   ];
 
   programs.git = {

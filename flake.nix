@@ -9,7 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
+    # Modular flake framework.
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     nufmt = {
       url = "github:nushell/nufmt";
@@ -24,123 +25,129 @@
   outputs =
     {
       self,
-      nixpkgs,
       nix-darwin,
-      flake-utils,
-      treefmt-nix,
+      flake-parts,
       ...
-    }:
+    }@inputs:
     let
-      localOverlay = ((import ./overlay.nix) self);
+      localOverlay = (import ./overlay.nix) { inherit inputs; };
     in
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        # Set up nixpkgs.
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ localOverlay ];
-        };
-        # Evaluate the treefmt modules from ./treefmt.nix
-        treefmt = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build;
-      in
-      {
-        # For `nix fmt`
-        formatter = treefmt.wrapper;
-        # For `nix flake check`
-        checks.formatting = treefmt.check self;
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      # Declared systems that your flake supports. These will be enumerated in perSystem
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "riscv64-linux"
+        "aarch64-darwin"
+      ];
 
-        devShells = {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixpkgs-fmt
-              comchan
-              cargo-fmt-toml
-              vk-turn-proxy
-              nufmt
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        ./flake-modules/options.nix
+        ./flake-modules/overlays.nix
+        ./flake-modules/home
+      ];
+
+      perSystem =
+        {
+          system,
+          ...
+        }:
+        let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [
+              localOverlay
             ];
           };
+        in
+        {
+          # Set up nixpkgs with the local overlay and any additional overlays you need.
+          _module.args.pkgs = pkgs;
+          # Setup nix formatting with treefmt-nix.
+          treefmt = {
+            # Project root marker used by treefmt
+            projectRootFile = "flake.nix";
+            programs = {
+              nixfmt = {
+                enable = true;
+                package = pkgs.nixfmt-rs;
+              };
+              taplo.enable = true;
+            };
+          };
 
-          # Minimal shell for Rust development.
-          rust = pkgs.mkShell {
-            nativeBuildInputs =
-              with pkgs;
-              [
-                pkgconf
-                openssl
-                rustup
-                nushell
-                python3
-                rustPlatform.bindgenHook
+          # Development shell with common tools for Rust and Nix development.
+          devShells = {
+            # Default shell with all tools in pkgs directory to test them out.
+            default = pkgs.mkShell {
+              buildInputs = with pkgs; [
                 comchan
-                rumdl
                 cargo-fmt-toml
-              ]
-              ++ lib.optionals stdenv.isLinux [ systemd ];
+                vk-turn-proxy
+                nufmt
+              ];
+            };
+            # Minimal shell for Rust development.
+            rust =
+              with pkgs;
+              mkShell {
+                nativeBuildInputs = [
+                  pkgconf
+                  openssl
+                  rustup
+                  nushell
+                  python3
+                  rustPlatform.bindgenHook
+                  comchan
+                  rumdl
+                  cargo-fmt-toml
+                ]
+                ++ lib.optionals stdenv.isLinux [ systemd ];
 
-            env.PROMPT_NAME = "devshell/rust";
+                env.PROMPT_NAME = "devshell/rust";
+              };
+          };
+
+          # deprecated: Additional subcommands for managing home-manager setups.
+          packages = rec {
+            # Activate system scripts, similar to flake-parts
+
+            activate-home = pkgs.writeShellApplication {
+              name = "activate-home";
+              runtimeInputs = with pkgs; [ home-manager ];
+              text = ''
+                home-manager switch --flake .# "$@"
+              '';
+            };
+            activate-darwin = pkgs.writeShellApplication {
+              name = "activate-darwin";
+              runtimeInputs = [
+                pkgs.nix
+                nix-darwin.packages.${system}.darwin-rebuild
+              ];
+              text = ''
+                sudo darwin-rebuild switch --flake .# "$@"
+              '';
+            };
+            activate-nixos = pkgs.writeShellApplication {
+              name = "activate-nixos";
+              text = ''
+                nixos-rebuild switch --flake .# --sudo "$@"
+              '';
+            };
+            activate = if system == "aarch64-darwin" then activate-darwin else activate-nixos;
+
+            cleanup = pkgs.writeShellApplication {
+              name = "cleanup";
+              runtimeInputs = with pkgs; [ nix ];
+              text = ''
+                sudo nix store gc -vv
+                nix store gc -vv
+                nix store optimise
+              '';
+            };
           };
         };
-
-        # Additional subcommands for managing home-manager setups.
-        packages = rec {
-          # Activate system scripts, similar to flake-parts
-
-          activate-home = pkgs.writeShellApplication {
-            name = "activate-home";
-            runtimeInputs = with pkgs; [ home-manager ];
-            text = ''
-              home-manager switch --flake .# "$@"
-            '';
-          };
-          activate-darwin = pkgs.writeShellApplication {
-            name = "activate-darwin";
-            runtimeInputs = [
-              pkgs.nix
-              nix-darwin.packages.${system}.darwin-rebuild
-            ];
-            text = ''
-              sudo darwin-rebuild switch --flake .# "$@"
-            '';
-          };
-          activate-nixos = pkgs.writeShellApplication {
-            name = "activate-nixos";
-            text = ''
-              nixos-rebuild switch --flake .# --sudo "$@"
-            '';
-          };
-          activate = if system == "aarch64-darwin" then activate-darwin else activate-nixos;
-
-          cleanup = pkgs.writeShellApplication {
-            name = "cleanup";
-            runtimeInputs = with pkgs; [ nix ];
-            text = ''
-              sudo nix store gc -vv
-              nix store gc -vv
-              nix store optimise
-            '';
-          };
-        };
-      }
-    )
-    # System-independent modules.
-    // {
-      overlays.default = localOverlay;
-      # All NixOS modules are defined here
-      nixosModules = {
-        overlays = import ./modules/overlays.nix;
-      };
-      # All home-manager configurations are defined here.
-      homeModules = {
-        all = import ./modules/home;
-        core = import ./modules/home/core.nix;
-        develop = import ./modules/home/develop.nix;
-        shell = import ./modules/home/shell.nix;
-        git = import ./modules/home/git.nix;
-      };
-      # All nix-darwin modules are defined here
-      darwinModules = {
-        all = import ./modules/darwin;
-      };
     };
 }
