@@ -10,15 +10,15 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "comchan";
-  version = "0.7.0";
+  version = "0.9.0";
   strictDeps = true;
 
   src = fetchCrate {
     inherit pname version;
-    hash = "sha256-HIRsaMASFx/TF250CjBLTM5HdlkWQ/439q54ltONqqk=";
+    hash = "sha256-I+Qgbq3fiOT7MWSmoXW0iKMlnrQ6Qe0oJYFR3c5OqCY=";
   };
 
-  cargoHash = "sha256-cTcqPhIQGHyK1RQH/19yW/HRBbDPZmk7VxHHZPg0KBY=";
+  cargoHash = "sha256-oLD2Ow/E9UhvKYLXB4kLlguTPeWjDJf0s3UUkCcfVbU=";
 
   nativeBuildInputs = [
     pkg-config
