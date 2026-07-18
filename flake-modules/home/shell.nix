@@ -47,11 +47,6 @@
       };
     };
 
-    carapace = {
-      enable = true;
-      enableNushellIntegration = true;
-    };
-
     direnv = {
       enable = true;
       nix-direnv = {
