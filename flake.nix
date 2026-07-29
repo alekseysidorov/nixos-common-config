@@ -107,10 +107,8 @@
               };
           };
 
-          # deprecated: Additional subcommands for managing home-manager setups.
-          packages = rec {
+          packages = {
             # Activate system scripts, similar to flake-parts
-
             activate-home = pkgs.writeShellApplication {
               name = "activate-home";
               runtimeInputs = with pkgs; [ home-manager ];
@@ -118,23 +116,27 @@
                 home-manager switch --flake .# "$@"
               '';
             };
-            activate-darwin = pkgs.writeShellApplication {
-              name = "activate-darwin";
-              runtimeInputs = [
-                pkgs.nix
-                nix-darwin.packages.${system}.darwin-rebuild
-              ];
-              text = ''
-                sudo darwin-rebuild switch --flake .# "$@"
-              '';
-            };
-            activate-nixos = pkgs.writeShellApplication {
-              name = "activate-nixos";
-              text = ''
-                nixos-rebuild switch --flake .# --sudo "$@"
-              '';
-            };
-            activate = if system == "aarch64-darwin" then activate-darwin else activate-nixos;
+
+            activate =
+              let
+                activate-darwin = pkgs.writeShellApplication {
+                  name = "activate-darwin";
+                  runtimeInputs = [
+                    pkgs.nix
+                    nix-darwin.packages.${system}.darwin-rebuild
+                  ];
+                  text = ''
+                    sudo darwin-rebuild switch --flake .# "$@"
+                  '';
+                };
+                activate-nixos = pkgs.writeShellApplication {
+                  name = "activate-nixos";
+                  text = ''
+                    nixos-rebuild switch --flake .# --sudo "$@"
+                  '';
+                };
+              in
+              if system == "aarch64-darwin" then activate-darwin else activate-nixos;
 
             cleanup = pkgs.writeShellApplication {
               name = "cleanup";
