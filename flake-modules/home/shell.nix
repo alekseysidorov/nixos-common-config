@@ -13,7 +13,6 @@
       enable = true;
       enableCompletion = true;
     };
-
     fish.enable = true;
 
     nushell = {

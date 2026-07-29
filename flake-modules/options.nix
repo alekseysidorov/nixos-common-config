@@ -1,6 +1,12 @@
 { lib, ... }:
 
 {
+  options.flake.nixosModules = lib.mkOption {
+    type = lib.types.lazyAttrsOf lib.types.raw;
+    default = { };
+    description = "Nixos modules exported by this flake.";
+  };
+
   options.flake.darwinModules = lib.mkOption {
     type = lib.types.lazyAttrsOf lib.types.raw;
     default = { };
