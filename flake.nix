@@ -43,10 +43,7 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
-        ./flake-modules/options.nix
-        ./flake-modules/overlays.nix
-        ./flake-modules/nixos
-        ./flake-modules/home
+        ./flake-modules
       ];
 
       perSystem =

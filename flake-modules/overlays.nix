@@ -1,4 +1,4 @@
-{ inputs, ... }@self:
+{ inputs,  ... }@self:
 
 let
   unstableOverlay = final: prev: {
@@ -20,17 +20,16 @@ let
     ];
   };
 in
-{
-  flake = rec {
-    overlays = {
-      unstable = unstableOverlay;
-      common = commonOverlay;
-    };
-
-    nixosModules = {
-      unstableOverlay = overlayModule unstableOverlay;
-      commonOverlay = overlayModule commonOverlay;
-    };
-    darwinModules = nixosModules;
+rec {
+  flake.overlays = {
+    unstable = unstableOverlay;
+    common = commonOverlay;
   };
+
+  flake.nixosModules = {
+    unstableOverlay = overlayModule flake.overlays.unstable;
+    commonOverlay = overlayModule flake.overlays.common;
+  };
+
+  flake.darwinModules = flake.nixosModules;
 }
