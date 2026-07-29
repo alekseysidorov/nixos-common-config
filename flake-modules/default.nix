@@ -41,8 +41,6 @@ in
         commonOverlay
         ;
 
-      luksAutomount = ./nixos/luksAutomount.nix;
-
       default.imports = [
         unstableOverlay
         commonOverlay
