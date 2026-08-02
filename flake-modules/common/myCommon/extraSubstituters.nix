@@ -92,7 +92,7 @@ in
       '';
     }) enabledNames;
 
-    nix.settings = {
+    nix.settings = lib.optionalAttrs (enabled != [ ]) {
       extra-substituters = map (substituter: substituter.uri) enabled;
       extra-trusted-public-keys = map (substituter: substituter.publicKey) enabled;
     };
