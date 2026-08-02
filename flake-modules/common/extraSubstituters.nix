@@ -94,7 +94,6 @@ in
 
     nix.settings = {
       extra-substituters = map (substituter: substituter.uri) enabled;
-
       extra-trusted-public-keys = map (substituter: substituter.publicKey) enabled;
     };
   };

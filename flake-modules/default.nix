@@ -66,19 +66,19 @@ in
     };
 
     homeManagerModules = rec {
+      inherit myCommon;
+
       core = ./home/core.nix;
       develop = ./home/develop.nix;
       git = ./home/git.nix;
       shell = ./home/shell.nix;
 
-      default = {
-        imports = [
-          core
-          develop
-          git
-          shell
-        ];
-      };
+      default.imports = [
+        core
+        develop
+        git
+        shell
+      ];
     };
   };
 }
