@@ -13,7 +13,8 @@ let
   };
   commonOverlay = (import ./../overlay.nix) self;
 
-  myCommon = ./common;
+  myCommon = ./common/myCommon;
+  nixSettings = ./common/nixSettings.nix;
 
   overlayModule = overlay: {
     nixpkgs.overlays = [
@@ -38,7 +39,10 @@ in
     };
 
     nixosModules = rec {
-      inherit myCommon;
+      inherit
+        myCommon
+        nixSettings
+        ;
       inherit (overlayModules)
         unstableOverlay
         commonOverlay
@@ -46,13 +50,14 @@ in
 
       default.imports = [
         myCommon
+        nixSettings
         unstableOverlay
         commonOverlay
       ];
     };
 
     darwinModules = {
-      inherit myCommon;
+      inherit myCommon nixSettings;
       inherit (overlayModules)
         unstableOverlay
         commonOverlay
@@ -60,13 +65,14 @@ in
 
       default.imports = [
         myCommon
+        nixSettings
         unstableOverlay
         commonOverlay
       ];
     };
 
     homeManagerModules = rec {
-      inherit myCommon;
+      inherit myCommon nixSettings;
 
       core = ./home/core.nix;
       develop = ./home/develop.nix;
