@@ -15,7 +15,6 @@ in
 
   # Custom packages.
 
-  cargo-fmt-toml = final.callPackage ./pkgs/cargo-fmt-toml.nix { };
   comchan = final.callPackage ./pkgs/comchan.nix { };
   vk-turn-proxy = final.callPackage ./pkgs/vk-turn-proxy.nix { };
 

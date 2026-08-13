@@ -81,7 +81,6 @@
             default = pkgs.mkShell {
               buildInputs = with pkgs; [
                 comchan
-                cargo-fmt-toml
                 vk-turn-proxy
                 nufmt
               ];
@@ -99,7 +98,6 @@
                   rustPlatform.bindgenHook
                   comchan
                   rumdl
-                  cargo-fmt-toml
                 ]
                 ++ lib.optionals stdenv.isLinux [ systemd ];
 
