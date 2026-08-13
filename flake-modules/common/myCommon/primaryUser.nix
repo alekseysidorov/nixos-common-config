@@ -32,9 +32,4 @@ in
       description = "Absolute path to the primary user's home directory.";
     };
   };
-
-   # Suppress 'Error: HOME is set to "/Users/user" but we expect "/var/empty"'
-  config = lib.optionalAttrs isDarwin {
-    system.primaryUser = config.myCommon.primaryUser.name;
-  };
 }
