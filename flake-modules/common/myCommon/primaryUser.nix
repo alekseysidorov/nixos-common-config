@@ -22,7 +22,9 @@ in
       type = types.path;
       readOnly = true;
       default =
-        if isNixOS then
+        if (config.myCommon.primaryUser.name == null) then
+          null
+        else if isNixOS then
           "/home/${config.myCommon.primaryUser.name}"
         else if isDarwin then
           "/Users/${config.myCommon.primaryUser.name}"
