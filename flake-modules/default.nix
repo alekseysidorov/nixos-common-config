@@ -56,18 +56,21 @@ in
       ];
     };
 
-    darwinModules = {
+    darwinModules = rec {
       inherit myCommon nixSettings;
       inherit (overlayModules)
         unstableOverlay
         commonOverlay
         ;
 
+      primaryUser = ./darwin/primaryUser.nix;
+
       default.imports = [
         myCommon
         nixSettings
         unstableOverlay
         commonOverlay
+        primaryUser
       ];
     };
 

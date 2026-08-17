@@ -65,7 +65,6 @@ in
 
     enabledSubstituters = mkOption {
       type = types.either (types.enum [ "all" ]) (types.listOf types.str);
-
       default = [ ];
 
       example = [
