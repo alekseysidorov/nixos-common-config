@@ -1,12 +1,13 @@
 {
   config,
+  lib,
   ...
 }:
 let
-  primaryUser = config.myCommon.primaryUser;
+  cfg = config.myCommon.primaryUser;
 in
-{
-  # Suppress 'Error: HOME is set to "/Users/user" but we expect "/var/empty"'
-  system.primaryUser = primaryUser.name;
-  users.users.${primaryUser.name}.home = primaryUser.homeDirectory;
+# Suppress 'Error: HOME is set to "/Users/user" but we expect "/var/empty"'
+lib.mkIf (cfg.name != null) {
+  system.primaryUser = cfg.name;
+  users.users.${cfg.name}.home = cfg.homeDirectory;
 }
