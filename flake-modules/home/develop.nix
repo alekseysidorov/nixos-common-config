@@ -8,7 +8,7 @@
     rustup
     sccache
     tombi
-    unstable.comchan
+    comchan
     # Nix tooling and extensions
     nil
     nixd

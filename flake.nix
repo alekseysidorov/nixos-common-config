@@ -95,10 +95,10 @@
                   nushell
                   python3
                   rustPlatform.bindgenHook
-                  unstable.comchan
+                  comchan
                   rumdl
                 ]
-                ++ lib.optionals stdenv.isLinux [ systemd ];
+                ++ lib.optionals stdenv.hostPlatform.isLinux [ systemd ];
 
                 env.PROMPT_NAME = "devshell/rust";
               };

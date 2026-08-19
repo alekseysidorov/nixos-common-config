@@ -15,7 +15,7 @@ in
   nufmt = inputs.nufmt.packages.${system}.nufmt;
 
   # Custom packages.
-  comchan = final.callPackage ./pkgs/comchan.nix { };
+  comchan = final.unstable.callPackage ./pkgs/comchan.nix { };
 
   /*
     Creates a Nushell script application.
