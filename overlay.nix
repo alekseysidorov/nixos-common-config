@@ -8,7 +8,7 @@ in
   # Unstable overlay providing newer versions of selected packages.
   unstable = import inputs.nixpkgs-unstable {
     localSystem = system;
-    inherit (prev) config overlays;
+    inherit (final) config overlays;
   };
 
   # Additional packages from flake inputs.
@@ -39,7 +39,7 @@ in
       script = ./tools/vpn-peer.nu;
       runtimeInputs = with pkgs; [ sops age ];
       env = { SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt"; };
-      meta.mainProgram = "vpn-peer";
+      meta.mainProgram = "vpn-peer";sha256-lRVP1vkY2pVr9aH/Q8wYVi/gzD4IBSKw42kUaV3ZjAE=
     }
     ```
   */
