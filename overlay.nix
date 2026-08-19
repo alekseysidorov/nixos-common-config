@@ -10,13 +10,12 @@ in
     localSystem = system;
     inherit (prev) config overlays;
   };
+
   # Additional packages from flake inputs.
   nufmt = inputs.nufmt.packages.${system}.nufmt;
 
   # Custom packages.
-
   comchan = final.callPackage ./pkgs/comchan.nix { };
-  vk-turn-proxy = final.callPackage ./pkgs/vk-turn-proxy.nix { };
 
   /*
     Creates a Nushell script application.

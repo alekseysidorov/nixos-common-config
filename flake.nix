@@ -80,8 +80,7 @@
             # Default shell with all tools in pkgs directory to test them out.
             default = pkgs.mkShell {
               buildInputs = with pkgs; [
-                comchan
-                vk-turn-proxy
+                unstable.comchan
                 nufmt
               ];
             };
@@ -96,7 +95,7 @@
                   nushell
                   python3
                   rustPlatform.bindgenHook
-                  comchan
+                  unstable.comchan
                   rumdl
                 ]
                 ++ lib.optionals stdenv.isLinux [ systemd ];
