@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./assets.nix
+    ./shared.nix
     ./extraSubstituters.nix
     ./primaryUser.nix
   ];
