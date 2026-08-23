@@ -1,8 +1,8 @@
 { ... }:
+
 {
   imports = [
-    ./shared.nix
-    ./extraSubstituters.nix
     ./primaryUser.nix
+    ./extraSubstituters.nix
   ];
 }

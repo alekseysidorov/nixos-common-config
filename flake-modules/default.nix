@@ -1,7 +1,6 @@
 { ... }:
 let
   commonModules = {
-    myCommon = ./common/myCommon;
     nixSettings = ./common/nixSettings.nix;
     shell = ./common/shell.nix;
   };
@@ -10,18 +9,17 @@ in
   imports = [
     ./options.nix
     ./overlays.nix
+    ./myCommon.nix
   ];
 
   flake = {
     nixosModules = rec {
       inherit (commonModules)
-        myCommon
         nixSettings
         shell
         ;
 
       default.imports = [
-        myCommon
         nixSettings
         shell
       ];
@@ -34,19 +32,15 @@ in
         shell
         ;
 
-      primaryUser = ./common/myCommon/darwin/primaryUser.nix;
-
       default.imports = [
         myCommon
         nixSettings
-        primaryUser
         shell
       ];
     };
 
     homeManagerModules = rec {
       inherit (commonModules)
-        myCommon
         nixSettings
         ;
 
