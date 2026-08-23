@@ -4,6 +4,7 @@
   imports = [
     ./primaryUser.nix
     ./extraSubstituters.nix
+    ./shared.nix
   ];
 
   flake = {
