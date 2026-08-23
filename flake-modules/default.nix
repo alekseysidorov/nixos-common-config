@@ -7,12 +7,12 @@ let
   };
 in
 {
-  flake = {
-    imports = [
-      ./options.nix
-      ./overlays.nix
-    ];
+  imports = [
+    ./options.nix
+    ./overlays.nix
+  ];
 
+  flake = {
     nixosModules = rec {
       inherit (commonModules)
         myCommon
