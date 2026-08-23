@@ -14,6 +14,10 @@ inputs.nix-darwin.lib.darwinSystem {
         system.stateVersion = 7;
 
         myCommon.primaryUser.name = "test";
+
+        myCommon.shared = {
+          foo = "bar";
+        };
       }
     )
   ];
