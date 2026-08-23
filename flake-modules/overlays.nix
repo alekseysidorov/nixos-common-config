@@ -38,6 +38,11 @@ let
 in
 {
   flake = {
+    overlays = {
+      unstable = unstableOverlay;
+      common = commonOverlay;
+    };
+
     nixosModules = modules;
     darwinModules = modules;
   };
