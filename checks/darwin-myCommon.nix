@@ -7,7 +7,7 @@
 
 inputs.nix-darwin.lib.darwinSystem {
   modules = [
-    self.darwinModules.default
+    self.darwinModules.myCommon
     (
       { ... }:
       {

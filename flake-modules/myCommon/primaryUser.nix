@@ -59,11 +59,11 @@ let
 in
 {
   flake = {
-    nixosModules.default.imports = [
+    nixosModules.myCommon.imports = [
       optionsModule
     ];
 
-    darwinModules.default.imports = [
+    darwinModules.myCommon.imports = [
       optionsModule
       darwinModule
     ];

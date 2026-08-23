@@ -81,7 +81,7 @@
           };
 
           checks = {
-            darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
+            darwin-myCommon = (mkDarwinCheck ./checks/darwin-myCommon.nix);
             darwin-overlays = (mkDarwinCheck ./checks/darwin-overlays.nix);
           };
 
