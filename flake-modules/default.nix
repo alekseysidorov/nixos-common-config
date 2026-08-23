@@ -9,7 +9,7 @@ in
   imports = [
     ./options.nix
     ./overlays.nix
-    ./myCommon.nix
+    ./myCommon
   ];
 
   flake = {
@@ -27,13 +27,11 @@ in
 
     darwinModules = rec {
       inherit (commonModules)
-        myCommon
         nixSettings
         shell
         ;
 
       default.imports = [
-        myCommon
         nixSettings
         shell
       ];
