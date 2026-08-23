@@ -49,6 +49,7 @@
       perSystem =
         {
           system,
+          lib,
           ...
         }:
         let
@@ -58,6 +59,10 @@
               localOverlay
             ];
           };
+
+          mkDarwinCheck =
+            module:
+            lib.mkIf (lib.hasSuffix "-darwin" system) ((import module { inherit self inputs system; }).system);
         in
         {
           # Set up nixpkgs with the local overlay and any additional overlays you need.
@@ -73,6 +78,10 @@
               };
               taplo.enable = true;
             };
+          };
+
+          checks = {
+            darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
           };
 
           # Development shell with common tools for Rust and Nix development.

@@ -8,38 +8,44 @@ let
       overlays = [ ];
     };
   };
-
   commonOverlay = import ../overlay.nix { inherit inputs; };
 
   unstableOverlayModule = {
     nixpkgs.overlays = [ unstableOverlay ];
   };
-
   commonOverlayModule = {
     nixpkgs.overlays = [ commonOverlay ];
   };
 in
 {
-  flake.overlays.unstable = unstableOverlay;
-  flake.overlays.common = commonOverlay;
+  flake = {
+    overlays = {
+      unstable = unstableOverlay;
+      common = commonOverlay;
+    };
 
-  flake.nixosModules.unstableOverlay = unstableOverlayModule;
-  flake.nixosModules.commonOverlay = commonOverlayModule;
+    nixosModules = {
+      unstableOverlay = unstableOverlayModule;
+      commonOverlay = commonOverlayModule;
 
-  flake.nixosModules.default = {
-    imports = [
-      unstableOverlayModule
-      commonOverlayModule
-    ];
-  };
+      default = {
+        imports = [
+          unstableOverlayModule
+          commonOverlayModule
+        ];
+      };
+    };
 
-  flake.darwinModules.unstableOverlay = unstableOverlayModule;
-  flake.darwinModules.commonOverlay = commonOverlayModule;
+    darwinModules = {
+      unstableOverlay = unstableOverlayModule;
+      commonOverlay = commonOverlayModule;
 
-  flake.darwinModules.default = {
-    imports = [
-      unstableOverlayModule
-      commonOverlayModule
-    ];
+      default = {
+        imports = [
+          unstableOverlayModule
+          commonOverlayModule
+        ];
+      };
+    };
   };
 }
