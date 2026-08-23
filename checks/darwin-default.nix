@@ -4,7 +4,26 @@
   system,
   ...
 }:
+let
+  myCommon = {
+    primaryUser = {
+      name = "test";
+    };
+    shared = {
+      foo = "bar";
+    };
 
+    nix = {
+      knownSubstituters = {
+        cachix = {
+          uri = "https://example.cachix.org";
+          publicKey = "example.cachix.org-1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        };
+      };
+      enabledSubstituters = [ "cachix" ];
+    };
+  };
+in
 inputs.nix-darwin.lib.darwinSystem {
   modules = [
     self.darwinModules.default
@@ -20,7 +39,7 @@ inputs.nix-darwin.lib.darwinSystem {
           pkgs.unstable.hello
         ];
 
-        myCommon.primaryUser.name = "test";
+        inherit myCommon;
 
         home-manager = {
           useGlobalPkgs = true;
@@ -35,7 +54,7 @@ inputs.nix-darwin.lib.darwinSystem {
                 self.homeManagerModules.default
               ];
 
-              myCommon.nix.primaryUser.name = "foo";
+              inherit myCommon;
             };
         };
 
