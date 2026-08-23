@@ -1,17 +1,9 @@
 { ... }:
 let
   optionsModule =
-    {
-      lib,
-      config,
-      options,
-      ...
-    }:
+    { lib, ... }:
     let
       inherit (lib) mkOption types;
-      # Only NixOS has boot options, nix-darwin hasn't.
-      isNixOS = lib.hasAttr "boot" options;
-      isDarwin = lib.hasAttr "launchd" options;
     in
     {
       key = "myCommon/primaryUser/config";
@@ -22,21 +14,30 @@ let
           description = "The username of the primary user.";
           default = null;
         };
+      };
+    };
 
+  mkPathsModule =
+    mkPaths:
+    { lib, config, ... }:
+    let
+      inherit (lib) mkOption types;
+      paths = mkPaths { inherit config; };
+    in
+    {
+      key = "myCommon/primaryUser/paths";
+
+      options.myCommon.primaryUser.paths = {
         homeDirectory = mkOption {
           type = types.path;
           readOnly = true;
-          default =
-            if (config.myCommon.primaryUser.name == null) then
-              null
-            else if isNixOS then
-              "/home/${config.myCommon.primaryUser.name}"
-            else if isDarwin then
-              "/Users/${config.myCommon.primaryUser.name}"
-            else
-              throw "Unsupported system";
+          default = paths.homeDirectory;
+        };
 
-          description = "Absolute path to the primary user's home directory.";
+        sopsAgeKeyFile = mkOption {
+          type = types.path;
+          readOnly = true;
+          default = paths.sopsAgeKeyFile;
         };
       };
     };
@@ -63,15 +64,36 @@ in
   flake = {
     nixosModules.myCommon.imports = [
       optionsModule
+      (mkPathsModule (
+        { config, ... }:
+        rec {
+          homeDirectory = "/home/${config.myCommon.primaryUser.name}";
+          sopsAgeKeyFile = "${homeDirectory}/.config/sops/age/keys.txt";
+        }
+      ))
     ];
 
     darwinModules.myCommon.imports = [
       optionsModule
       darwinModule
+      (mkPathsModule (
+        { config, ... }:
+        rec {
+          homeDirectory = "/Users/${config.myCommon.primaryUser.name}";
+          sopsAgeKeyFile = "${homeDirectory}/.config/sops/age/keys.txt";
+        }
+      ))
     ];
 
     homeManagerModules.myCommon.imports = [
       optionsModule
+      (mkPathsModule (
+        { config, ... }:
+        rec {
+          homeDirectory = config.home.homeDirectory;
+          sopsAgeKeyFile = "${homeDirectory}/.config/sops/age/keys.txt";
+        }
+      ))
     ];
   };
 }

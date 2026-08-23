@@ -23,6 +23,22 @@ let
       enabledSubstituters = [ "cachix" ];
     };
   };
+
+  mkAssertionsFor =
+    config: with config.myCommon; [
+      {
+        assertion = primaryUser.name == "test";
+        message = "primaryUser.name must be configured";
+      }
+      {
+        assertion = primaryUser.paths.homeDirectory == "/Users/test";
+        message = "primaryUser.homeDirectory must be calculated";
+      }
+      {
+        assertion = primaryUser.paths.sopsAgeKeyFile == "/Users/test/.config/sops/age/keys.txt";
+        message = "primaryUser.sopsAgeKeyfile must be calculated";
+      }
+    ];
 in
 inputs.nix-darwin.lib.darwinSystem {
   modules = [
@@ -30,9 +46,11 @@ inputs.nix-darwin.lib.darwinSystem {
     self.darwinModules.myCommon
     inputs.home-manager.darwinModules.default
     (
-      { pkgs, ... }:
+      { pkgs, config, ... }:
       {
         system.stateVersion = 7;
+
+        assertions = mkAssertionsFor config;
 
         environment.systemPackages = [
           pkgs.comchan
@@ -50,6 +68,8 @@ inputs.nix-darwin.lib.darwinSystem {
             {
               home.stateVersion = "26.05";
 
+              assertions = mkAssertionsFor config;
+
               imports = [
                 self.homeManagerModules.default
               ];
@@ -57,7 +77,6 @@ inputs.nix-darwin.lib.darwinSystem {
               inherit myCommon;
             };
         };
-
       }
     )
   ];
