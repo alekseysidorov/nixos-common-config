@@ -28,24 +28,20 @@ in
       unstableOverlay = unstableOverlayModule;
       commonOverlay = commonOverlayModule;
 
-      default = {
-        imports = [
-          unstableOverlayModule
-          commonOverlayModule
-        ];
-      };
+      default.imports = [
+        unstableOverlayModule
+        commonOverlayModule
+      ];
     };
 
     darwinModules = {
       unstableOverlay = unstableOverlayModule;
       commonOverlay = commonOverlayModule;
 
-      default = {
-        imports = [
-          unstableOverlayModule
-          commonOverlayModule
-        ];
-      };
+      default.imports = [
+        unstableOverlayModule
+        commonOverlayModule
+      ];
     };
   };
 }

@@ -34,6 +34,8 @@ let
       };
     in
     {
+      key = "myCommon/extraSubstituters/config";
+
       options.myCommon.nix = {
         knownSubstituters = mkOption {
           type = types.lazyAttrsOf substituterType;

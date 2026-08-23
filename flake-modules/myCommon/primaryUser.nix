@@ -14,6 +14,8 @@ let
       isDarwin = lib.hasAttr "launchd" options;
     in
     {
+      key = "myCommon/primaryUser/config";
+
       options.myCommon.primaryUser = {
         name = mkOption {
           type = types.str;

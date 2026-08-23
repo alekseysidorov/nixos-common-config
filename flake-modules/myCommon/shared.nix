@@ -6,6 +6,8 @@ let
       inherit (lib) mkOption types;
     in
     {
+      key = "myCommon/shared/config";
+
       options.myCommon.shared = mkOption {
         type = types.attrsOf (types.either types.path types.attrs);
         default = { };
