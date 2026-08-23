@@ -69,5 +69,9 @@ in
       optionsModule
       darwinModule
     ];
+
+    homeManagerModules.myCommon.imports = [
+      optionsModule
+    ];
   };
 }

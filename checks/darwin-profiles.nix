@@ -30,6 +30,12 @@ inputs.nix-darwin.lib.darwinSystem {
             { ... }:
             {
               home.stateVersion = "26.05";
+
+              imports = [
+                self.homeManagerModules.default
+              ];
+
+              myCommon.nix.primaryUser.name = "foo";
             };
         };
 
