@@ -82,6 +82,7 @@
 
           checks = {
             darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
+            darwin-overlays = (mkDarwinCheck ./checks/darwin-overlays.nix);
           };
 
           # Development shell with common tools for Rust and Nix development.
