@@ -1,49 +1,45 @@
-{ inputs, ... }@self:
+{ inputs, ... }:
+
 let
   unstableOverlay = final: prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = final.stdenv.hostPlatform.system;
-      # Inherit config from the previous package set, so that the unstable overlay
-      # can see the same configuration as the stable one.
       config = prev.config or { };
-      # But we can't inherit overlays, because that would create a circular
-      # dependency. So we just ignore them.
       overlays = [ ];
     };
   };
-  commonOverlay = (import ./../overlay.nix) self;
 
-  overlayModule = overlay: {
-    nixpkgs.overlays = [
-      overlay
-    ];
+  commonOverlay = import ../overlay.nix { inherit inputs; };
+
+  unstableOverlayModule = {
+    nixpkgs.overlays = [ unstableOverlay ];
   };
 
-  overlayModules = {
-    unstableOverlay = overlayModule unstableOverlay;
-    commonOverlay = overlayModule commonOverlay;
-  };
-
-  modules = {
-    inherit (overlayModules)
-      unstableOverlay
-      commonOverlay
-      ;
-
-    default.imports = [
-      unstableOverlay
-      commonOverlay
-    ];
+  commonOverlayModule = {
+    nixpkgs.overlays = [ commonOverlay ];
   };
 in
 {
-  flake = {
-    overlays = {
-      unstable = unstableOverlay;
-      common = commonOverlay;
-    };
+  flake.overlays.unstable = unstableOverlay;
+  flake.overlays.common = commonOverlay;
 
-    nixosModules = modules;
-    darwinModules = modules;
+  flake.nixosModules.unstableOverlay = unstableOverlayModule;
+  flake.nixosModules.commonOverlay = commonOverlayModule;
+
+  flake.nixosModules.default = {
+    imports = [
+      unstableOverlayModule
+      commonOverlayModule
+    ];
+  };
+
+  flake.darwinModules.unstableOverlay = unstableOverlayModule;
+  flake.darwinModules.commonOverlay = commonOverlayModule;
+
+  flake.darwinModules.default = {
+    imports = [
+      unstableOverlayModule
+      commonOverlayModule
+    ];
   };
 }
