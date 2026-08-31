@@ -18,5 +18,8 @@ in
   comchan = final.unstable.callPackage ./pkgs/comchan.nix { };
 
   # Preserve the common overlay API; the implementation lives in rust-dev-flake.
-  inherit (inputs.rust-dev-flake.overlays.default final prev) writeNuApplication;
+  inherit (inputs.rust-dev-flake.overlays.default final prev)
+    writeNuShellApplication
+    writeNuShellScript
+    ;
 }
