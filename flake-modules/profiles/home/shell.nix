@@ -1,5 +1,10 @@
 # Shell settings and integrations
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   home.shell.enableShellIntegration = true;
 
@@ -15,6 +20,9 @@
     };
 
     fish.enable = true;
+
+    # Fish enables man caches even when no man package is installed.
+    man.generateCaches = lib.mkIf (config.programs.man.package == null) false;
 
     nushell = {
       enable = true;
