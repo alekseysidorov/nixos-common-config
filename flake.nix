@@ -2,9 +2,12 @@
   description = "Common parts of NixOS configuration";
 
   inputs = {
+    # Nix
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
+    # System configuration
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,15 +17,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Modular flake framework.
-    flake-parts.url = "github:hercules-ci/flake-parts";
-
-    nufmt = {
-      url = "github:nushell/nufmt";
+    # Development
+    rust-dev-flake = {
+      url = "path:/Users/wildboarder/Projects/nix/rust-dev-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.treefmt-nix.follows = "treefmt-nix";
     };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nufmt = {
+      url = "github:nushell/nufmt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -39,15 +46,12 @@
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       # Declared systems that your flake supports. These will be enumerated in perSystem
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "riscv64-linux"
-        "aarch64-darwin"
-      ];
-
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
+      # Modules that are imported into the flake.
       imports = [
         inputs.treefmt-nix.flakeModule
+        inputs.rust-dev-flake.flakeModules.gitHooks
+
         ./flake-modules
       ];
 
@@ -86,7 +90,22 @@
           };
 
           checks = {
+            comchan = pkgs.comchan;
             darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
+          };
+
+          # Install explicitly with `nix run .#install-git-hooks`.
+          gitHooks = {
+            pre-commit = pkgs.writeShellScript "pre-commit" ''
+              set -euo pipefail
+              echo "⚡️ Running pre-commit checks..."
+              nix build .#checks.${system}.treefmt -L
+            '';
+            pre-push = pkgs.writeShellScript "pre-push" ''
+              set -euo pipefail
+              echo "⚡️ Running pre-push checks..."
+              nix flake check -L
+            '';
           };
 
           # Development shell with common tools for Rust and Nix development.
