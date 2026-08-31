@@ -19,7 +19,7 @@
 
     # Development
     rust-dev-flake = {
-      url = "path:/Users/wildboarder/Projects/nix/rust-dev-flake";
+      url = "github:alekseysidorov/rust-dev-flake/dev";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
@@ -47,11 +47,9 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       # Declared systems that your flake supports. These will be enumerated in perSystem
       systems = inputs.nixpkgs.lib.systems.flakeExposed;
-      # Modules that are imported into the flake.
       imports = [
         inputs.treefmt-nix.flakeModule
         inputs.rust-dev-flake.flakeModules.gitHooks
-
         ./flake-modules
       ];
 
@@ -74,71 +72,10 @@
             lib.mkIf (lib.hasSuffix "-darwin" system) ((import module { inherit self inputs system; }).system);
         in
         {
-          # Set up nixpkgs with the local overlay and any additional overlays you need.
+          # Use the common overlay in all per-system modules.
           _module.args.pkgs = pkgs;
-          # Setup nix formatting with treefmt-nix.
-          treefmt = {
-            # Project root marker used by treefmt
-            projectRootFile = "flake.nix";
-            programs = {
-              nixfmt = {
-                enable = true;
-                package = pkgs.nixfmt-rs;
-              };
-              taplo.enable = true;
-            };
-          };
-
-          checks = {
-            comchan = pkgs.comchan;
-            darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
-          };
-
-          # Install explicitly with `nix run .#install-git-hooks`.
-          gitHooks = {
-            pre-commit = pkgs.writeShellScript "pre-commit" ''
-              set -euo pipefail
-              echo "⚡️ Running pre-commit checks..."
-              nix build .#checks.${system}.treefmt -L
-            '';
-            pre-push = pkgs.writeShellScript "pre-push" ''
-              set -euo pipefail
-              echo "⚡️ Running pre-push checks..."
-              nix flake check -L
-            '';
-          };
-
-          # Development shell with common tools for Rust and Nix development.
-          devShells = {
-            # Default shell with all tools in pkgs directory to test them out.
-            default = pkgs.mkShell {
-              buildInputs = with pkgs; [
-                unstable.comchan
-                nufmt
-              ];
-            };
-            # Minimal shell for Rust development.
-            rust =
-              with pkgs;
-              mkShell {
-                nativeBuildInputs = [
-                  pkgconf
-                  openssl
-                  rustup
-                  nushell
-                  python3
-                  rustPlatform.bindgenHook
-                  comchan
-                  rumdl
-                ]
-                ++ lib.optionals stdenv.hostPlatform.isLinux [ systemd ];
-
-                env.PROMPT_NAME = "devshell/rust";
-              };
-          };
-
+          # Expose activation and maintenance commands through `nix run`.
           packages = {
-            # Activate system scripts, similar to flake-parts
             activate-home = pkgs.writeShellApplication {
               name = "activate-home";
               runtimeInputs = with pkgs; [ home-manager ];
@@ -177,6 +114,67 @@
                 nix store optimise
               '';
             };
+          };
+
+          # Enter with `nix develop` or `nix develop .#rust`.
+          devShells = {
+            # Try tools provided by the common overlay.
+            default = pkgs.mkShell {
+              buildInputs = with pkgs; [
+                unstable.comchan
+                nufmt
+              ];
+            };
+            # Supply native dependencies while rustup manages the Rust toolchain.
+            rust =
+              with pkgs;
+              mkShell {
+                nativeBuildInputs = [
+                  pkgconf
+                  openssl
+                  rustup
+                  nushell
+                  python3
+                  rustPlatform.bindgenHook
+                  comchan
+                  rumdl
+                ]
+                ++ lib.optionals stdenv.hostPlatform.isLinux [ systemd ];
+
+                env.PROMPT_NAME = "devshell/rust";
+              };
+          };
+
+          # Share formatting rules between `nix fmt` and CI.
+          treefmt = {
+            projectRootFile = "flake.nix";
+            programs = {
+              nixfmt = {
+                enable = true;
+                package = pkgs.nixfmt-rs;
+              };
+              taplo.enable = true;
+            };
+          };
+
+          # Verify package builds and the sample Darwin configuration with `nix flake check`.
+          checks = {
+            comchan = pkgs.comchan;
+            darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
+          };
+
+          # Install explicitly with `nix run .#install-git-hooks`.
+          gitHooks = {
+            pre-commit = pkgs.writeShellScript "pre-commit" ''
+              set -euo pipefail
+              echo "⚡️ Running pre-commit checks..."
+              nix build .#checks.${system}.treefmt -L
+            '';
+            pre-push = pkgs.writeShellScript "pre-push" ''
+              set -euo pipefail
+              echo "⚡️ Running pre-push checks..."
+              nix flake check -L
+            '';
           };
         };
     };
