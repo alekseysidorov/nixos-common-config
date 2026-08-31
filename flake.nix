@@ -37,7 +37,6 @@
   outputs =
     {
       self,
-      nix-darwin,
       flake-parts,
       ...
     }@inputs:
@@ -74,48 +73,6 @@
         {
           # Use the common overlay in all per-system modules.
           _module.args.pkgs = pkgs;
-          # Expose activation and maintenance commands through `nix run`.
-          packages = {
-            activate-home = pkgs.writeShellApplication {
-              name = "activate-home";
-              runtimeInputs = with pkgs; [ home-manager ];
-              text = ''
-                home-manager switch --flake .# "$@"
-              '';
-            };
-
-            activate =
-              let
-                activate-darwin = pkgs.writeNuShellApplication {
-                  name = "activate-darwin";
-                  runtimeInputs = [
-                    pkgs.nix
-                    nix-darwin.packages.${system}.darwin-rebuild
-                  ];
-                  text = ''
-                    sudo darwin-rebuild switch --flake .# "$@"
-                  '';
-                };
-                activate-nixos = pkgs.writeShellApplication {
-                  name = "activate-nixos";
-                  text = ''
-                    nixos-rebuild switch --flake .# --sudo "$@"
-                  '';
-                };
-              in
-              if system == "aarch64-darwin" then activate-darwin else activate-nixos;
-
-            cleanup = pkgs.writeNuShellApplication {
-              name = "cleanup";
-              runtimeInputs = with pkgs; [ nix ];
-              text = ''
-                sudo nix store gc -vv
-                nix store gc -vv
-                nix store optimise
-              '';
-            };
-          };
-
           # Enter with `nix develop` or `nix develop .#rust`.
           devShells = {
             # Try tools provided by the common overlay.
