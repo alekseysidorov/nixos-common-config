@@ -9,6 +9,18 @@
     }:
     let
       inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+
+      rebuild =
+        if isDarwin then
+          {
+            package = inputs.nix-darwin.packages.${system}.darwin-rebuild;
+            command = "^sudo darwin-rebuild";
+          }
+        else
+          {
+            package = pkgs.nixos-rebuild;
+            command = "^nixos-rebuild --sudo";
+          };
     in
     {
       # Keep activation explicit: entering a shell never changes the system.
@@ -38,20 +50,9 @@
           name = "activate";
           runtimeInputs = [
             pkgs.nix
-          ]
-          ++ (
-            if isDarwin then [ inputs.nix-darwin.packages.${system}.darwin-rebuild ] else [ pkgs.nixos-rebuild ]
-          );
-          # Select the platform backend without duplicating argument forwarding.
-          extraConfig =
-            if isDarwin then
-              ''
-                alias rebuild = ^sudo darwin-rebuild
-              ''
-            else
-              ''
-                alias rebuild = ^nixos-rebuild --sudo
-              '';
+            rebuild.package
+          ];
+          extraConfig = "alias rebuild = ${rebuild.command}";
           text = ''
             def --wrapped main [...args: string] {
               rebuild switch --flake ".#" ...$args
