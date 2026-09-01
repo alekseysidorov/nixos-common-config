@@ -4,6 +4,7 @@
   imports = [
     ./primaryUser.nix
     ./extraSubstituters.nix
+    ./git.nix
     ./shared.nix
   ];
 
