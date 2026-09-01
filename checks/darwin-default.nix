@@ -169,8 +169,9 @@ let
     in
     [
       {
-        assertion = config.programs.bash.enable && config.programs.nushell.enable;
-        message = "selecting Nushell must enable Bash and Nushell";
+        assertion =
+          config.programs.bash.enable && config.programs.nushell.enable && config.programs.zsh.enable;
+        message = "the shell profile must enable Bash, Nushell, and Zsh";
       }
       {
         assertion =
@@ -182,16 +183,24 @@ let
       }
       {
         assertion =
-          config.programs.starship.presets == [ "pure-preset" ] && config.programs.starship.settings == { };
-        message = "the shell profile must use the unmodified Starship pure preset";
+          config.programs.starship.presets == [ "pure-preset" ]
+          && config.programs.starship.settings.character.success_symbol == "[➜](purple)"
+          && config.programs.starship.settings.env_var.variable == "PROMPT_NAME";
+        message = "the shell profile must apply the intended overrides to the Starship pure preset";
       }
       {
         assertion =
-          config.programs.starship.enableBashIntegration
+          config.programs.carapace.enable
+          && config.programs.carapace.enableBashIntegration
+          && config.programs.carapace.enableNushellIntegration
+          && config.programs.carapace.enableZshIntegration
+          && config.programs.starship.enableBashIntegration
           && config.programs.starship.enableNushellIntegration
+          && config.programs.starship.enableZshIntegration
           && config.programs.direnv.enableBashIntegration
-          && config.programs.direnv.enableNushellIntegration;
-        message = "Home Manager defaults must enable Bash and Nushell integrations";
+          && config.programs.direnv.enableNushellIntegration
+          && config.programs.direnv.enableZshIntegration;
+        message = "Home Manager defaults must enable Carapace, Starship, and Direnv shell integrations";
       }
     ];
 in
