@@ -2,13 +2,6 @@
 let
   nixSettings = ./nixSettings.nix;
 
-  shellPrograms =
-    { ... }:
-    {
-      programs.zsh.enable = true;
-      programs.fish.enable = true;
-    };
-
 in
 
 {
@@ -18,7 +11,6 @@ in
 
       default.imports = [
         nixSettings
-        shellPrograms
       ];
     };
 
@@ -27,7 +19,6 @@ in
 
       default.imports = [
         nixSettings
-        shellPrograms
       ];
     };
 

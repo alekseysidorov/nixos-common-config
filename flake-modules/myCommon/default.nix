@@ -5,6 +5,7 @@
     ./primaryUser.nix
     ./extraSubstituters.nix
     ./git.nix
+    ./home.nix
     ./shared.nix
   ];
 
