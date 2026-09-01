@@ -27,7 +27,7 @@ let
   };
 
   homeMyCommon = myCommon // {
-    home.interactiveShell = "nushell";
+    home.enableNushellIntegration = true;
   };
 
   defaultHome = inputs.home-manager.lib.homeManagerConfiguration {
@@ -55,18 +55,17 @@ let
           stateVersion = "26.05";
           shell.enableShellIntegration = false;
         };
-        myCommon.home.interactiveShell = "nushell";
+        myCommon.home.enableNushellIntegration = true;
       }
     ];
   };
 
-  invalidDarwin = inputs.nix-darwin.lib.darwinSystem {
+  disabledDarwin = inputs.nix-darwin.lib.darwinSystem {
     inherit system;
     modules = [
       self.darwinModules.myCommon
       {
         system.stateVersion = 7;
-        myCommon.home.interactiveShell = "nushell";
       }
     ];
   };
@@ -79,17 +78,6 @@ let
         system.stateVersion = "26.05";
         myCommon.primaryUser.name = "test";
         users.users.test.isNormalUser = true;
-      }
-    ];
-  };
-
-  invalidNixos = inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    modules = [
-      self.nixosModules.myCommon
-      {
-        system.stateVersion = "26.05";
-        myCommon.home.interactiveShell = "nushell";
       }
     ];
   };
@@ -134,27 +122,23 @@ let
         message = "enableGitIntegration must install the common Git tools system-wide";
       }
       {
-        assertion = !(builtins.tryEval invalidDarwin.system.drvPath).success;
-        message = "nix-darwin must reject Home Manager-only myCommon.home options";
-      }
-      {
-        assertion = !(builtins.tryEval invalidNixos.config.system.build.toplevel.drvPath).success;
-        message = "NixOS must reject Home Manager-only myCommon.home options";
-      }
-      {
         assertion = nixos.config.users.users.test.shell == nixos.pkgs.bashInteractive;
         message = "the NixOS primary user's login shell must remain Bash";
       }
       {
-        assertion = config.programs.fish.enable && nixos.config.programs.fish.enable;
+        assertion =
+          config.myCommon.home.enableNushellIntegration
+          && config.programs.fish.enable
+          && nixos.config.programs.fish.enable
+          && !disabledDarwin.config.programs.fish.enable;
         message = "NixOS and nix-darwin must provide Fish for the Nushell completion backend";
       }
       {
         assertion =
-          defaultHome.config.myCommon.home.interactiveShell == null
+          !defaultHome.config.myCommon.home.enableNushellIntegration
           && !defaultHome.config.programs.nushell.enable
           && defaultHome.config.programs.bash.initExtra == "";
-        message = "the default interactiveShell policy must not alter shell behavior";
+        message = "the disabled Nushell integration must not alter shell behavior";
       }
       {
         assertion =

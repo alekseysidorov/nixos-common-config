@@ -5,38 +5,35 @@ let
     {
       key = "myCommon/home/options";
 
-      options.myCommon.home.interactiveShell = lib.mkOption {
-        type = lib.types.nullOr (lib.types.enum [ "nushell" ]);
-        default = null;
-        description = ''
-          Selects the user's preferred interactive shell. This does not change
-          the system login shell, which is configured separately. This option
-          is intended for Home Manager configurations only.
-        '';
-      };
+      options.myCommon.home.enableNushellIntegration = lib.mkEnableOption ''
+        the common Nushell setup and its platform-specific dependencies
+      '';
     };
 
-  systemGuardModule =
+  systemModule =
     { config, lib, ... }:
     {
-      assertions = lib.optional (config.myCommon.home.interactiveShell != null) {
-        assertion = false;
-        message = "myCommon.home.interactiveShell is a Home Manager-only option";
+      config = lib.mkIf config.myCommon.home.enableNushellIntegration {
+        programs.fish.enable = true;
       };
     };
 
   homeManagerModule =
-    { config, lib, ... }:
-    let
-      useNushell = config.myCommon.home.interactiveShell == "nushell";
-    in
     {
-      config = lib.mkIf useNushell {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      config = lib.mkIf config.myCommon.home.enableNushellIntegration {
+        home.shell.enableShellIntegration = lib.mkDefault true;
+
         programs = {
           bash = {
             enable = true;
             # Home Manager puts initExtra behind its interactive Bash guard.
-            initExtra = lib.mkIf config.home.shell.enableShellIntegration (
+            initExtra = lib.mkIf config.home.shell.enableNushellIntegration (
               lib.mkOrder 200 ''
                 if [[ -t 0 && -t 1 ]]; then
                   exec ${lib.getExe config.programs.nushell.package}
@@ -45,7 +42,44 @@ let
             );
           };
 
-          nushell.enable = true;
+          zsh = {
+            enable = true;
+            # Home Manager puts initExtra behind its interactive Bash guard.
+            initExtra = lib.mkIf config.home.shell.enableNushellIntegration (
+              lib.mkOrder 200 ''
+                if [[ -t 0 && -t 1 ]]; then
+                  exec ${lib.getExe config.programs.nushell.package}
+                fi
+              ''
+            );
+          };
+
+          fish.enable = true;
+
+          nushell = {
+            enable = true;
+
+            settings.completions.external = {
+              enable = true;
+              completer = lib.hm.nushell.mkNushellInline ''
+                {|spans|
+                  ${lib.getExe pkgs.fish} --command $'complete "--do-complete=($spans | str join " ")"'
+                  | $"value(char tab)description(char newline)" + $in
+                  | from tsv --flexible --no-infer
+                }
+              '';
+            };
+
+            extraConfig = ''
+              source ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/nix/nix-completions.nu
+              source ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/just/just-completions.nu
+            '';
+          };
+
+          nix-your-shell = {
+            enable = true;
+            enableNushellIntegration = true;
+          };
         };
       };
     };
@@ -54,12 +88,12 @@ in
   flake = {
     nixosModules.myCommon.imports = [
       optionsModule
-      systemGuardModule
+      systemModule
     ];
 
     darwinModules.myCommon.imports = [
       optionsModule
-      systemGuardModule
+      systemModule
     ];
 
     homeManagerModules.myCommon.imports = [

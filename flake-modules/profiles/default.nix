@@ -2,8 +2,8 @@
 let
   nixSettings = ./nixSettings.nix;
 
-  shellPrograms = {
-    programs.fish.enable = true;
+  nushellIntegration = {
+    myCommon.home.enableNushellIntegration = true;
   };
 
 in
@@ -15,7 +15,7 @@ in
 
       default.imports = [
         nixSettings
-        shellPrograms
+        nushellIntegration
       ];
     };
 
@@ -24,7 +24,7 @@ in
 
       default.imports = [
         nixSettings
-        shellPrograms
+        nushellIntegration
       ];
     };
 
