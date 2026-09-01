@@ -54,6 +54,7 @@
 
       perSystem =
         {
+          config,
           system,
           lib,
           ...
@@ -73,6 +74,16 @@
         {
           # Use the common overlay in all per-system modules.
           _module.args.pkgs = pkgs;
+
+          # Expose build artifacts and project commands through `nix build` / `nix run`.
+          packages = {
+            inherit (pkgs)
+              comchan
+              git-clean-all
+              git-sweep-all
+              ;
+          };
+
           # Enter with `nix develop` or `nix develop .#rust`.
           devShells = {
             # Try tools provided by the common overlay.
@@ -115,8 +126,7 @@
           };
 
           # Verify package builds and the sample Darwin configuration with `nix flake check`.
-          checks = {
-            comchan = pkgs.comchan;
+          checks = config.packages // {
             darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
           };
 
