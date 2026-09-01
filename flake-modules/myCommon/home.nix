@@ -66,13 +66,15 @@ let
             nushell = {
               enable = true;
 
-              # settings = {
-              #   # Escape hatch: stay in Bash instead of being re-exec'd into
-              #   # Nushell by the interactive trampoline. `--norc` skips the
-              #   # trampoline; `-i` keeps it interactive.
-              #   aliases.bash = "exec bash --norc -i";
-              #   aliases.zsh = "exec zsh --norc -i";
-              # };
+              # Escape hatch: stay in Bash/Zsh instead of being re-exec'd into
+              # Nushell by the interactive trampoline. `--norc` skips the
+              # trampoline; `-i` keeps it interactive. Uses shellAliases (real
+              # `alias` in config.nu), NOT settings (which flattens to
+              # $env.config.* and has no aliases table).
+              shellAliases = {
+                bash = "exec bash --norc -i";
+                zsh = "exec zsh --norc -i";
+              };
 
               settings.completions.external = {
                 enable = true;
