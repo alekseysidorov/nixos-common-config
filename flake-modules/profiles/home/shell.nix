@@ -1,11 +1,23 @@
 # Shell settings and integrations
 { lib, ... }:
 {
-  home.shell.enableShellIntegration = true;
   myCommon.home.interactiveShell = "nushell";
 
+  home.shell = {
+    enableShellIntegration = true;
+    enableNushellIntegration = true;
+  };
+
   programs = {
-    carapace.enable = true;
+    carapace = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    nix-your-shell = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
 
     starship = {
       enable = true;
