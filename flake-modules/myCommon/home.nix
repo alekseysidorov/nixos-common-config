@@ -45,7 +45,7 @@ let
           zsh = {
             enable = true;
             # Home Manager puts initExtra behind its interactive Bash guard.
-            initExtra = lib.mkIf config.home.shell.enableNushellIntegration (
+            initContent = lib.mkIf config.home.shell.enableNushellIntegration (
               lib.mkOrder 200 ''
                 if [[ -t 0 && -t 1 ]]; then
                   exec ${lib.getExe config.programs.nushell.package}
@@ -54,6 +54,7 @@ let
             );
           };
 
+          # Nushell uses fish program for external autocompletions.
           fish.enable = true;
 
           nushell = {
@@ -71,7 +72,6 @@ let
             };
 
             extraConfig = ''
-              source ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/nix/nix-completions.nu
               source ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/just/just-completions.nu
             '';
           };
@@ -79,6 +79,43 @@ let
           nix-your-shell = {
             enable = true;
             enableNushellIntegration = true;
+          };
+
+          starship = {
+            enable = true;
+            presets = [ "pure-preset" ];
+            settings = {
+              format = lib.concatStrings [
+                "$env_var"
+                "$username"
+                "$hostname"
+                "$directory"
+                "$git_branch"
+                "$git_state"
+                "$git_status"
+                "$cmd_duration"
+                "$line_break"
+                "$python"
+                "$character"
+              ];
+
+              character = {
+                success_symbol = "[➜](purple)";
+                error_symbol = "[➜](red)";
+                vimcmd_symbol = "[➜](green)";
+              };
+
+              hostname = {
+                ssh_only = true;
+                format = "[$hostname](purple) ";
+              };
+
+              env_var = {
+                variable = "PROMPT_NAME";
+                style = "bright-black";
+                format = "[($env_value)]($style)";
+              };
+            };
           };
         };
       };
