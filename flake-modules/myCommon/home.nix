@@ -44,7 +44,8 @@ let
 
           zsh = {
             enable = true;
-            # Home Manager puts initExtra behind its interactive Bash guard.
+            # Home Manager writes initContent to .zshrc, which runs only for
+            # interactive sessions, so this is a safe interactive trampoline.
             initContent = lib.mkIf config.home.shell.enableNushellIntegration (
               lib.mkOrder 200 ''
                 if [[ -t 0 && -t 1 ]]; then
@@ -59,6 +60,14 @@ let
 
           nushell = {
             enable = true;
+
+            settings = {
+              # Escape hatch: stay in Bash instead of being re-exec'd into
+              # Nushell by the interactive trampoline. `--norc` skips the
+              # trampoline; `-i` keeps it interactive.
+              aliases.bash = "exec bash --norc -i";
+              aliases.zsh = "exec zsh --norc -i";
+            };
 
             settings.completions.external = {
               enable = true;

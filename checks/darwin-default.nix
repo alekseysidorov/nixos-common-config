@@ -180,7 +180,6 @@ let
         assertion =
           !config.programs.carapace.enable
           && config.programs.nushell.settings.completions.external.enable
-          && lib.hasInfix "/custom-completions/nix/nix-completions.nu" config.programs.nushell.extraConfig
           && lib.hasInfix "/custom-completions/just/just-completions.nu" config.programs.nushell.extraConfig
           && config.programs.starship.enableBashIntegration
           && config.programs.starship.enableNushellIntegration
@@ -188,7 +187,7 @@ let
           && config.programs.direnv.enableBashIntegration
           && config.programs.direnv.enableNushellIntegration
           && config.programs.direnv.enableZshIntegration;
-        message = "the shell profile must provide Fish plus native Nix and Just completions";
+        message = "the shell profile must provide Fish plus native Just completions";
       }
     ];
 in
