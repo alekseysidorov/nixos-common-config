@@ -146,6 +146,10 @@ let
         message = "the NixOS primary user's login shell must remain Bash";
       }
       {
+        assertion = config.programs.fish.enable && nixos.config.programs.fish.enable;
+        message = "NixOS and nix-darwin must provide Fish for the Nushell completion backend";
+      }
+      {
         assertion =
           defaultHome.config.myCommon.home.interactiveShell == null
           && !defaultHome.config.programs.nushell.enable
@@ -190,17 +194,17 @@ let
       }
       {
         assertion =
-          config.programs.carapace.enable
-          && config.programs.carapace.enableBashIntegration
-          && config.programs.carapace.enableNushellIntegration
-          && config.programs.carapace.enableZshIntegration
+          !config.programs.carapace.enable
+          && config.programs.nushell.settings.completions.external.enable
+          && lib.hasInfix "/custom-completions/nix/nix-completions.nu" config.programs.nushell.extraConfig
+          && lib.hasInfix "/custom-completions/just/just-completions.nu" config.programs.nushell.extraConfig
           && config.programs.starship.enableBashIntegration
           && config.programs.starship.enableNushellIntegration
           && config.programs.starship.enableZshIntegration
           && config.programs.direnv.enableBashIntegration
           && config.programs.direnv.enableNushellIntegration
           && config.programs.direnv.enableZshIntegration;
-        message = "Home Manager defaults must enable Carapace, Starship, and Direnv shell integrations";
+        message = "the shell profile must provide Fish plus native Nix and Just completions";
       }
     ];
 in

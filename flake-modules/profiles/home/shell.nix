@@ -1,5 +1,5 @@
 # Shell settings and integrations
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   myCommon.home.interactiveShell = "nushell";
 
@@ -9,9 +9,22 @@
   };
 
   programs = {
-    carapace = {
-      enable = true;
-      enableNushellIntegration = true;
+    nushell = {
+      settings.completions.external = {
+        enable = true;
+        completer = lib.hm.nushell.mkNushellInline ''
+          {|spans|
+            ${lib.getExe pkgs.fish} --command $'complete "--do-complete=($spans | str join " ")"'
+            | $"value(char tab)description(char newline)" + $in
+            | from tsv --flexible --no-infer
+          }
+        '';
+      };
+
+      extraConfig = ''
+        source ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/nix/nix-completions.nu
+        source ${pkgs.nu_scripts}/share/nu_scripts/custom-completions/just/just-completions.nu
+      '';
     };
 
     nix-your-shell = {
