@@ -47,9 +47,9 @@ let
   optionsModule =
     { lib, ... }:
     {
-      key = "myCommon/gitDefaults/config";
+      key = "myCommon/enableGitIntegration/config";
 
-      options.myCommon.gitDefaults = lib.mkEnableOption "the common Git defaults";
+      options.myCommon.enableGitIntegration = lib.mkEnableOption "the common Git defaults";
     };
 
   nixosModule =
@@ -60,7 +60,7 @@ let
       ...
     }:
     {
-      config = lib.mkIf config.myCommon.gitDefaults {
+      config = lib.mkIf config.myCommon.enableGitIntegration {
         environment.systemPackages = [
           pkgs.git-clean-all
           pkgs.git-sweep-all
@@ -82,7 +82,7 @@ let
       ...
     }:
     {
-      config = lib.mkIf config.myCommon.gitDefaults {
+      config = lib.mkIf config.myCommon.enableGitIntegration {
         environment.systemPackages = [
           pkgs.git
           pkgs.git-lfs
@@ -104,7 +104,7 @@ let
       ...
     }:
     {
-      config = lib.mkIf config.myCommon.gitDefaults {
+      config = lib.mkIf config.myCommon.enableGitIntegration {
         home.packages = [
           pkgs.git-clean-all
           pkgs.git-sweep-all

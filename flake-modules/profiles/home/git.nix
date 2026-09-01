@@ -1,6 +1,6 @@
 { ... }:
 {
-  myCommon.gitDefaults = true;
+  myCommon.enableGitIntegration = true;
 
   programs.git.settings.user = {
     name = "Aleksey Sidorov";

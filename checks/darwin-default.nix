@@ -6,7 +6,7 @@
 }:
 let
   myCommon = {
-    gitDefaults = true;
+    enableGitIntegration = true;
 
     primaryUser = {
       name = "test";
@@ -48,11 +48,11 @@ let
       }
       {
         assertion = lib.hasInfix "[alias]" gitConfig && lib.hasInfix "swp = " gitConfig;
-        message = "gitDefaults must write common aliases to /etc/gitconfig";
+        message = "enableGitIntegration must write common aliases to /etc/gitconfig";
       }
       {
         assertion = lib.hasInfix ''[filter "lfs"]'' gitConfig;
-        message = "gitDefaults must write the Git LFS filter to /etc/gitconfig";
+        message = "enableGitIntegration must write the Git LFS filter to /etc/gitconfig";
       }
       {
         assertion = !lib.hasInfix "[user]" gitConfig;
@@ -63,7 +63,7 @@ let
           "git-clean-all"
           "git-sweep-all"
         ];
-        message = "gitDefaults must install the common Git tools system-wide";
+        message = "enableGitIntegration must install the common Git tools system-wide";
       }
     ];
 in
