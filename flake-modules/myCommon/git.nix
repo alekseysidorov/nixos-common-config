@@ -2,8 +2,8 @@
 let
   gitSettings = {
     alias = {
-      cln = "!git-clean-all";
-      swp = "!git-sweep-all";
+      cln = "!git-clean-all --this-repo";
+      swp = "!git-sweep-all --this-repo";
     };
 
     push = {

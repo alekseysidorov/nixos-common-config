@@ -23,13 +23,13 @@ in
       final.findutils
     ];
     text = ''
-      # Clean ignored and untracked files in a Git repository.
+      # Clean ignored and untracked files in an all Git repositories under the given path.
       def main [
         root: path = "." # Repository or root directory to process.
-        --recursive (-r) # Process every Git repository under root.
+        --this-repo # Process only repository in the given path
       ] {
         let root = ($root | path expand)
-        let repos = if $recursive {
+        let repos = if not $this_repo {
           ^find $root -type d -name .git -prune
           | lines
           | each { path dirname }
@@ -51,13 +51,13 @@ in
       final.findutils
     ];
     text = ''
-      # Delete local branches with a gone upstream in a Git repository.
+      # Delete local branches with a gone upstream in a all Git repositories under the given path.
       def main [
         root: path = "." # Repository or root directory to process.
-        --recursive (-r) # Process every Git repository under root.
+        --this-repo      # Process only given git repository path
       ] {
         let root = ($root | path expand)
-        let repos = if $recursive {
+        let repos = if not $this_repo {
           ^find $root -type d -name .git -prune
           | lines
           | each { path dirname }
