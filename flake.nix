@@ -28,10 +28,6 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nufmt = {
-      url = "github:nushell/nufmt";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -40,36 +36,35 @@
       flake-parts,
       ...
     }@inputs:
-    let
-      localOverlay = (import ./overlay.nix) { inherit inputs; };
-    in
     flake-parts.lib.mkFlake { inherit inputs; } {
-      # Declared systems that your flake supports. These will be enumerated in perSystem
-      systems = inputs.nixpkgs.lib.systems.flakeExposed;
       imports = [
         inputs.treefmt-nix.flakeModule
         inputs.rust-dev-flake.flakeModules.gitHooks
-        ./flake-modules
+
+        ./modules
+      ];
+
+      # Declared systems that your flake supports. These will be enumerated in perSystem
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+        "riscv64-linux"
       ];
 
       perSystem =
         {
           config,
           system,
-          lib,
           ...
         }:
         let
           pkgs = import inputs.nixpkgs {
             inherit system;
             overlays = [
-              localOverlay
+              self.overlays.default
             ];
           };
-
-          mkDarwinCheck =
-            module:
-            lib.mkIf (lib.hasSuffix "-darwin" system) ((import module { inherit self inputs system; }).system);
         in
         {
           # Use the common overlay in all per-system modules.
@@ -77,57 +72,33 @@
 
           # Expose build artifacts and project commands through `nix build` / `nix run`.
           packages = {
-            inherit (pkgs)
-              comchan
-              git-clean-all
-              git-sweep-all
-              ;
           };
 
           # Enter with `nix develop` or `nix develop .#rust`.
           devShells = {
             # Try tools provided by the common overlay.
             default = pkgs.mkShell {
-              buildInputs = with pkgs; [
-                unstable.comchan
-                nufmt
+              packages = with pkgs; [
               ];
             };
-            # Supply native dependencies while rustup manages the Rust toolchain.
-            rust =
-              with pkgs;
-              mkShell {
-                nativeBuildInputs = [
-                  pkgconf
-                  openssl
-                  rustup
-                  nushell
-                  python3
-                  rustPlatform.bindgenHook
-                  comchan
-                  rumdl
-                ]
-                ++ lib.optionals stdenv.hostPlatform.isLinux [ systemd ];
 
-                env.PROMPT_NAME = "devshell/rust";
-              };
+            # Supply native dependencies while rustup manages the Rust toolchain.
+            rust = pkgs.mkShell {
+              env.PROMPT_NAME = "devshell/rust";
+            };
           };
 
           # Share formatting rules between `nix fmt` and CI.
           treefmt = {
             projectRootFile = "flake.nix";
             programs = {
-              nixfmt = {
-                enable = true;
-                package = pkgs.nixfmt-rs;
-              };
+              nixfmt.enable = true;
               taplo.enable = true;
             };
           };
 
           # Verify package builds and the sample Darwin configuration with `nix flake check`.
           checks = config.packages // {
-            darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
           };
 
           # Install explicitly with `nix run .#install-git-hooks`.
