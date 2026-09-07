@@ -1,9 +1,9 @@
 {
-  writeNuShellApplication,
+  writeNushellApplication,
   git,
   findutils,
 }:
-writeNuShellApplication {
+writeNushellApplication {
   name = "git-sweep-all";
   runtimeInputs = [
     git

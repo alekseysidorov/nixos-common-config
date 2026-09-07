@@ -4,11 +4,6 @@ All documentation must be in English. Keep instructions concise.
 
 ## Agent Workflow
 
-### Temporary Files
-
-- Store temporary files under `target/agent` (ignored by Git).
-- Organize subdirectories as needed. No temporary files outside `target/`.
-
 ## Commit Messages
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)

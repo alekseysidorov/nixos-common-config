@@ -1,10 +1,10 @@
 {
-  writeNuShellApplication,
+  writeNushellApplication,
   git,
   findutils,
 }:
 
-writeNuShellApplication {
+writeNushellApplication {
   name = "git-clean-all";
   runtimeInputs = [
     git

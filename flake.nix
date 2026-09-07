@@ -18,12 +18,8 @@
     };
 
     # Development
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     rust-dev-flake = {
-      url = "github:alekseysidorov/rust-dev-flake";
+      url = "github:alekseysidorov/rust-dev-flake/nix-devtools";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
@@ -42,9 +38,9 @@
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
+        inputs.flake-parts.flakeModules.modules
         inputs.treefmt-nix.flakeModule
-        inputs.rust-dev-flake.flakeModules.gitHooks
-
+        inputs.rust-dev-flake.flakeModule
         ./modules
       ];
 
@@ -105,11 +101,11 @@
 
           # Install explicitly with `nix run .#install-git-hooks`.
           gitHooks = {
-            pre-commit = pkgs.writeNuShellScript "pre-commit" ''
+            pre-commit = pkgs.writeNushellScript "pre-commit" ''
               print "⚡️ Running pre-commit checks..."
               nix build .#checks.${system}.treefmt -L
             '';
-            pre-push = pkgs.writeNuShellScript "pre-push" ''
+            pre-push = pkgs.writeNushellScript "pre-push" ''
               print "⚡️ Running pre-push checks..."
               nix flake check -L
             '';
