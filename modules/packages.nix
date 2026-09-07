@@ -8,23 +8,28 @@ let
       directory = ../pkgs;
     };
 
+  localOverlay = final: _prev: localPackagesFor final;
+
   unstableOverlay = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = final.stdenv.hostPlatform.system;
       config = final.config;
+
+      overlays = [
+        inputs.rust-dev-flake.overlays.default
+        inputs.rust-overlay.overlays.default
+        localOverlay
+      ];
     };
   };
-
-  localOverlay = final: _prev: localPackagesFor final;
-
-  overlay = lib.composeManyExtensions [
+in
+{
+  flake.overlays.default = lib.composeManyExtensions [
     inputs.rust-dev-flake.overlays.default
+    inputs.rust-overlay.overlays.default
     unstableOverlay
     localOverlay
   ];
-in
-{
-  flake.overlays.default = overlay;
 
   perSystem =
     { pkgs, ... }:

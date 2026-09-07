@@ -18,6 +18,10 @@
     };
 
     # Development
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     rust-dev-flake = {
       url = "github:alekseysidorov/rust-dev-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -78,8 +82,7 @@
           devShells = {
             # Try tools provided by the common overlay.
             default = pkgs.mkShell {
-              packages = with pkgs; [
-              ];
+              packages = [ ];
             };
 
             # Supply native dependencies while rustup manages the Rust toolchain.
@@ -98,8 +101,7 @@
           };
 
           # Verify package builds and the sample Darwin configuration with `nix flake check`.
-          checks = config.packages // {
-          };
+          checks = config.packages;
 
           # Install explicitly with `nix run .#install-git-hooks`.
           gitHooks = {

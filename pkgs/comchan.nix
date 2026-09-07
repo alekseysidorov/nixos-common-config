@@ -1,12 +1,22 @@
 {
   lib,
-  rustPlatform,
   fetchCrate,
   pkg-config,
   udev,
   fontconfig,
   stdenv,
+
+  rust-bin,
+  makeRustPlatform,
 }:
+let
+  rust = rust-bin.stable."1.97.1".minimal;
+
+  rustPlatform = makeRustPlatform {
+    cargo = rust;
+    rustc = rust;
+  };
+in
 
 rustPlatform.buildRustPackage rec {
   pname = "comchan";
