@@ -96,6 +96,7 @@
                 gitOverride
 
                 {
+                  nix.package = pkgs.nix;
                   home = {
                     username = "test";
                     homeDirectory = "/home/test";
