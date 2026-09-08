@@ -32,6 +32,7 @@ in
 {
   imports = [
     ./extraSubstituters.nix
+    ./secretOptionsFile.nix
     ./home
   ];
 
