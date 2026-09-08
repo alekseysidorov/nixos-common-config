@@ -1,8 +1,7 @@
 {
   imports = [
     ./flake
-    ./git.nix
-    ./vim.nix
+    ./home
     ./nix
     ./packages.nix
     ./tests.nix

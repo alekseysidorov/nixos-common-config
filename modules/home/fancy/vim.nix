@@ -4,9 +4,9 @@ let
   optionsModule =
     { lib, ... }:
     {
-      key = "myCommon/enableVimIntegration/config";
+      key = "myCommon/home/fancy/vim";
 
-      options.myCommon.enableVimIntegration = lib.mkEnableOption "the common Vim defaults";
+      options.myCommon.home.fancy.vim.enable = lib.mkEnableOption "the common Vim defaults";
     };
 
   vimConfig = ''
@@ -48,45 +48,6 @@ let
       };
     };
 
-  nixosModule =
-    {
-      config,
-      lib,
-      pkgs,
-      ...
-    }:
-
-    {
-      config = lib.mkIf config.myCommon.enableVimIntegration {
-        programs.vim = {
-          enable = true;
-          defaultEditor = true;
-          package = mkVim pkgs;
-        };
-      };
-    };
-
-  darwinModule =
-    {
-      config,
-      lib,
-      pkgs,
-      ...
-    }:
-
-    {
-      config = lib.mkIf config.myCommon.enableVimIntegration {
-        environment.systemPackages = [
-          (mkVim pkgs)
-        ];
-
-        environment.variables = {
-          EDITOR = "vim";
-          VISUAL = "vim";
-        };
-      };
-    };
-
   homeManagerModule =
     {
       config,
@@ -94,9 +55,8 @@ let
       pkgs,
       ...
     }:
-
     {
-      config = lib.mkIf config.myCommon.enableVimIntegration {
+      config = lib.mkIf config.myCommon.home.fancy.vim.enable {
         programs.vim = {
           enable = true;
           defaultEditor = true;
@@ -108,20 +68,8 @@ let
     };
 in
 {
-  flake.modules = {
-    nixos.myCommon.imports = [
-      optionsModule
-      nixosModule
-    ];
-
-    darwin.myCommon.imports = [
-      optionsModule
-      darwinModule
-    ];
-
-    homeManager.myCommon.imports = [
-      optionsModule
-      homeManagerModule
-    ];
-  };
+  flake.modules.homeManager.myCommon.imports = [
+    optionsModule
+    homeManagerModule
+  ];
 }

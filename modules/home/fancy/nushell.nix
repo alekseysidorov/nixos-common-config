@@ -10,12 +10,12 @@ let
     }:
 
     let
-      cfg = config.myCommon.home.nushell;
+      cfg = config.myCommon.home.fancy.nushell;
     in
     {
-      key = "myCommon/home/nushell";
+      key = "myCommon/home/fancy/nushell";
 
-      options.myCommon.home.nushell = {
+      options.myCommon.home.fancy.nushell = {
         enable = lib.mkEnableOption "the common Nushell environment";
 
         trampoline = {
