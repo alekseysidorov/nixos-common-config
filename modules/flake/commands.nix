@@ -1,129 +1,132 @@
-{ ... }:
+{ inputs, ... }:
 
 let
   commandsModule =
     {
-      config,
-      inputs,
+      flake-parts-lib,
       lib,
-      pkgs,
-      system,
       ...
     }:
 
-    let
-      cfg = config.myCommon.flake.commands;
+    {
+      options.perSystem = flake-parts-lib.mkPerSystemOption (
+        {
+          config,
+          pkgs,
+          system,
+          ...
+        }:
 
-      inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+        let
+          cfg = config.myCommon.flake.commands;
 
-      # Activation is one semantic command with a platform-specific backend.
-      #
-      # Keep the backend selection internal: callers should invoke `activate`
-      # without knowing whether the current system is managed by NixOS or
-      # nix-darwin.
-      activationBackend =
-        if isDarwin then
-          {
-            package = inputs.nix-darwin.packages.${system}.darwin-rebuild;
-            command = "^sudo darwin-rebuild";
-          }
-        else if isLinux then
-          {
-            package = pkgs.nixos-rebuild;
-            command = "^nixos-rebuild --sudo";
-          }
-        else
-          null;
+          # Use this flake's canonical package universe locally. Consumers do
+          # not need to install the overlay globally just to use the commands.
+          pkgsLocal = pkgs.extend inputs.self.overlays.default;
 
-      # `cleanup` is a flake command, not part of the reusable package-set API.
-      # Build it locally and expose only the executable entrypoint through
-      # `apps.cleanup`.
-      cleanup = pkgs.writeNushellApplication {
-        name = "cleanup";
+          inherit (pkgsLocal.stdenv.hostPlatform) isDarwin isLinux;
 
-        runtimeInputs = [
-          pkgs.nix
-        ];
+          # `activate` is one semantic command. The platform-specific rebuild
+          # implementation remains internal to the module.
+          activationBackend =
+            if isDarwin then
+              {
+                package = inputs.nix-darwin.packages.${system}.darwin-rebuild;
+                command = "^sudo darwin-rebuild";
+              }
+            else if isLinux then
+              {
+                package = pkgsLocal.nixos-rebuild;
+                command = "^nixos-rebuild --sudo";
+              }
+            else
+              null;
 
-        text = ''
-          ^sudo nix store gc -vv
-          ^nix store gc -vv
-          ^nix store optimise
-        '';
-      };
-
-      # Build one `activate` command independent of the concrete system backend.
-      # The selected rebuild tool is injected only as a runtime dependency.
-      activate =
-        if activationBackend == null then
-          null
-        else
-          pkgs.writeNushellApplication {
-            name = "activate";
+          # Private implementation of the public `cleanup` app.
+          cleanup = pkgsLocal.writeNushellApplication {
+            name = "cleanup";
 
             runtimeInputs = [
-              pkgs.nix
-              activationBackend.package
+              pkgsLocal.nix
             ];
 
-            extraConfig = ''
-              alias rebuild = ${activationBackend.command}
-            '';
-
             text = ''
-              # Activate this flake's system configuration using the selected backend.
-              def --wrapped main [...args: string] {
-                rebuild switch --flake ".#" ...$args
-              }
+              # Garbage-collect system and user store paths, then optimise the store.
+              ^sudo nix store gc -vv
+              ^nix store gc -vv
+              ^nix store optimise
             '';
           };
-    in
-    {
-      options.myCommon.flake.commands.enable = lib.mkEnableOption "common flake commands";
 
-      config = lib.mkIf cfg.enable {
-        # Apps are the public command surface.
-        #
-        # The underlying derivations intentionally remain private to this
-        # module: they are implementation details rather than reusable
-        # `pkgs.*` capabilities.
-        apps = {
-          cleanup = {
-            type = "app";
-            program = lib.getExe cleanup;
+          # Private implementation of the public `activate` app.
+          activate =
+            if activationBackend == null then
+              null
+            else
+              pkgsLocal.writeNushellApplication {
+                name = "activate";
 
-            meta.description = "Collect obsolete Nix store paths and optimise the local Nix store.";
+                runtimeInputs = [
+                  pkgsLocal.nix
+                  activationBackend.package
+                ];
+
+                extraConfig = ''
+                  alias rebuild = ${activationBackend.command}
+                '';
+
+                text = ''
+                  # Activate this flake's system configuration.
+                  def --wrapped main [...args: string] {
+                    rebuild switch --flake ".#" ...$args
+                  }
+                '';
+              };
+        in
+        {
+          options.myCommon.flake.commands.enable = lib.mkEnableOption "common flake commands";
+
+          config = lib.mkIf cfg.enable {
+            # Apps are the public interface. Their backing derivations remain
+            # private implementation details of this module.
+            apps = {
+              cleanup = {
+                type = "app";
+                program = lib.getExe cleanup;
+
+                meta.description = "Collect obsolete Nix store paths and optimise the local Nix store.";
+              };
+            }
+            // lib.optionalAttrs (activate != null) {
+              activate = {
+                type = "app";
+                program = lib.getExe activate;
+
+                meta.description = "Activate this flake's system configuration.";
+              };
+            };
           };
         }
-        // lib.optionalAttrs (activate != null) {
-          activate = {
-            type = "app";
-            program = lib.getExe activate;
+      );
 
-            meta.description = "Activate this flake's system configuration.";
-          };
-        };
-      };
-
-      # TODO: support Home Manager as an activation backend.
+      # TODO: support Home Manager as an alternative activation backend.
       #
-      # The intended public API is:
+      # Intended API:
       #
       #   myCommon.flake.commands.activate.useHomeManager = true;
       #
-      # When enabled, the same `apps.activate` entrypoint should use
-      # `home-manager switch --flake ...` instead of the platform system
-      # backend. Keep `activate` as the single semantic command; selecting
-      # NixOS, nix-darwin, or Home Manager is an implementation detail.
-      #
-      # The remaining design question is how to determine the Home Manager
-      # flake target/configuration name without reintroducing a global
-      # `primaryUser` abstraction. Add the option only once that target can
-      # be derived or represented explicitly and cleanly.
+      # The same `apps.activate` entrypoint should then invoke
+      # `home-manager switch --flake ...` instead of nixos-rebuild or
+      # darwin-rebuild. The remaining question is how to identify the Home
+      # Manager configuration cleanly without restoring primaryUser.
     };
 in
 {
-  perSystem = commandsModule;
+  imports = [
+    commandsModule
+  ];
 
-  flake.modules.flake.myCommon.imports = [ commandsModule ];
+  flake.modules.flake.myCommon.imports = [
+    commandsModule
+  ];
 }
