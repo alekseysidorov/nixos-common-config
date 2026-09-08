@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}:
+{ lib, ... }:
 
 {
   perSystem =
@@ -14,35 +11,54 @@
     let
       inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
 
-      # Enable the public command surface exactly as a consumer would.
-      commandsModule = {
-        myCommon.flake.commands.enable = true;
-      };
-
-      # Evaluate this flake's per-system configuration with commands enabled.
-      #
-      # The test deliberately observes only the resulting `apps` interface:
-      # backend selection remains an implementation detail of commands.nix.
       apps = config.apps;
 
-      activateProgram = apps.activate.program;
-      cleanupProgram = apps.cleanup.program;
+      # `apps.*.program` points to <derivation>/bin/<command>.
+      # Recover the backing derivation so behavioral checks can inspect the
+      # generated Nushell application without depending on its implementation
+      # being exported through `packages`.
+      appPackage = app: builtins.dirOf (builtins.dirOf app.program);
 
-      # `apps.*.program` points at <package>/bin/<command>.
-      # Recover the package output so the generated Nushell application can be
-      # inspected during the build without discarding Nix string context.
-      activatePackage = builtins.dirOf (builtins.dirOf activateProgram);
-      cleanupPackage = builtins.dirOf (builtins.dirOf cleanupProgram);
+      activatePackage = appPackage apps.activate;
+      cleanupPackage = appPackage apps.cleanup;
 
+      # Contract shared by every supported platform:
+      # enabling the command capability publishes the same public app surface.
+      commonChecks = {
+        test-commands-flake-apps-eval =
+          assert apps ? activate;
+          assert apps ? cleanup;
+          assert apps.activate.type == "app";
+          assert apps.cleanup.type == "app";
+          assert apps.activate.meta.description != "";
+          assert apps.cleanup.meta.description != "";
+
+          pkgs.runCommand "test-commands-flake-apps-eval" { } ''
+            touch $out
+          '';
+
+        test-commands-flake-cleanup = pkgs.runCommand "test-commands-flake-cleanup" { } ''
+          # Intent:
+          # cleanup is platform-independent and performs both privileged and
+          # user store garbage collection followed by store optimisation.
+          grep -R --fixed-strings "sudo nix store gc -vv" ${cleanupPackage}
+          grep -R --fixed-strings "nix store gc -vv" ${cleanupPackage}
+          grep -R --fixed-strings "nix store optimise" ${cleanupPackage}
+
+          touch $out
+        '';
+      };
+
+      # Platform-specific contract:
+      # `activate` keeps one stable public name while selecting exactly the
+      # backend appropriate for the current host platform.
       platformChecks =
         lib.optionalAttrs isLinux {
           test-commands-flake-nixos-activate = pkgs.runCommand "test-commands-flake-nixos-activate" { } ''
-            # Intent: Linux system activation is implemented by nixos-rebuild.
             grep -R --fixed-strings "nixos-rebuild" ${activatePackage}
 
-            # Darwin must not accidentally leak into the Linux backend.
             if grep -R --fixed-strings "darwin-rebuild" ${activatePackage}; then
-              echo "activate unexpectedly contains the Darwin backend" >&2
+              echo "Darwin backend leaked into the NixOS activate command" >&2
               exit 1
             fi
 
@@ -51,44 +67,22 @@
         }
         // lib.optionalAttrs isDarwin {
           test-commands-flake-darwin-activate = pkgs.runCommand "test-commands-flake-darwin-activate" { } ''
-            # Intent: Darwin system activation is implemented by darwin-rebuild.
             grep -R --fixed-strings "darwin-rebuild" ${activatePackage}
 
-            # NixOS must not accidentally leak into the Darwin backend.
             if grep -R --fixed-strings "nixos-rebuild" ${activatePackage}; then
-              echo "activate unexpectedly contains the NixOS backend" >&2
+              echo "NixOS backend leaked into the Darwin activate command" >&2
               exit 1
             fi
 
             touch $out
           '';
         };
-
-      commonChecks = {
-        test-commands-flake-apps-eval =
-          # Intent: enabling commands publishes the stable public app surface.
-          assert apps ? activate;
-          assert apps ? cleanup;
-          assert apps.activate.type == "app";
-          assert apps.cleanup.type == "app";
-
-          pkgs.runCommand "test-commands-flake-apps-eval" { } ''
-            touch $out
-          '';
-
-        test-commands-flake-cleanup = pkgs.runCommand "test-commands-flake-cleanup" { } ''
-          # Intent: cleanup remains a platform-independent Nix store command.
-          grep -R --fixed-strings "nix store gc" ${cleanupPackage}
-          grep -R --fixed-strings "nix store optimise" ${cleanupPackage}
-
-          touch $out
-        '';
-      };
     in
     {
-      imports = [
-        commandsModule
-      ];
+      # Scenario under test:
+      # command publication is an explicit per-system decision because its
+      # result lives under `apps.<system>`.
+      myCommon.flake.commands.enable = true;
 
       checks = commonChecks // platformChecks;
     };
