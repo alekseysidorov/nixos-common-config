@@ -124,4 +124,6 @@ let
 in
 {
   perSystem = commandsModule;
+
+  flake.modules.flake.myCommon.imports = [ commandsModule ];
 }
