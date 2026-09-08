@@ -1,7 +1,8 @@
 {
   imports = [
-    ./packages.nix
     ./git.nix
+    ./nix
+    ./packages.nix
     ./tests.nix
   ];
 }
