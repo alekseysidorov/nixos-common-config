@@ -37,17 +37,6 @@ let
       pkgs.vimPlugins.vim-easy-align
     ];
 
-  mkVim =
-    pkgs:
-    pkgs.vim-full.customize {
-      name = "vim";
-
-      vimrcConfig = {
-        customRC = vimConfig;
-        packages.myCommon.start = mkVimPlugins pkgs;
-      };
-    };
-
   homeManagerModule =
     {
       config,
