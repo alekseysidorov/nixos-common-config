@@ -20,7 +20,6 @@ let
 
         trampoline = {
           bash.enable = lib.mkEnableOption "the Bash to Nushell interactive trampoline";
-
           zsh.enable = lib.mkEnableOption "the Zsh to Nushell interactive trampoline";
         };
       };
