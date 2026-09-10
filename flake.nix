@@ -42,6 +42,7 @@
         inputs.treefmt-nix.flakeModule
         inputs.rust-dev-flake.flakeModule
         ./modules
+        ./tests
       ];
 
       # Declared systems that your flake supports. These will be enumerated in perSystem

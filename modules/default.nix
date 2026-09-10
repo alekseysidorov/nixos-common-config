@@ -4,6 +4,5 @@
     ./home
     ./nix
     ./packages.nix
-    ./tests.nix
   ];
 }
