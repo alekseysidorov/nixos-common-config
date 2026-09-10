@@ -60,7 +60,6 @@
       expectedNushellExe = plainText (lib.getExe trampolineConfig.programs.nushell.package);
 
       bashInit = plainText trampolineConfig.programs.bash.initExtra;
-
       zshInit = plainText trampolineConfig.programs.zsh.initContent;
 
       mkEvalCheck =
@@ -82,6 +81,10 @@
         # Nushell integration alone must not implicitly enable source shells.
         assert !integrationConfig.programs.bash.enable;
         assert !integrationConfig.programs.zsh.enable;
+
+        # Nushell integration should has an external completers.
+        assert integrationConfig.programs.nushell.settings.completions.external.enable;
+        assert integrationConfig.programs.nushell.settings.completions.external.completer != null;
 
         mkEvalCheck "test-nushell-home-integration-eval";
 

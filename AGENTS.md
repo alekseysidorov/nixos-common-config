@@ -23,6 +23,8 @@ All documentation must be in English. Keep instructions concise.
 - Expose semantic interfaces, not implementation artifacts.
 - Tests should verify public contracts and resulting behavior, not private layout.
 - Keep the core minimal; add new behavior as orthogonal capabilities.
+- System modules provide infrastructure.
+- Home Manager owns personal UX.
 
 ## Module Structure
 
@@ -40,9 +42,9 @@ Capabilities contribute to one or more aggregates.
 Namespaces:
 
 ```text
-myCommon.nix.*     Nix policy/infrastructure
-myCommon.flake.*   flake-level behavior
-myCommon.fancy.*   opt-in personal UX/tooling
+myCommon.nix.*          Nix policy/infrastructure
+myCommon.flake.*        flake-level behavior
+myCommon.home.fancy.*   opt-in personal UX/tooling managed by Home Manager
 ```
 
 Examples:

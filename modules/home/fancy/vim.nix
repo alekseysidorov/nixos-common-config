@@ -25,8 +25,6 @@ let
         src = pkgs.fetchFromGitHub {
           owner = "krfl";
           repo = "fleetish-vim";
-
-          # Pin this to a concrete commit once you've fetched the hash.
           rev = "e2d3c7f";
           hash = "sha256-ciHSCI2M8CqKmYY9HaF88n3ev0HTLEJsTSB/UK+m9ps=";
         };
