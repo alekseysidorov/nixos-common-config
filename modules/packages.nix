@@ -23,7 +23,7 @@ let
       config = final.config;
 
       overlays = [
-        inputs.rust-dev-flake.overlays.default
+        inputs.nix-devtools.overlays.default
         localOverlay
       ];
     };
@@ -32,7 +32,7 @@ let
   # Keep one canonical package-set extension for both the public overlay
   # and every platform module assembled into myCommon.
   defaultOverlay = lib.composeManyExtensions [
-    inputs.rust-dev-flake.overlays.default
+    inputs.nix-devtools.overlays.default
     unstableOverlay
     localOverlay
   ];

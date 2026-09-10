@@ -18,8 +18,8 @@
     };
 
     # Development
-    rust-dev-flake = {
-      url = "github:alekseysidorov/rust-dev-flake/nix-devtools";
+    nix-devtools = {
+      url = "github:alekseysidorov/nix-devtools";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
@@ -40,7 +40,7 @@
       imports = [
         inputs.flake-parts.flakeModules.modules
         inputs.treefmt-nix.flakeModule
-        inputs.rust-dev-flake.flakeModule
+        inputs.nix-devtools.flakeModule
         ./modules
         ./tests
       ];

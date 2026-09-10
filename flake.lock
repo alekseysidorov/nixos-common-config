@@ -75,6 +75,35 @@
         "type": "github"
       }
     },
+    "nix-devtools": {
+      "inputs": {
+        "crane": "crane",
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-advisory-db": "rust-advisory-db",
+        "rust-overlay": "rust-overlay",
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789043586,
+        "narHash": "sha256-L16NsDHqPgwWxJF2e4vHfPUSPjTiuNNqtd5jYISj++w=",
+        "owner": "alekseysidorov",
+        "repo": "nix-devtools",
+        "rev": "d7e2b85dcf01be97ca35a975e6f6885ce525e553",
+        "type": "github"
+      },
+      "original": {
+        "owner": "alekseysidorov",
+        "repo": "nix-devtools",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1788690626,
@@ -127,9 +156,9 @@
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
+        "nix-devtools": "nix-devtools",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "rust-dev-flake": "rust-dev-flake",
         "treefmt-nix": "treefmt-nix"
       }
     },
@@ -149,40 +178,10 @@
         "type": "github"
       }
     },
-    "rust-dev-flake": {
-      "inputs": {
-        "crane": "crane",
-        "flake-parts": [
-          "flake-parts"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-advisory-db": "rust-advisory-db",
-        "rust-overlay": "rust-overlay",
-        "treefmt-nix": [
-          "treefmt-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1788822349,
-        "narHash": "sha256-/ijuM9E7SW61iytRNpeor2YN46V59TAOLygGdcGlFro=",
-        "owner": "alekseysidorov",
-        "repo": "rust-dev-flake",
-        "rev": "6401353808a465a1aa83b2fef8b20c826c20e0f1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "alekseysidorov",
-        "ref": "nix-devtools",
-        "repo": "rust-dev-flake",
-        "type": "github"
-      }
-    },
     "rust-overlay": {
       "inputs": {
         "nixpkgs": [
-          "rust-dev-flake",
+          "nix-devtools",
           "nixpkgs"
         ]
       },
