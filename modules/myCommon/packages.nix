@@ -11,7 +11,7 @@ let
     pkgs:
     lib.filesystem.packagesFromDirectoryRecursive {
       inherit (pkgs) callPackage;
-      directory = ../pkgs;
+      directory = ../../pkgs;
     };
 
   localOverlay = final: _prev: localPackagesFor final;

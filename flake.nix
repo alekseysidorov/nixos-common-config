@@ -36,81 +36,76 @@
       flake-parts,
       ...
     }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-        inputs.flake-parts.flakeModules.modules
-        inputs.treefmt-nix.flakeModule
-        inputs.nix-devtools.flakeModule
-        ./modules
-        ./tests
-      ];
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      let
+        # Repository-specific checks are intentionally outside the public modules.
+        repositoryChecks = inputs.nix-devtools.lib.nixDevtools.flakeModulesFromDirectoryRecursive ./tests;
+      in
+      {
+        imports = [
+          inputs.flake-parts.flakeModules.modules
+          inputs.treefmt-nix.flakeModule
+          inputs.nix-devtools.flakeModule
+          ./modules
+        ]
+        ++ repositoryChecks;
 
-      # Declared systems that your flake supports. These will be enumerated in perSystem
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-        "riscv64-linux"
-      ];
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+          "aarch64-darwin"
+          "riscv64-linux"
+        ];
 
-      perSystem =
-        {
-          config,
-          system,
-          ...
-        }:
-        let
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = [
-              self.overlays.default
-            ];
-          };
-        in
-        {
-          # Use the common overlay in all per-system modules.
-          _module.args.pkgs = pkgs;
+        perSystem =
+          {
+            system,
+            ...
+          }:
+          let
+            pkgs = import inputs.nixpkgs {
+              inherit system;
+              overlays = [
+                self.overlays.default
+              ];
+            };
+          in
+          {
+            _module.args.pkgs = pkgs;
 
-          # Expose build artifacts and project commands through `nix build` / `nix run`.
-          packages = {
-          };
+            packages = { };
 
-          # Enter with `nix develop` or `nix develop .#rust`.
-          devShells = {
-            # Try tools provided by the common overlay.
-            default = pkgs.mkShell {
-              packages = [ ];
+            devShells = {
+              default = pkgs.mkShell {
+                packages = [ ];
+              };
+
+              rust = pkgs.mkShell {
+                env.PROMPT_NAME = "devshell/rust";
+              };
             };
 
-            # Supply native dependencies while rustup manages the Rust toolchain.
-            rust = pkgs.mkShell {
-              env.PROMPT_NAME = "devshell/rust";
+            treefmt = {
+              projectRootFile = "flake.nix";
+
+              programs = {
+                nixfmt.enable = true;
+                taplo.enable = true;
+              };
+            };
+
+            gitHooks = {
+              pre-commit = pkgs.writeNushellScript "pre-commit" ''
+                print "⚡️ Running pre-commit checks..."
+                nix build .#checks.${system}.treefmt -L
+              '';
+
+              pre-push = pkgs.writeNushellScript "pre-push" ''
+                print "⚡️ Running pre-push checks..."
+                nix flake check -L
+              '';
             };
           };
-
-          # Share formatting rules between `nix fmt` and CI.
-          treefmt = {
-            projectRootFile = "flake.nix";
-            programs = {
-              nixfmt.enable = true;
-              taplo.enable = true;
-            };
-          };
-
-          # Verify package builds and the sample Darwin configuration with `nix flake check`.
-          checks = config.packages;
-
-          # Install explicitly with `nix run .#install-git-hooks`.
-          gitHooks = {
-            pre-commit = pkgs.writeNushellScript "pre-commit" ''
-              print "⚡️ Running pre-commit checks..."
-              nix build .#checks.${system}.treefmt -L
-            '';
-            pre-push = pkgs.writeNushellScript "pre-push" ''
-              print "⚡️ Running pre-push checks..."
-              nix flake check -L
-            '';
-          };
-        };
-    };
+      }
+    );
 }

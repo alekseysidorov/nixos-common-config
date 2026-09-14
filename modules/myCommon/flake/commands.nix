@@ -22,9 +22,9 @@ let
 
           # Use this flake's canonical package universe locally. Consumers do
           # not need to install the overlay globally just to use the commands.
-          pkgsLocal = pkgs.extend inputs.self.overlays.default;
+          pkgs' = pkgs.extend inputs.self.overlays.default;
 
-          inherit (pkgsLocal.stdenv.hostPlatform) isDarwin isLinux;
+          inherit (pkgs'.stdenv.hostPlatform) isDarwin isLinux;
 
           # `activate` is one semantic command. The platform-specific rebuild
           # implementation remains internal to the module.
@@ -36,18 +36,18 @@ let
               }
             else if isLinux then
               {
-                package = pkgsLocal.nixos-rebuild;
+                package = pkgs'.nixos-rebuild;
                 command = "^nixos-rebuild --sudo";
               }
             else
               null;
 
           # Private implementation of the public `cleanup` app.
-          cleanup = pkgsLocal.writeNushellApplication {
+          cleanup = pkgs'.writeNushellApplication {
             name = "cleanup";
 
             runtimeInputs = [
-              pkgsLocal.nix
+              pkgs'.nix
             ];
 
             text = ''
@@ -63,11 +63,11 @@ let
             if activationBackend == null then
               null
             else
-              pkgsLocal.writeNushellApplication {
+              pkgs'.writeNushellApplication {
                 name = "activate";
 
                 runtimeInputs = [
-                  pkgsLocal.nix
+                  pkgs'.nix
                   activationBackend.package
                 ];
 
