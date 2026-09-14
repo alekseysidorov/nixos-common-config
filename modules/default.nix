@@ -1,5 +1,6 @@
 {
   imports = [
     ./myCommon
+    ./profiles
   ];
 }
