@@ -50,14 +50,18 @@ in
   flake.overlays.default = defaultOverlay;
 
   # Each capability contributes its own fragment to the aggregate module.
+  #
+  # Apply the overlay once in the NixOS and nix-darwin graphs so `pkgs`
+  # exposes the shared unstable universe and the local packages. Home Manager
+  # reuses that same package set under `useGlobalPkgs`, so it must not
+  # re-apply `nixpkgs.overlays` (those options are disabled there). Consumers
+  # that build a standalone Home Manager package set can apply
+  # `inputs.my-common.overlays.default` themselves.
   flake.modules = {
     nixos.myCommon.imports = [
       packagesModule
     ];
     darwin.myCommon.imports = [
-      packagesModule
-    ];
-    homeManager.myCommon.imports = [
       packagesModule
     ];
   };

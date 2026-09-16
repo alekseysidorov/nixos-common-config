@@ -137,7 +137,7 @@ let
 
           # On Darwin, programs.man.package defaults to null, so the man cache
           # enabled by fish is a no-op that only produces a warning.
-          (lib.mkIf pkgs.stdenv.isDarwin {
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
             programs.man.generateCaches = false;
           })
         ]
