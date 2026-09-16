@@ -2,15 +2,31 @@
 
 All documentation must be in English. Keep instructions concise.
 
+## Core Properties
+
+When uncertain, optimize for these properties:
+
+1. One semantic value, one source of truth.
+2. Facts describe identity; modules describe behavior.
+3. Keep transport, routing, NAT, services, and policy orthogonal.
+4. Give every responsibility exactly one authority.
+5. Ownership follows semantic boundaries and lifetime.
+6. Prefer derived values over duplicated state.
+7. Keep the normal path simple; make exceptions explicit.
+8. Make invalid states difficult to express.
+9. Verify runtime invariants before destructive changes.
+10. Delete obsolete architecture once its replacement is proven.
+
+These properties are canonical and shared across repositories. The design
+principles below are this repository's realization of them.
+
 ## Design Principles
 
 - This repository is a reusable personal platform layer, not a machine inventory.
 - Keep machine-specific policy in consumers.
 - Prefer capabilities over global configuration bags.
-- One semantic capability should have one source of truth.
 - Share semantics; allow platform-specific realization where native APIs differ.
 - Prefer explicit model divergence over fake uniform abstractions.
-- Keep invalid states unrepresentable where practical.
 - Presence and activation are different concepts.
 - Provider-owned dependencies must stay provider-owned.
 - Exported modules must be self-contained.
@@ -25,6 +41,9 @@ All documentation must be in English. Keep instructions concise.
 - Keep the core minimal; add new behavior as orthogonal capabilities.
 - System modules provide infrastructure.
 - Home Manager owns personal UX.
+- Practicality is a legitimate tradeoff: take the practical realization over a
+  property it fights, and make the deviation explicit. Unrepresentability of
+  invalid states is a target, not an absolute.
 
 ## Module Structure
 
