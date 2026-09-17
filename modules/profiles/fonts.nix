@@ -1,5 +1,4 @@
 { ... }:
-
 let
   fontPackages =
     pkgs: with pkgs; [

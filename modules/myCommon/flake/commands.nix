@@ -1,4 +1,4 @@
-inputs:
+{ localInputs, ... }:
 let
   commandsModule =
     {
@@ -21,7 +21,7 @@ let
 
           # Use this flake's canonical package universe locally. Consumers do
           # not need to install the overlay globally just to use the commands.
-          pkgs' = pkgs.extend inputs.self.overlays.default;
+          pkgs' = pkgs.extend localInputs.self.overlays.default;
 
           inherit (pkgs'.stdenv.hostPlatform) isDarwin isLinux;
 
@@ -30,7 +30,7 @@ let
           activationBackend =
             if isDarwin then
               {
-                package = inputs.nix-darwin.packages.${system}.darwin-rebuild;
+                package = localInputs.nix-darwin.packages.${system}.darwin-rebuild;
                 command = "^sudo darwin-rebuild";
               }
             else if isLinux then

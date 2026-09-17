@@ -1,4 +1,4 @@
-inputs:
+{ ... }:
 let
   nixModule =
     { config, lib, ... }:

@@ -1,5 +1,4 @@
-inputs:
-{ flake-parts-lib, ... }:
+{ ... }:
 let
   # These settings are part of the baseline contract of myCommon.
   #
@@ -28,11 +27,9 @@ let
       "@admin"
     ];
   };
-
-  inherit (flake-parts-lib) importApply;
 in
 {
-  imports = map (path: importApply path inputs) [
+  imports = [
     ./extraSubstituters.nix
     ./secretOptionsFile.nix
   ];
