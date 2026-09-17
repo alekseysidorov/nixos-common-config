@@ -1,5 +1,4 @@
-{ inputs, ... }:
-
+inputs:
 let
   commandsModule =
     {

@@ -46,9 +46,6 @@ let
   };
 in
 {
-  # Public package-set API for consumers that want the overlay directly.
-  flake.overlays.default = defaultOverlay;
-
   # Each capability contributes its own fragment to the aggregate module.
   #
   # Apply the overlay once in the NixOS and nix-darwin graphs so `pkgs`

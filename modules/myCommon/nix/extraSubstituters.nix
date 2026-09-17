@@ -1,5 +1,4 @@
-{ ... }:
-
+inputs:
 let
   optionsModule =
     { lib, ... }:

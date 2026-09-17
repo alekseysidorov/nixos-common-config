@@ -1,8 +1,7 @@
-{ lib, ... }:
-
+inputs:
 let
   nixModule =
-    { config, ... }:
+    { config, lib, ... }:
 
     let
       cfg = config.myCommon.nix;

@@ -1,5 +1,4 @@
 { ... }:
-
 let
   optionsModule =
     { lib, ... }:
@@ -45,7 +44,7 @@ let
     {
       config = lib.mkIf config.myCommon.home.fancy.vim.enable {
         programs.vim = {
-          enable = true;
+          enable = lib.mkDefault true;
           defaultEditor = true;
 
           plugins = mkVimPlugins pkgs;

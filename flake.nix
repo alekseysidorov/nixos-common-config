@@ -37,25 +37,76 @@
       ...
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
+      { flake-parts-lib, ... }:
       let
+        inherit (flake-parts-lib) importApply;
+        inherit (inputs.nixpkgs) lib;
+
+        # Build this repository's package namespace against a given package set.
+        localPackagesFor =
+          pkgs:
+          lib.filesystem.packagesFromDirectoryRecursive {
+            directory = ./pkgs;
+
+            callPackage = lib.callPackageWith (
+              pkgs
+              // {
+                inherit (inputs)
+                  crane
+                  rust-advisory-db
+                  ;
+              }
+            );
+          };
+
+        localOverlay = final: _prev: localPackagesFor final;
+
+        # Expose an unstable package universe with the same common capabilities.
+        unstableOverlay = final: _prev: {
+          unstable = import inputs.nixpkgs-unstable {
+            system = final.stdenv.hostPlatform.system;
+            config = final.config;
+
+            overlays = [
+              inputs.nix-devtools.overlays.default
+              localOverlay
+            ];
+          };
+        };
+
+        # Keep one canonical package-set extension for both the public overlay
+        # and every platform module assembled into myCommon.
+        defaultOverlay = lib.composeManyExtensions [
+          inputs.nix-devtools.overlays.default
+          unstableOverlay
+          localOverlay
+        ];
+
+        # Pass the whole `inputs` so the module can reach `self`, which is only
+        # available through the flake's own input closure.
+        flakeModule = importApply ./modules inputs;
         # Repository-specific checks are intentionally outside the public modules.
         repositoryChecks = inputs.nix-devtools.lib.nixDevtools.flakeModulesFromDirectoryRecursive ./tests;
       in
       {
-        imports = [
-          inputs.flake-parts.flakeModules.modules
-          inputs.treefmt-nix.flakeModule
-          inputs.nix-devtools.flakeModule
-          ./modules
-        ]
-        ++ repositoryChecks;
-
         systems = [
           "x86_64-linux"
           "aarch64-linux"
           "aarch64-darwin"
           "riscv64-linux"
         ];
+
+        imports = [
+          inputs.flake-parts.flakeModules.modules
+          inputs.treefmt-nix.flakeModule
+          inputs.nix-devtools.flakeModule
+
+          flakeModule
+        ]
+        ++ repositoryChecks;
+
+        # Public package-set API for consumers that want the overlay directly.
+        flake.overlays.default = defaultOverlay;
 
         perSystem =
           {

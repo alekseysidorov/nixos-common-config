@@ -1,4 +1,4 @@
-{ ... }:
+{ self, ... }:
 let
   gitSettings = {
     alias = {
@@ -50,11 +50,14 @@ let
       pkgs,
       ...
     }:
+    let
+      pkgs' = pkgs.extend self.overlays.default;
+    in
     {
       config = lib.mkIf config.myCommon.home.fancy.git.enable {
         home.packages = [
-          pkgs.git-clean-all
-          pkgs.git-sweep-all
+          pkgs'.git-clean-all
+          pkgs'.git-sweep-all
         ];
 
         programs.git = {
