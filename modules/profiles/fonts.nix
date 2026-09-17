@@ -22,12 +22,13 @@ let
       roboto-mono
       cascadia-code
       iosevka
-      maple-mono
+      maple-mono.truetype
 
       # Nerd Fonts.
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.meslo-lg
+      maple-mono.NF
 
       # Fallback and multilingual coverage.
       noto-fonts
