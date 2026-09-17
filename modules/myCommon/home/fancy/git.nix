@@ -54,6 +54,7 @@ let
       pkgs' = pkgs.extend self.overlays.default;
     in
     {
+      key = "my-common/fancy/git";
       config = lib.mkIf config.myCommon.home.fancy.git.enable {
         home.packages = [
           pkgs'.git-clean-all

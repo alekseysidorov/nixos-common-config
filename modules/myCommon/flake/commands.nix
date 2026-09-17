@@ -8,6 +8,7 @@ let
     }:
 
     {
+      key = "my-common/commands";
       options.perSystem = flake-parts-lib.mkPerSystemOption (
         {
           config,

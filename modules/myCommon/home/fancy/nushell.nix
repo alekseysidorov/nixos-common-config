@@ -13,7 +13,6 @@ let
     in
     {
       key = "myCommon/home/fancy/nushell";
-
       options.myCommon.home.fancy.nushell = {
         enable = lib.mkEnableOption "the common Nushell environment";
 

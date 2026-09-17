@@ -7,6 +7,7 @@ let
       cfg = config.myCommon.nix;
     in
     {
+      key = "my-common/nix/secretOptionsFile";
       options.myCommon.nix.secretOptionsFile = lib.mkOption {
         type = lib.types.nullOr lib.types.externalPath;
         default = null;

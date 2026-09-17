@@ -27,6 +27,7 @@ let
       };
     in
     {
+      key = "my-common/nix/extraSubstituters";
       options.myCommon.nix.extraSubstituters = mkOption {
         type = types.lazyAttrsOf substituterType;
         default = { };

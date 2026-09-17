@@ -4,7 +4,6 @@ let
     { lib, ... }:
     {
       key = "myCommon/home/fancy/vim";
-
       options.myCommon.home.fancy.vim.enable = lib.mkEnableOption "the common Vim defaults";
     };
 
