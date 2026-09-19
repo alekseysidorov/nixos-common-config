@@ -59,6 +59,10 @@ let
                 enableNushellIntegration = true;
               };
 
+              programs.direnv = {
+                enableNushellIntegration = true;
+              };
+
               starship = {
                 enable = true;
                 presets = [ "pure-preset" ];
