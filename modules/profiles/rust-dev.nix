@@ -55,6 +55,10 @@
         # Particularly useful for libraries: detect accidental semver-breaking
         # changes before publishing a new version.
         cargo-semver-checks
+
+        # Rust editor tooling.
+        rust-analyzer
+        crates-lsp
       ];
     };
 }

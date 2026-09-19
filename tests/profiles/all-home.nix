@@ -44,6 +44,7 @@
       homeProfiles = {
         nix-dev = self.modules.homeManager.nixDev;
         rust-dev = self.modules.homeManager.rustDev;
+        dev-tools = self.modules.homeManager.devTools;
       };
     in
     {

@@ -6,5 +6,6 @@
     ./fonts.nix
     ./nix-dev.nix
     ./rust-dev.nix
+    ./dev-tools.nix
   ];
 }
