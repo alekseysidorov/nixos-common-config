@@ -41,6 +41,7 @@
         # policy such as advisories, licenses, bans, and allowed sources.
         cargo-shear
         cargo-deny
+        cargo-audit
 
         # Coverage and performance analysis.
         #

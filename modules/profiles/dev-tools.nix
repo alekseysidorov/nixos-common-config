@@ -16,6 +16,9 @@
         # Structured data and configuration files.
         yaml-language-server
         vscode-json-languageserver
+        package-version-server
+        typescript-language-server
+        basedpyright
         # TOML language server, formatter, and linter.
         tombi
         # Documentation and prose.
