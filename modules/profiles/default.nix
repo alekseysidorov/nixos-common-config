@@ -1,11 +1,12 @@
 { ... }:
 {
   imports = [
-    ./networking.nix
-    ./localization.nix
+    ./dev-tools.nix
     ./fonts.nix
+    ./localization.nix
+    ./networking.nix
     ./nix-dev.nix
     ./rust-dev.nix
-    ./dev-tools.nix
+    ./serial-dev.nix
   ];
 }

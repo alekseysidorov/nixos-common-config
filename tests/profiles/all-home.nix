@@ -45,6 +45,7 @@
         nix-dev = self.modules.homeManager.nixDev;
         rust-dev = self.modules.homeManager.rustDev;
         dev-tools = self.modules.homeManager.devTools;
+        serial-dev = self.modules.homeManager.serialDev;
       };
     in
     {
