@@ -5,7 +5,7 @@
 # This module only provides the tooling that is useful across Nix projects.
 { ... }:
 {
-  flake.modules.home.nixDev =
+  flake.modules.homeManager.nixDev =
     { pkgs, ... }:
     {
       # Automatically enter project-provided Nix environments.
@@ -19,7 +19,8 @@
         # intended behaviour rather than an incidental upstream default.
         nix-direnv.enable = true;
         # `.direnv/` is runtime/cache state and should never be committed.
-        enableGitIntegration = true;
+        # TODO enable when home-manager-26.11 become stable.
+        # enableGitIntegration = true;
       };
 
       home.packages = with pkgs; [

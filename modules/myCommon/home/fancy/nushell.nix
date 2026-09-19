@@ -59,7 +59,7 @@ let
                 enableNushellIntegration = true;
               };
 
-              programs.direnv = {
+              direnv = {
                 enableNushellIntegration = true;
               };
 
