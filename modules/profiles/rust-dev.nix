@@ -58,7 +58,6 @@
         cargo-semver-checks
 
         # Rust editor tooling.
-        rust-analyzer
         crates-lsp
       ];
     };
