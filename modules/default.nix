@@ -1,6 +1,10 @@
+myCommonInputs:
+
+{ flake-parts-lib, ... }:
+
 {
   imports = [
-    ./myCommon
+    (flake-parts-lib.importApply ./myCommon myCommonInputs)
     ./profiles
   ];
 }

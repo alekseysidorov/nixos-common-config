@@ -1,6 +1,10 @@
+myCommonInputs:
+
+{ flake-parts-lib, ... }:
+
 {
   imports = [
-    ./flake
+    (flake-parts-lib.importApply ./flake myCommonInputs)
     ./home
     ./nix
   ];

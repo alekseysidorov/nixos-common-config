@@ -85,12 +85,7 @@
             localOverlay
           ];
 
-          flakeModule = {
-            imports = [ ./modules ];
-            # These are nix-devtools' inputs, even when the module is imported
-            # by another flake with a different `inputs` argument.
-            _module.args.localInputs = inputs;
-          };
+          flakeModule = flake-parts.lib.importApply ./modules inputs;
 
           # Repository-specific checks are intentionally outside the public modules.
           repositoryChecks = inputs.nix-devtools.lib.nixDevtools.flakeModulesFromDirectoryRecursive ./tests;

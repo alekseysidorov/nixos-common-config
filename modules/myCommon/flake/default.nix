@@ -1,5 +1,9 @@
+myCommonInputs:
+
+{ flake-parts-lib, ... }:
+
 {
   imports = [
-    ./commands.nix
+    (flake-parts-lib.importApply ./commands.nix myCommonInputs)
   ];
 }

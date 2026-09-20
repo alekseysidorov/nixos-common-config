@@ -1,4 +1,4 @@
-{ localInputs, ... }:
+{ inputs, ... }:
 
 {
   perSystem =
@@ -10,17 +10,17 @@
 
     let
       # Model a downstream flake which only imports the public module. In
-      # particular, it does not know about or provide `localInputs`.
-      consumer = localInputs.flake-parts.lib.mkFlake { inputs = { }; } {
+      # particular, it does not know about or provide the module's inputs.
+      consumer = inputs.flake-parts.lib.mkFlake { inputs = { }; } {
         imports = [
-          localInputs.flake-parts.flakeModules.modules
-          localInputs.self.flakeModule
+          inputs.flake-parts.flakeModules.modules
+          inputs.self.flakeModule
         ];
 
         systems = [ system ];
 
         perSystem = {
-          _module.args.pkgs = localInputs.nixpkgs.legacyPackages.${system};
+          _module.args.pkgs = inputs.nixpkgs.legacyPackages.${system};
           myCommon.flake.commands.enable = true;
         };
       };
