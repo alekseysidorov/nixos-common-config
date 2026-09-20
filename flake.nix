@@ -39,10 +39,6 @@
     flake-parts.lib.mkFlake
       {
         inherit inputs;
-        # Expose this flake's own inputs to all modules in its module graph.
-        specialArgs = {
-          localInputs = inputs;
-        };
       }
       (
         { ... }:
@@ -89,7 +85,12 @@
             localOverlay
           ];
 
-          flakeModule = ./modules;
+          # Keep provider-owned inputs attached to the public module. Consumers
+          # only import this wrapper and never have to reconstruct our context.
+          flakeModule = {
+            imports = [ ./modules ];
+            _module.args.localInputs = inputs;
+          };
           # Repository-specific checks are intentionally outside the public modules.
           repositoryChecks = inputs.nix-devtools.lib.nixDevtools.flakeModulesFromDirectoryRecursive ./tests;
         in

@@ -1,0 +1,41 @@
+{ localInputs, ... }:
+
+{
+  perSystem =
+    {
+      pkgs,
+      system,
+      ...
+    }:
+
+    let
+      # Model a downstream flake which only imports the public module. In
+      # particular, it does not know about or provide `localInputs`.
+      consumer = localInputs.flake-parts.lib.mkFlake { inputs = { }; } {
+        imports = [
+          localInputs.flake-parts.flakeModules.modules
+          localInputs.self.flakeModule
+        ];
+
+        systems = [ system ];
+
+        perSystem = {
+          _module.args.pkgs = localInputs.nixpkgs.legacyPackages.${system};
+          myCommon.flake.commands.enable = true;
+        };
+      };
+
+      apps = consumer.apps.${system};
+    in
+    {
+      checks.test-public-flake-module-consumer =
+        assert apps ? activate;
+        assert apps ? cleanup;
+        assert apps.activate.type == "app";
+        assert apps.cleanup.type == "app";
+
+        pkgs.runCommand "test-public-flake-module-consumer" { } ''
+          touch $out
+        '';
+    };
+}
