@@ -30,6 +30,7 @@
         # they occupy the same role, while nixd also understands NixOS and
         # Home Manager option evaluation particularly well.
         nixd
+        nil
         nixfmt
         # Static analysis.
         statix
