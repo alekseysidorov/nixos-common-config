@@ -85,12 +85,13 @@
             localOverlay
           ];
 
-          # Keep provider-owned inputs attached to the public module. Consumers
-          # only import this wrapper and never have to reconstruct our context.
           flakeModule = {
             imports = [ ./modules ];
+            # These are nix-devtools' inputs, even when the module is imported
+            # by another flake with a different `inputs` argument.
             _module.args.localInputs = inputs;
           };
+
           # Repository-specific checks are intentionally outside the public modules.
           repositoryChecks = inputs.nix-devtools.lib.nixDevtools.flakeModulesFromDirectoryRecursive ./tests;
         in
@@ -106,7 +107,6 @@
             inputs.flake-parts.flakeModules.modules
             inputs.treefmt-nix.flakeModule
             inputs.nix-devtools.flakeModule
-
             flakeModule
           ]
           ++ repositoryChecks;
