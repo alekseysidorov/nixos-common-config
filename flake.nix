@@ -18,18 +18,14 @@
     };
 
     # Development
-    rust-dev-flake = {
-      url = "github:alekseysidorov/rust-dev-flake";
+    nix-devtools = {
+      url = "github:alekseysidorov/nix-devtools";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
     };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nufmt = {
-      url = "github:nushell/nufmt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -40,107 +36,131 @@
       flake-parts,
       ...
     }@inputs:
-    let
-      localOverlay = (import ./overlay.nix) { inherit inputs; };
-    in
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      # Declared systems that your flake supports. These will be enumerated in perSystem
-      systems = inputs.nixpkgs.lib.systems.flakeExposed;
-      imports = [
-        inputs.treefmt-nix.flakeModule
-        inputs.rust-dev-flake.flakeModules.gitHooks
-        ./flake-modules
-      ];
-
-      perSystem =
-        {
-          config,
-          system,
-          lib,
-          ...
-        }:
+    flake-parts.lib.mkFlake
+      {
+        inherit inputs;
+      }
+      (
+        { ... }:
         let
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = [
-              localOverlay
-            ];
-          };
+          inherit (inputs.nixpkgs) lib;
 
-          mkDarwinCheck =
-            module:
-            lib.mkIf (lib.hasSuffix "-darwin" system) ((import module { inherit self inputs system; }).system);
-        in
-        {
-          # Use the common overlay in all per-system modules.
-          _module.args.pkgs = pkgs;
+          # Build this repository's package namespace against a given package set.
+          localPackagesFor =
+            pkgs:
+            lib.filesystem.packagesFromDirectoryRecursive {
+              directory = ./pkgs;
 
-          # Expose build artifacts and project commands through `nix build` / `nix run`.
-          packages = {
-            inherit (pkgs)
-              comchan
-              git-clean-all
-              git-sweep-all
-              ;
-          };
+              callPackage = lib.callPackageWith (
+                pkgs
+                // {
+                  inherit (inputs)
+                    crane
+                    rust-advisory-db
+                    ;
+                }
+              );
+            };
 
-          # Enter with `nix develop` or `nix develop .#rust`.
-          devShells = {
-            # Try tools provided by the common overlay.
-            default = pkgs.mkShell {
-              buildInputs = with pkgs; [
-                unstable.comchan
-                nufmt
+          localOverlay = final: _prev: localPackagesFor final;
+
+          # Expose an unstable package universe with the same common capabilities.
+          unstableOverlay = final: _prev: {
+            unstable = import inputs.nixpkgs-unstable {
+              system = final.stdenv.hostPlatform.system;
+              config = final.config;
+
+              overlays = [
+                inputs.nix-devtools.overlays.default
+                localOverlay
               ];
             };
-            # Supply native dependencies while rustup manages the Rust toolchain.
-            rust =
-              with pkgs;
-              mkShell {
-                nativeBuildInputs = [
-                  pkgconf
-                  openssl
-                  rustup
-                  nushell
-                  python3
-                  rustPlatform.bindgenHook
-                  comchan
-                  rumdl
-                ]
-                ++ lib.optionals stdenv.hostPlatform.isLinux [ systemd ];
-
-                env.PROMPT_NAME = "devshell/rust";
-              };
           };
 
-          # Share formatting rules between `nix fmt` and CI.
-          treefmt = {
-            projectRootFile = "flake.nix";
-            programs = {
-              nixfmt = {
-                enable = true;
-                package = pkgs.nixfmt-rs;
+          # Keep one canonical package-set extension for both the public overlay
+          # and every platform module assembled into myCommon.
+          defaultOverlay = lib.composeManyExtensions [
+            inputs.nix-devtools.overlays.default
+            unstableOverlay
+            localOverlay
+          ];
+
+          flakeModule = flake-parts.lib.importApply ./modules inputs;
+
+          # Repository-specific checks are intentionally outside the public modules.
+          repositoryChecks = inputs.nix-devtools.lib.nixDevtools.flakeModulesFromDirectoryRecursive ./tests;
+        in
+        {
+          systems = [
+            "x86_64-linux"
+            "aarch64-linux"
+            "aarch64-darwin"
+            "riscv64-linux"
+          ];
+
+          imports = [
+            inputs.flake-parts.flakeModules.modules
+            inputs.treefmt-nix.flakeModule
+            inputs.nix-devtools.flakeModule
+            flakeModule
+          ]
+          ++ repositoryChecks;
+
+          flake = {
+            inherit flakeModule;
+            # Public package-set API for consumers that want the overlay directly.
+            overlays.default = defaultOverlay;
+          };
+
+          perSystem =
+            {
+              system,
+              ...
+            }:
+            let
+              pkgs = import inputs.nixpkgs {
+                inherit system;
+                overlays = [
+                  self.overlays.default
+                ];
               };
-              taplo.enable = true;
+            in
+            {
+              _module.args.pkgs = pkgs;
+
+              packages = { };
+
+              devShells = {
+                default = pkgs.mkShell {
+                  packages = [ ];
+                };
+
+                rust = pkgs.mkShell {
+                  env.PROMPT_NAME = "devshell/rust";
+                };
+              };
+
+              treefmt = {
+                projectRootFile = "flake.nix";
+
+                programs = {
+                  nixfmt.enable = true;
+                  taplo.enable = true;
+                };
+              };
+
+              gitHooks = {
+                pre-commit = pkgs.writeNushellScript "pre-commit" ''
+                  print "⚡️ Running pre-commit checks..."
+                  nix build .#checks.${system}.treefmt -L
+                '';
+
+                pre-push = pkgs.writeNushellScript "pre-push" ''
+                  print "⚡️ Running pre-push checks..."
+                  nix flake check -L
+                '';
+              };
             };
-          };
-
-          # Verify package builds and the sample Darwin configuration with `nix flake check`.
-          checks = config.packages // {
-            darwin-default = (mkDarwinCheck ./checks/darwin-default.nix);
-          };
-
-          # Install explicitly with `nix run .#install-git-hooks`.
-          gitHooks = {
-            pre-commit = pkgs.writeNuShellScript "pre-commit" ''
-              print "⚡️ Running pre-commit checks..."
-              nix build .#checks.${system}.treefmt -L
-            '';
-            pre-push = pkgs.writeNuShellScript "pre-push" ''
-              print "⚡️ Running pre-push checks..."
-              nix flake check -L
-            '';
-          };
-        };
-    };
+        }
+      );
 }
