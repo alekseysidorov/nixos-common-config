@@ -44,9 +44,5 @@ in
       commonNixSettingsModule
       darwinModule
     ];
-
-    homeManager.myCommon.imports = [
-      commonNixSettingsModule
-    ];
   };
 }
