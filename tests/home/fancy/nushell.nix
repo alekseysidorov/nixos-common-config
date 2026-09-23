@@ -74,8 +74,6 @@
         assert integrationConfig.programs.nushell.enable;
         assert integrationConfig.programs.fish.enable;
         assert integrationConfig.programs.starship.enable;
-        assert integrationConfig.programs.nix-your-shell.enable;
-        assert integrationConfig.programs.nix-your-shell.enableNushellIntegration;
         assert integrationConfig.home.shell.enableShellIntegration;
 
         # Nushell integration alone must not implicitly enable source shells.
