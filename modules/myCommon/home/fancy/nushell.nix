@@ -54,11 +54,6 @@ let
                 '';
               };
 
-              nix-your-shell = {
-                enable = true;
-                enableNushellIntegration = true;
-              };
-
               direnv = {
                 enableNushellIntegration = true;
               };
