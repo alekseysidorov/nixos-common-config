@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./base-dev.nix
     ./dev-tools.nix
     ./fonts.nix
     ./localization.nix

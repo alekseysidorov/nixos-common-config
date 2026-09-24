@@ -42,6 +42,7 @@
       # Only profiles that are expected to work as standalone Home Manager
       # modules belong here. Reusable fragments do not need an isolated check.
       homeProfiles = {
+        base-dev = self.modules.homeManager.baseDev;
         nix-dev = self.modules.homeManager.nixDev;
         rust-dev = self.modules.homeManager.rustDev;
         dev-tools = self.modules.homeManager.devTools;
