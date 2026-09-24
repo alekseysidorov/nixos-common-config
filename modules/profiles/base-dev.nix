@@ -62,7 +62,6 @@
         # dust shows disk usage with a readable, colour-coded layout,
         # and ncdu adds an interactive browser over those results.
         dust
-        ncdu
 
         # Human-readable directory listing.
         #
