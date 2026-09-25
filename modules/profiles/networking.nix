@@ -14,7 +14,6 @@
 
         # Packet capture and inspection.
         tcpdump
-        termshark
 
         # Path, reachability and latency diagnostics.
         mtr
