@@ -60,6 +60,9 @@
         #
         # Checks files against .editorconfig independently of editor support.
         editorconfig-checker
+
+        # Other external tools.
+        gh
       ];
     };
 }
