@@ -31,6 +31,10 @@
 
         # General-purpose socket plumbing.
         socat
+
+        # Network bandwidth testing.
+        speedtest-cli
+        speedtest-rs
       ];
     };
 }
