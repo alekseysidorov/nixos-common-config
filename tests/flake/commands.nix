@@ -17,7 +17,7 @@
       # Recover the backing derivation so behavioral checks can inspect the
       # generated Nushell application without depending on its implementation
       # being exported through `packages`.
-      appPackage = app: builtins.dirOf (builtins.dirOf app.program);
+      appPackage = app: dirOf (dirOf app.program);
 
       activatePackage = appPackage apps.activate;
       cleanupPackage = appPackage apps.cleanup;

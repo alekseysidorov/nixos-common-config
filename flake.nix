@@ -146,6 +146,11 @@
                 programs = {
                   nixfmt.enable = true;
                   taplo.enable = true;
+
+                  # The Haskell `nixfmt` requires GHC, which cannot bootstrap on
+                  # riscv64-linux. Use the Rust rewrite, which builds everywhere
+                  # GHC does, while producing the same formatting.
+                  nixfmt.package = pkgs.nixfmt-rs;
                 };
               };
 
