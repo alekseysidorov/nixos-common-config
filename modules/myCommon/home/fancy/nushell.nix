@@ -41,8 +41,11 @@ let
                   enable = true;
 
                   completer = lib.hm.nushell.mkNushellInline ''
-                    {|place|
-                      let command = ($place.command | get 0)
+                    {|completion_context|
+                      # Nu 0.115 passes the legacy spans list; newer Nu versions
+                      # pass a record whose `command` field contains the same list.
+                      let command_line = (try { $completion_context.command } catch { $completion_context })
+                      let command = ($command_line | get 0)
                       let executable = (which $command | get 0.path? | default null)
                       let is_nushell_script = if $executable == null {
                         false
@@ -60,9 +63,20 @@ let
                       }
 
                       if $is_nushell_script {
-                        []
+                        let native_command = ($command_line | skip 1 | prepend main)
+                        let source_path = ($executable | to nuon)
+                        let query = ($native_command | str join " " | to nuon)
+                        let source_dir = ($executable | path dirname)
+                        let code = $"source ($source_path); ($query) | commandline complete --detailed | to json"
+
+                        try {
+                          ^${lib.getExe config.programs.nushell.package} --no-config-file --no-history --include-path $source_dir --commands $code
+                          | from json
+                        } catch {
+                          []
+                        }
                       } else {
-                        ${lib.getExe pkgs.fish} --command $'complete "--do-complete=($place.command | str join " ")"'
+                        ${lib.getExe pkgs.fish} --command $'complete "--do-complete=($command_line | str join " ")"'
                         | $"value(char tab)description(char newline)" + $in
                         | from tsv --flexible --no-infer
                       }
