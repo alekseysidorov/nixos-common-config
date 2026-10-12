@@ -41,10 +41,31 @@ let
                   enable = true;
 
                   completer = lib.hm.nushell.mkNushellInline ''
-                    {|spans|
-                      ${lib.getExe pkgs.fish} --command $'complete "--do-complete=($spans | str join " ")"'
-                      | $"value(char tab)description(char newline)" + $in
-                      | from tsv --flexible --no-infer
+                    {|place|
+                      let command = ($place.command | get 0)
+                      let executable = (which $command | get 0.path? | default null)
+                      let is_nushell_script = if $executable == null {
+                        false
+                      } else {
+                        try {
+                          (open --raw $executable
+                            | lines
+                            | first
+                            | str replace "#!" ""
+                            | split words
+                            | any {|part| ($part | path basename) in [nu nushell] })
+                        } catch {
+                          false
+                        }
+                      }
+
+                      if $is_nushell_script {
+                        []
+                      } else {
+                        ${lib.getExe pkgs.fish} --command $'complete "--do-complete=($place.command | str join " ")"'
+                        | $"value(char tab)description(char newline)" + $in
+                        | from tsv --flexible --no-infer
+                      }
                     }
                   '';
                 };
@@ -68,12 +89,13 @@ let
                     "$username"
                     "$hostname"
                     "$directory"
+                    "$nix_shell"
                     "$git_branch"
                     "$git_state"
                     "$git_status"
                     "$cmd_duration"
                     "$line_break"
-                    "$python"
+                    "$rust"
                     "$character"
                   ];
 
