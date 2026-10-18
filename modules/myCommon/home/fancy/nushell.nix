@@ -41,10 +41,8 @@ let
                   enable = true;
 
                   completer = lib.hm.nushell.mkNushellInline ''
-                    {|completion_context|
-                      # Nu 0.115 passes the legacy spans list; newer Nu versions
-                      # pass a record whose `command` field contains the same list.
-                      let command_line = (try { $completion_context.command } catch { $completion_context })
+                    {|place|
+                      let command_line = $place.command
                       let command = ($command_line | get 0)
                       let executable = (which $command | get 0.path? | default null)
                       let is_nushell_script = if $executable == null {
