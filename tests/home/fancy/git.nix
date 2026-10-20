@@ -1,12 +1,17 @@
 {
   inputs,
   self,
+  lib,
   ...
 }:
 
 {
   perSystem =
-    { pkgs, ... }:
+    {
+      pkgs,
+      system,
+      ...
+    }:
 
     let
       gitOverride = {
@@ -27,6 +32,24 @@
         }:
         assert gitHelpersInstalled packages;
         pkgs.runCommand name { } ''
+          touch $out
+        '';
+
+      buildGlobalOverrideTest =
+        {
+          name,
+          systemGitConfig,
+        }:
+        pkgs.runCommand name { } ''
+          export HOME="$TMPDIR/home"
+          mkdir -p "$HOME"
+          printf '%s' ${lib.escapeShellArg systemGitConfig} > "$TMPDIR/system-gitconfig"
+          export GIT_CONFIG_SYSTEM="$TMPDIR/system-gitconfig"
+
+          ${pkgs.git}/bin/git config --global pull.rebase false
+
+          test "$(${pkgs.git}/bin/git config --get pull.rebase)" = false
+          test "$(${pkgs.git}/bin/git config --get diff.algorithm)" = histogram
           touch $out
         '';
 
@@ -61,8 +84,64 @@
             packages = config.home.packages;
           };
       };
+
+      systemChecks =
+        lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+          test-git-nixos =
+            let
+              testSystem = inputs.nixpkgs.lib.nixosSystem {
+                inherit system;
+
+                modules = [
+                  self.modules.nixos.myCommon
+                  { system.stateVersion = "26.05"; }
+                ];
+              };
+
+              config = testSystem.config;
+              systemGitConfig = config.environment.etc."gitconfig".text;
+            in
+            assert lib.hasInfix "[alias]" systemGitConfig;
+            assert lib.hasInfix "cln" systemGitConfig;
+            assert lib.hasInfix "git-clean-all --this-repo" systemGitConfig;
+            assert builtins.elem pkgs.git config.environment.systemPackages;
+            assert builtins.elem pkgs.git-lfs config.environment.systemPackages;
+            assert builtins.elem pkgs.git-clean-all config.environment.systemPackages;
+            assert builtins.elem pkgs.git-sweep-all config.environment.systemPackages;
+            buildGlobalOverrideTest {
+              name = "test-git-nixos";
+              inherit systemGitConfig;
+            };
+        }
+        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+          test-git-darwin =
+            let
+              testSystem = inputs.nix-darwin.lib.darwinSystem {
+                inherit system;
+
+                modules = [
+                  self.modules.darwin.myCommon
+                  { system.stateVersion = 6; }
+                ];
+              };
+
+              config = testSystem.config;
+              systemGitConfig = config.environment.etc."gitconfig".text;
+            in
+            assert lib.hasInfix "[alias]" systemGitConfig;
+            assert lib.hasInfix "cln" systemGitConfig;
+            assert lib.hasInfix "git-clean-all --this-repo" systemGitConfig;
+            assert builtins.elem pkgs.git config.environment.systemPackages;
+            assert builtins.elem pkgs.git-lfs config.environment.systemPackages;
+            assert builtins.elem pkgs.git-clean-all config.environment.systemPackages;
+            assert builtins.elem pkgs.git-sweep-all config.environment.systemPackages;
+            buildGlobalOverrideTest {
+              name = "test-git-darwin";
+              inherit systemGitConfig;
+            };
+        };
     in
     {
-      checks = homeChecks;
+      checks = homeChecks // systemChecks;
     };
 }

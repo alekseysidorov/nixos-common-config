@@ -68,10 +68,36 @@ let
         };
       };
     };
+
+  systemModule =
+    {
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      pkgs' = pkgs.extend self.overlays.default;
+    in
+    {
+      # Git reads the system config before the user's global config. This
+      # gives every user the common defaults while keeping `git config
+      # --global` as the natural per-user override.
+      environment.etc."gitconfig".text = lib.mkDefault (lib.generators.toINI { } gitSettings);
+
+      environment.systemPackages = [
+        pkgs.git
+        pkgs.git-lfs
+        pkgs'.git-clean-all
+        pkgs'.git-sweep-all
+      ];
+    };
 in
 {
   flake.modules.homeManager.myCommon.imports = [
     optionsModule
     homeManagerModule
   ];
+
+  flake.modules.nixos.myCommon = systemModule;
+  flake.modules.darwin.myCommon = systemModule;
 }
