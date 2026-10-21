@@ -7,7 +7,7 @@
 
 {
   perSystem =
-    { pkgs, ... }:
+    { pkgs, system, ... }:
 
     let
       mkHome =
@@ -52,6 +52,34 @@
 
       trampolineConfig = trampolines.config;
 
+      darwinHomebrewShellInit = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin (
+        let
+          testSystem = inputs.nix-darwin.lib.darwinSystem {
+            inherit system;
+
+            modules = [
+              {
+                system.primaryUser = "test";
+                system.stateVersion = 6;
+                users.users.test.home = "/Users/test";
+
+                homebrew = {
+                  enable = true;
+                  enableBashIntegration = true;
+                  enableZshIntegration = true;
+                };
+              }
+            ];
+          };
+
+          config = testSystem.config;
+        in
+        {
+          bash = config.programs.bash.interactiveShellInit;
+          zsh = config.programs.zsh.interactiveShellInit;
+        }
+      );
+
       # These assertions only inspect generated configuration text.
       # Strip Nix string context so store paths can safely participate
       # in string matching without altering production dependency tracking.
@@ -69,37 +97,51 @@
         '';
     in
     {
-      checks.test-nushell-home-integration-eval =
-        # Nushell integration configures the common shell environment.
-        assert integrationConfig.programs.nushell.enable;
-        assert integrationConfig.programs.fish.enable;
-        assert integrationConfig.programs.starship.enable;
-        assert integrationConfig.home.shell.enableShellIntegration;
+      checks = {
+        test-nushell-home-integration-eval =
+          # Nushell integration configures the common shell environment.
+          assert integrationConfig.programs.nushell.enable;
+          assert integrationConfig.programs.fish.enable;
+          assert integrationConfig.programs.starship.enable;
+          assert integrationConfig.home.shell.enableShellIntegration;
 
-        # Nushell integration alone must not implicitly enable source shells.
-        assert !integrationConfig.programs.bash.enable;
-        assert !integrationConfig.programs.zsh.enable;
+          # Nushell integration alone must not implicitly enable source shells.
+          assert !integrationConfig.programs.bash.enable;
+          assert !integrationConfig.programs.zsh.enable;
 
-        # Nushell integration should has an external completers.
-        assert integrationConfig.programs.nushell.settings.completions.external.enable;
-        assert integrationConfig.programs.nushell.settings.completions.external.completer != null;
+          # Nushell integration should has an external completers.
+          assert integrationConfig.programs.nushell.settings.completions.external.enable;
+          assert integrationConfig.programs.nushell.settings.completions.external.completer != null;
 
-        mkEvalCheck "test-nushell-home-integration-eval";
+          mkEvalCheck "test-nushell-home-integration-eval";
 
-      checks.test-nushell-home-trampoline-eval =
-        # Explicit trampoline configuration enables its source shells.
-        assert trampolineConfig.programs.bash.enable;
-        assert trampolineConfig.programs.zsh.enable;
+        test-nushell-home-trampoline-eval =
+          # Explicit trampoline configuration enables its source shells.
+          assert trampolineConfig.programs.bash.enable;
+          assert trampolineConfig.programs.zsh.enable;
 
-        # Interactive source shells redirect into the configured Nushell.
-        assert lib.hasInfix "exec ${expectedNushellExe}" bashInit;
-        assert lib.hasInfix "exec ${expectedNushellExe}" zshInit;
+          # Interactive source shells redirect into the configured Nushell.
+          assert lib.hasInfix "exec ${expectedNushellExe}" bashInit;
+          assert lib.hasInfix "exec ${expectedNushellExe}" zshInit;
 
-        # Escape hatches start interactive shells without reading the rc files
-        # containing the trampoline.
-        assert trampolineConfig.programs.nushell.shellAliases.bashInteractive == "exec bash --norc -i";
-        assert trampolineConfig.programs.nushell.shellAliases.zshInteractive == "exec zsh --no-rcs -i";
+          # Escape hatches start interactive shells without reading the rc files
+          # containing the trampoline.
+          assert trampolineConfig.programs.nushell.shellAliases.bashInteractive == "exec bash --norc -i";
+          assert trampolineConfig.programs.nushell.shellAliases.zshInteractive == "exec zsh --no-rcs -i";
 
-        mkEvalCheck "test-nushell-home-trampoline-eval";
+          mkEvalCheck "test-nushell-home-trampoline-eval";
+
+      }
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        test-nushell-darwin-homebrew-integration-eval =
+          let
+            systemInit = darwinHomebrewShellInit;
+          in
+          assert lib.hasInfix "brew shellenv bash" systemInit.bash;
+          assert lib.hasInfix "brew shellenv zsh" systemInit.zsh;
+          assert lib.hasInfix "/opt/homebrew/bin/brew" systemInit.zsh;
+          assert lib.hasInfix "/opt/homebrew/bin/brew" systemInit.bash;
+          mkEvalCheck "test-nushell-darwin-homebrew-integration-eval";
+      };
     };
 }
