@@ -4,7 +4,22 @@ let
     { lib, ... }:
     {
       key = "myCommon/home/fancy/vim";
-      options.myCommon.home.fancy.vim.enable = lib.mkEnableOption "the common Vim defaults";
+      options.myCommon.home.fancy.vim = {
+        enable = lib.mkEnableOption "the common Vim defaults";
+
+        profile = lib.mkOption {
+          type = lib.types.enum [
+            "full"
+            "lite"
+          ];
+          default = "lite";
+          description = ''
+            Vim build profile. `full` uses the standard vim-full package;
+            `lite` keeps Home Manager's plugin/customization support while
+            disabling GUI support and embedded language interpreters.
+          '';
+        };
+      };
     };
 
   vimConfig = ''
@@ -45,6 +60,16 @@ let
         programs.vim = {
           enable = lib.mkDefault true;
           defaultEditor = true;
+
+          packageConfigurable = lib.mkIf (config.myCommon.home.fancy.vim.profile == "lite") (
+            pkgs.vim-full.override {
+              features = "normal";
+              guiSupport = "none";
+              pythonSupport = false;
+              rubySupport = false;
+              luaSupport = false;
+            }
+          );
 
           plugins = mkVimPlugins pkgs;
           extraConfig = vimConfig;
