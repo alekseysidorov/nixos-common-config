@@ -15,7 +15,7 @@
 
     let
       gitOverride = {
-        myCommon.home.fancy.git.enable = true;
+        myCommon.fancy.git.enable = true;
       };
 
       gitHelpersInstalled =

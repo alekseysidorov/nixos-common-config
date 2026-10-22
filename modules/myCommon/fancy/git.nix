@@ -38,9 +38,9 @@ let
   optionsModule =
     { lib, ... }:
     {
-      key = "myCommon/home/fancy/git";
+      key = "myCommon/fancy/git";
 
-      options.myCommon.home.fancy.git.enable = lib.mkEnableOption "the common Git defaults";
+      options.myCommon.fancy.git.enable = lib.mkEnableOption "the common Git defaults";
     };
 
   homeManagerModule =
@@ -55,7 +55,7 @@ let
     in
     {
       key = "my-common/fancy/git";
-      config = lib.mkIf config.myCommon.home.fancy.git.enable {
+      config = lib.mkIf config.myCommon.fancy.git.enable {
         home.packages = [
           pkgs'.git-clean-all
           pkgs'.git-sweep-all

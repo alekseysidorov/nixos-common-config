@@ -26,7 +26,7 @@
                 stateVersion = "26.05";
               };
 
-              myCommon.home.fancy.nushell = nushellConfig;
+              myCommon.fancy.nushell = nushellConfig;
             }
           ];
         };

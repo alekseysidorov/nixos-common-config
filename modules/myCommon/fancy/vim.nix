@@ -3,8 +3,8 @@ let
   optionsModule =
     { lib, ... }:
     {
-      key = "myCommon/home/fancy/vim";
-      options.myCommon.home.fancy.vim = {
+      key = "myCommon/fancy/vim";
+      options.myCommon.fancy.vim = {
         enable = lib.mkEnableOption "the common Vim defaults";
 
         profile = lib.mkOption {
@@ -56,12 +56,12 @@ let
       ...
     }:
     {
-      config = lib.mkIf config.myCommon.home.fancy.vim.enable {
+      config = lib.mkIf config.myCommon.fancy.vim.enable {
         programs.vim = {
           enable = lib.mkDefault true;
           defaultEditor = true;
 
-          packageConfigurable = lib.mkIf (config.myCommon.home.fancy.vim.profile == "lite") (
+          packageConfigurable = lib.mkIf (config.myCommon.fancy.vim.profile == "lite") (
             pkgs.vim-full.override {
               features = "normal";
               guiSupport = "none";

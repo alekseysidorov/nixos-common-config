@@ -5,7 +5,7 @@ myCommonInputs:
 {
   imports = [
     (flake-parts-lib.importApply ./flake myCommonInputs)
-    ./home
+    ./fancy
     ./nix
   ];
 }

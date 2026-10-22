@@ -26,7 +26,7 @@
               stateVersion = "25.05";
             };
 
-            myCommon.home.fancy.vim.enable = true;
+            myCommon.fancy.vim.enable = true;
           }
         ];
       };

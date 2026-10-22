@@ -63,7 +63,7 @@ Namespaces:
 ```text
 myCommon.nix.*          Nix policy/infrastructure
 myCommon.flake.*        flake-level behavior
-myCommon.home.fancy.*   opt-in personal UX/tooling managed by Home Manager
+myCommon.fancy.*        opt-in personal UX/tooling mostly managed by Home Manager
 ```
 
 Examples:
