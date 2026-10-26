@@ -43,11 +43,10 @@
         cargo-deny
         cargo-audit
 
-        # Coverage and performance analysis.
+        # Performance analysis.
         #
-        # These are intentionally diagnostic tools rather than build-system
-        # requirements, so they are useful to have available across projects.
-        cargo-llvm-cov
+        # These are diagnostic tools rather than build-system requirements, so
+        # they are useful to have available across projects.
         cargo-bloat
         cargo-flamegraph
 
