@@ -39,6 +39,9 @@
 
       integrationConfig = integration.config;
 
+      starshipConfig =
+        integrationConfig.home.file.${integrationConfig.programs.starship.configPath}.source;
+
       # Scenario:
       # Explicitly opt Bash and Zsh into interactive trampolining to Nushell.
       trampolines = mkHome {
@@ -114,6 +117,49 @@
           assert integrationConfig.programs.nushell.settings.completions.external.completer != null;
 
           mkEvalCheck "test-nushell-home-integration-eval";
+
+        test-nushell-starship-prompt =
+          pkgs.runCommand "test-nushell-starship-prompt"
+            {
+              nativeBuildInputs = [
+                pkgs.python3
+                pkgs.starship
+              ];
+            }
+            ''
+              export STARSHIP_CONFIG=${starshipConfig}
+              export STARSHIP_CACHE="$TMPDIR/starship-cache"
+              export TERM=xterm-256color
+
+              python3 - <<'PY'
+              import re
+              import os
+              import subprocess
+              import tomllib
+              from pathlib import Path
+
+              config = tomllib.loads(Path(os.environ["STARSHIP_CONFIG"]).read_text())
+              assert "$line_break" in config["format"]
+              assert "$rust" not in config["format"]
+              assert config["character"]["success_symbol"] == r"[\$](purple)"
+              assert config["character"]["error_symbol"] == r"[\$](red)"
+
+              ansi = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+              for status in (0, 1):
+                  result = subprocess.run(
+                      ["starship", "prompt", "--status", str(status)],
+                      check=True,
+                      capture_output=True,
+                      text=True,
+                  )
+                  assert "Error in module `character`" not in result.stderr
+                  rendered = ansi.sub("", result.stdout).replace("%{", "").replace("%}", "")
+                  assert "\n" in rendered, repr(rendered)
+                  assert rendered.splitlines()[-1].strip() == "$", repr(rendered)
+              PY
+
+              touch $out
+            '';
 
         test-nushell-home-trampoline-eval =
           # Explicit trampoline configuration enables its source shells.
