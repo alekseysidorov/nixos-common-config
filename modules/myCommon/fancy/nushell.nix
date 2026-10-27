@@ -107,14 +107,13 @@ let
                     "$git_status"
                     "$cmd_duration"
                     "$line_break"
-                    "$rust"
                     "$character"
                   ];
 
                   character = {
-                    success_symbol = "[➜](purple)";
-                    error_symbol = "[➜](red)";
-                    vimcmd_symbol = "[➜](green)";
+                    success_symbol = "[$](purple)";
+                    error_symbol = "[$](red)";
+                    vimcmd_symbol = "[$](green)";
                   };
 
                   hostname = {
