@@ -123,16 +123,6 @@
                 jcode = pkgs.jcode;
               };
 
-              devShells = {
-                default = pkgs.mkShell {
-                  packages = [ ];
-                };
-
-                rust = pkgs.mkShell {
-                  env.PROMPT_NAME = "devshell/rust";
-                };
-              };
-
               treefmt = {
                 projectRootFile = "flake.nix";
 
