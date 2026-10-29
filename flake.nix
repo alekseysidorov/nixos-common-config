@@ -50,16 +50,7 @@
             pkgs:
             lib.filesystem.packagesFromDirectoryRecursive {
               directory = ./pkgs;
-
-              callPackage = lib.callPackageWith (
-                pkgs
-                // {
-                  inherit (inputs)
-                    crane
-                    rust-advisory-db
-                    ;
-                }
-              );
+              callPackage = lib.callPackageWith pkgs;
             };
 
           localOverlay = final: _prev: localPackagesFor final;
@@ -128,7 +119,9 @@
             {
               _module.args.pkgs = pkgs;
 
-              packages = { };
+              packages = {
+                jcode = pkgs.jcode;
+              };
 
               devShells = {
                 default = pkgs.mkShell {
