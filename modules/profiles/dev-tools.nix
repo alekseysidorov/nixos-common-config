@@ -49,8 +49,8 @@
         #
         # Nushell itself provides its language server; these complement it with
         # standalone formatting and static analysis.
-        nufmt
-        nu-lint
+        unstable.nufmt
+        unstable.nu-lint
         # CI configuration.
         #
         # actionlint understands GitHub Actions semantics in addition to plain

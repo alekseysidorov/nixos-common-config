@@ -36,6 +36,8 @@ let
 
               nushell = {
                 enable = true;
+                # We use options from the newest nushell.
+                package = lib.mkForce pkgs.unstable.nushell;
 
                 settings.completions.external = {
                   enable = true;
