@@ -55,7 +55,7 @@ myCommonInputs:
         # standalone formatting and static analysis.
         nufmt
         # Prefer nu-lint from nix-devtools over nixpkgs.
-        myCommonInputs.nix-devtools.packages.${system}.nu-lint
+        nu-lint
         # CI configuration.
         #
         # actionlint understands GitHub Actions semantics in addition to plain
