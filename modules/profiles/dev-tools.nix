@@ -6,11 +6,14 @@
 # repository-wide diagnostics that are useful across otherwise unrelated
 # projects.
 
-{ ... }:
+{ inputs, ... }:
 
 {
   flake.modules.homeManager.devTools =
     { pkgs, ... }:
+    let
+      system = pkgs.stdenv.hostPlatform.system;
+    in
     {
       home.packages = with pkgs; [
         # Structured data and configuration files.
@@ -50,7 +53,9 @@
         # Nushell itself provides its language server; these complement it with
         # standalone formatting and static analysis.
         nufmt
-        nu-lint
+        # Prefer nu-lint from nix-devtools over nixpkgs.
+        inputs.nix-devtools.packages.${system}.nu-lint
+        inputs.nix-devtools.packages.${system}.nu-lint
         # CI configuration.
         #
         # actionlint understands GitHub Actions semantics in addition to plain

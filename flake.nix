@@ -81,8 +81,8 @@
           # and every platform module assembled into myCommon.
           defaultOverlay = lib.composeManyExtensions [
             inputs.nix-devtools.overlays.default
-            unstableOverlay
             localOverlay
+            unstableOverlay
           ];
 
           flakeModule = flake-parts.lib.importApply ./modules inputs;
