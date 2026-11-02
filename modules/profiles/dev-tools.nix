@@ -6,7 +6,8 @@
 # repository-wide diagnostics that are useful across otherwise unrelated
 # projects.
 
-{ inputs, ... }:
+myCommonInputs:
+{ ... }:
 
 {
   flake.modules.homeManager.devTools =
@@ -54,8 +55,7 @@
         # standalone formatting and static analysis.
         nufmt
         # Prefer nu-lint from nix-devtools over nixpkgs.
-        inputs.nix-devtools.packages.${system}.nu-lint
-        inputs.nix-devtools.packages.${system}.nu-lint
+        myCommonInputs.nix-devtools.packages.${system}.nu-lint
         # CI configuration.
         #
         # actionlint understands GitHub Actions semantics in addition to plain

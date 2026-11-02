@@ -1,8 +1,9 @@
-{ ... }:
+myCommonInputs:
+{ flake-parts-lib, ... }:
 {
   imports = [
     ./base-dev.nix
-    ./dev-tools.nix
+    (flake-parts-lib.importApply ./dev-tools.nix myCommonInputs)
     ./fonts.nix
     ./localization.nix
     ./networking.nix

@@ -5,6 +5,6 @@ myCommonInputs:
 {
   imports = [
     (flake-parts-lib.importApply ./myCommon myCommonInputs)
-    ./profiles
+    (flake-parts-lib.importApply ./profiles myCommonInputs)
   ];
 }
