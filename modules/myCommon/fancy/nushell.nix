@@ -36,6 +36,8 @@ let
 
               nushell = {
                 enable = true;
+                # Fancy nushell requires unstable channel.
+                package = lib.mkDefault pkgs.unstable.nushell;
 
                 settings.completions.external = {
                   enable = true;
