@@ -12,9 +12,6 @@ myCommonInputs:
 {
   flake.modules.homeManager.devTools =
     { pkgs, ... }:
-    let
-      system = pkgs.stdenv.hostPlatform.system;
-    in
     {
       home.packages = with pkgs; [
         # Structured data and configuration files.

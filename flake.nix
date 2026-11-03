@@ -119,10 +119,6 @@
             {
               _module.args.pkgs = pkgs;
 
-              packages = {
-                jcode = pkgs.jcode;
-              };
-
               treefmt = {
                 projectRootFile = "flake.nix";
 
